@@ -1,0 +1,7 @@
+@use "../styles.scss" as *;
+
+.app-content {
+  padding: 2rem;
+  min-height: calc(100vh - ($header-height + $footer-height));
+  background-color: #f7f4f1;
+}

@@ -1,0 +1,8 @@
+<!-- Workshop Detail view -->
+<div class="workshop-detail" *ngIf="workshop">
+    <h2>{{ workshop.title }}</h2>
+    <p>{{ workshop.description }}</p>
+    <p>{{ workshop.date }}</p>
+    <p>{{ workshop.location }}</p>
+</div>
+<p *ngIf="!workshop">Workshop nicht gefunden.</p>

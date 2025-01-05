@@ -1,0 +1,36 @@
+// Mixins für häufige Stile
+
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin box-shadow($color: rgba(0, 0, 0, 0.2), $blur: 10px, $spread: 0px) {
+  box-shadow: 0px $spread $blur $color;
+}
+
+@mixin responsive-text($min-size, $max-size) {
+  font-size: calc(#{$min-size} + (#{$max-size} - #{$min-size}) * ((100vw - 320px) / (1920 - 320)));
+}
+
+// Typografische Mixins
+@mixin text-style($color, $size, $weight: normal) {
+  color: $color;
+  font-size: $size;
+  font-weight: $weight;
+}
+
+@mixin button-style($bg-color, $text-color) {
+  background-color: $bg-color;
+  color: $text-color;
+  border: none;
+  border-radius: 4px;
+  padding: $padding-medium;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  
+  &:hover {
+    background-color: darken($bg-color, 10%);
+  }
+}

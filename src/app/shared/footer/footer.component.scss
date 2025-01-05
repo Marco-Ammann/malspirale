@@ -1,0 +1,14 @@
+@use "../../../styles" as *;
+
+.app-footer {
+    background-color: darken($primary-color, 10%);
+    color: #fff;
+    text-align: center;
+    padding: 1rem;
+    font-size: 0.875rem;
+    height: $footer-height;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  

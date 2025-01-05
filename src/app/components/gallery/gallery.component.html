@@ -1,0 +1,14 @@
+<div class="gallery">
+  <div *ngFor="let image of images$ | async" class="gallery-item" (click)="openModal(image)">
+    <img [src]="image.imageUrl" [alt]="image.title" />
+    <h3>{{ image.title }}</h3>
+  </div>
+</div>
+<div class="modal" *ngIf="selectedImage">
+  <div class="modal-content">
+    <img [src]="selectedImage.imageUrl" [alt]="selectedImage.title" />
+    <h3>{{ selectedImage.title }}</h3>
+    <p>{{ selectedImage.description }}</p>
+    <button (click)="closeModal()">Schließen</button>
+  </div>
+</div>

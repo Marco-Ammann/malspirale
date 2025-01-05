@@ -1,0 +1,53 @@
+@use "../../../styles" as *;
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: $padding-medium;
+  padding: $padding-medium;
+}
+
+.gallery-item {
+  border: 1px solid $secondary-color;
+  border-radius: 8px;
+  overflow: hidden;
+  background: $background-color;
+
+  img {
+    width: 100%;
+    height: auto;
+    transition: transform 0.2s;
+  }
+
+  &:hover img {
+    transform: scale(1.1);
+  }
+
+  h3 {
+    margin: $padding-small 0;
+    color: $text-color;
+  }
+
+  p {
+    font-size: 0.9rem;
+    color: $text-color;
+  }
+}
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .modal-content {
+    background: $background-color;
+    padding: $padding-medium;
+    border-radius: 8px;
+    text-align: center;
+  }
+}
