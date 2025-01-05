@@ -1,0 +1,38 @@
+<section class="hero">
+    <img [src]="heroImage" alt="Hero Image" class="hero-image" />
+    <div class="hero-text">
+      <h1>Willkommen bei Malspirale</h1>
+      <p>
+        Tauche ein in die Welt der Farben und Formen. Isabel Kunz lädt dich ein, Kunst auf eine neue Weise zu erleben. Lass dich inspirieren und werde selbst kreativ!
+      </p>
+      <a routerLink="/workshops" class="btn btn-primary" aria-label="Unsere Workshops anzeigen">Unsere Workshops</a>
+    </div>
+  </section>
+  
+  <section class="about">
+    <div class="content-wrapper">
+      <h2>Über Isabel</h2>
+      <p>
+        Isabel Kunz kombiniert die Farbenlehre mit künstlerischen Techniken, um einzigartige Werke zu schaffen. Ihre Leidenschaft und Kreativität teilt sie mit dir in
+        inspirierenden Workshops.
+      </p>
+      <a routerLink="/about" class="btn btn-secondary" aria-label="Mehr über Isabel erfahren">Mehr über Isabel</a>
+    </div>
+  </section>
+  
+  <section class="gallery-preview">
+    <div class="content-wrapper">
+      <h2>Galerie</h2>
+      <div class="artworks">
+        <div *ngFor="let artwork of artworks" class="artwork">
+          <div class="image-container">
+            <img [src]="artwork.src" [alt]="artwork.alt" />
+          </div>
+        </div>
+      </div>
+      <div class="gallery-button">
+        <a routerLink="/gallery" class="btn btn-secondary">Zur Galerie</a>
+      </div>
+    </div>
+  </section>
+  

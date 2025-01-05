@@ -41,4 +41,8 @@ export class WorkshopListComponent implements OnInit {
     this.stateService.setSelectedWorkshop(workshop);
     this.router.navigate(['/workshops', workshop.id]);
   }
+
+  navigateToWorkshop(workshop: Workshop): void {
+    this.router.navigate([`/workshops/${workshop.id}`]);
+  }
 }
