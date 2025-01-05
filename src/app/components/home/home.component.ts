@@ -10,7 +10,7 @@ import { RouterModule } from '@angular/router';
   imports: [CommonModule, RouterModule],
 })
 export class HomeComponent {
-  heroImage = '/assets/images/hero1.webp';
+  heroImage = '/assets/images/hero10.webp';
   artworks = [
     { src: 'assets/images/art1.webp', alt: 'Kunstwerk 1', title: 'Kreative Inspiration' },
     { src: 'assets/images/art2.webp', alt: 'Kunstwerk 2', title: 'Farben der Natur' },
