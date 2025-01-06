@@ -1,10 +1,8 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; // Import FormsModule
+import { FormsModule } from '@angular/forms';
 import { DataService } from '../../core/services/data.service';
-import { WorkshopDetailComponent } from './workshop-detail/workshop-detail.component';
 import { Router, RouterModule } from '@angular/router';
-import { Subject, Subscription, takeUntil } from 'rxjs';
 import { Workshop } from '../../core/interfaces/interfaces';
 import { StateService } from '../../core/services/state.service';
 

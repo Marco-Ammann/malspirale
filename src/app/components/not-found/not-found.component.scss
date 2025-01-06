@@ -1,5 +1,7 @@
-@use '../../../styles' as *;
+@use 'sass:color';
+@use 'variables' as vars;
+
 h1 {
-    text-align: center;
-    color: $text-color;
-  }
+  text-align: center;
+  color: vars.$text-color;
+}

@@ -1,7 +1,8 @@
 @use "../styles.scss" as *;
+@use 'variables' as vars;
 
 .app-content {
   padding: 2rem;
-  min-height: calc(100vh - ($header-height + $footer-height));
+  min-height: calc(100vh - (vars.$header-height + vars.$footer-height));
   background-color: #f7f4f1;
 }

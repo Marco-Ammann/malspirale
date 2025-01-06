@@ -1,11 +1,12 @@
-@use "../../../styles" as *;
+@use 'sass:color';
+@use 'variables' as vars;
 
 .contact-form {
   max-width: 600px;
   margin: 0 auto;
   padding: 16px;
-  background: $background-color;
-  border: 1px solid $primary-color;
+  background: vars.$background-color;
+  border: 1px solid vars.$primary-color;
   border-radius: 8px;
 
   h2 {
@@ -16,7 +17,7 @@
   label {
     display: block;
     margin-bottom: 8px;
-    color: $text-color;
+    color: vars.$text-color;
   }
 
   input,
@@ -24,7 +25,7 @@
     width: 100%;
     padding: 8px;
     margin-bottom: 16px;
-    border: 1px solid $secondary-color;
+    border: 1px solid vars.$secondary-color;
     border-radius: 4px;
   }
 
@@ -32,7 +33,7 @@
     display: block;
     width: 100%;
     padding: 10px;
-    background: $primary-color;
+    background: vars.$primary-color;
     color: white;
     border: none;
     border-radius: 4px;
@@ -45,7 +46,8 @@
     }
 
     &:hover:not(:disabled) {
-      background: darken($primary-color, 10%);
+      // alt: color.adjust($primary-color, $lightness: -10%)
+      background: color.adjust(vars.$primary-color, $lightness: -10%);
     }
   }
 }

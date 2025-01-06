@@ -30,7 +30,6 @@ export class WorkshopDetailComponent implements OnInit {
           if (workshop) {
             this.workshop = workshop;
           } else {
-            // Fallback: Keine Daten gefunden
             console.error('Workshop nicht gefunden!');
           }
         });

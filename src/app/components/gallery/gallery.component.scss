@@ -1,53 +1,129 @@
-@use "../../../styles" as *;
+@use 'sass:color';
+@use 'variables' as vars;
 
 .gallery {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: $padding-medium;
-  padding: $padding-medium;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: vars.$padding-medium;
+  padding: vars.$padding-medium;
+
+  .gallery-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+    cursor: pointer;
+    background-color: vars.$background-color;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+    img {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    &:hover img {
+      transform: scale(1.05);
+    }
+
+    h3 {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      color: #fff;
+      text-align: center;
+      padding: vars.$padding-small;
+      font-size: 1rem;
+      font-family: vars.$font-family;
+      transition: background 0.3s ease-in-out;
+    }
+
+    &:hover h3 {
+      background: rgba(0, 0, 0, 0.8);
+    }
+  }
 }
 
-.gallery-item {
-  border: 1px solid $secondary-color;
-  border-radius: 8px;
-  overflow: hidden;
-  background: $background-color;
-
-  img {
-    width: 100%;
-    height: auto;
-    transition: transform 0.2s;
-  }
-
-  &:hover img {
-    transform: scale(1.1);
-  }
-
-  h3 {
-    margin: $padding-small 0;
-    color: $text-color;
-  }
-
-  p {
-    font-size: 0.9rem;
-    color: $text-color;
+@media (max-width: 768px) {
+  .gallery {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   }
 }
+
+@media (max-width: 480px) {
+  .gallery {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+}
+
 .modal {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.8);
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+
+  .modal-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    cursor: pointer;
+  }
 
   .modal-content {
-    background: $background-color;
-    padding: $padding-medium;
-    border-radius: 8px;
+    position: relative;
+    background: vars.$background-color;
+    border-radius: 10px;
+    padding: vars.$padding-medium;
+    max-width: 90%;
+    max-height: 90%;
     text-align: center;
+    overflow-y: auto;
+
+    img {
+      max-width: 100%;
+      max-height: 80vh;
+      height: auto;
+      border-radius: 10px;
+      margin-bottom: vars.$padding-medium;
+    }
+
+    h3 {
+      margin-bottom: vars.$padding-small;
+      font-size: 1.5rem;
+      color: vars.$text-color;
+      font-family: vars.$font-family;
+    }
+
+    p {
+      margin-bottom: vars.$padding-medium;
+      font-size: 1rem;
+      color: vars.$text-color;
+      font-family: vars.$font-family;
+    }
+
+    button {
+      padding: vars.$padding-small vars.$padding-medium;
+      background-color: vars.$primary-color;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      font-size: 1rem;
+      font-family: vars.$font-family;
+      cursor: pointer;
+
+      &:hover {
+        // alt: color.adjust(variables.$primary-color, $lightness: 10%)
+        background-color: color.adjust(vars.$primary-color, $lightness: 10%);
+      }
+    }
   }
 }

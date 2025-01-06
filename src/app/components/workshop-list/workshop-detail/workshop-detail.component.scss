@@ -1,0 +1,8 @@
+@use 'sass:color';
+@use 'variables' as vars;
+
+// Noch keine Styles? Dann leer lassen oder anpassen.
+.workshop-detail {
+  padding: vars.$padding-medium;
+  background-color: vars.$background-color;
+}

@@ -1,14 +1,15 @@
-@use "../../../styles" as *;
+@use 'sass:color';
+@use 'variables' as vars;
 
 .app-footer {
-    background-color: darken($primary-color, 10%);
-    color: #fff;
-    text-align: center;
-    padding: 1rem;
-    font-size: 0.875rem;
-    height: $footer-height;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
+  // alt: darken($primary-color, 10%)
+  background-color: color.adjust(vars.$primary-color, $lightness: -10%);
+  color: #fff;
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.875rem;
+  height: vars.$footer-height;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

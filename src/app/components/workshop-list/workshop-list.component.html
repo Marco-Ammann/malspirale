@@ -5,7 +5,11 @@
   class="search-box"
 />
 <div class="workshop-list">
-  <div *ngFor="let workshop of filterWorkshops()" class="workshop-card" (click)="navigateToWorkshop(workshop)">
+  <div
+    *ngFor="let workshop of filterWorkshops()"
+    class="workshop-card"
+    (click)="navigateToWorkshop(workshop)"
+  >
     <h3>{{ workshop.title }}</h3>
     <p><strong>Datum:</strong> {{ workshop.date }}</p>
     <p><strong>Freie Plätze:</strong> {{ workshop.availableSlots }}</p>
@@ -14,5 +18,5 @@
 </div>
 
 <div [ngClass]="{ 'no-workshops': workshops.length === 0 }">
-  <p *ngIf="workshops.length === 0">Keine Workshops gefunden.</p>  
+  <p *ngIf="workshops.length === 0">Keine Workshops gefunden.</p>
 </div>
