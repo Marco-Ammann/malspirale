@@ -1,9 +1,36 @@
-<!-- Workshop Detail view -->
-<div class="workshop-detail" *ngIf="workshop">
-    <h2>{{ workshop.title }}</h2>
-    <p>{{ workshop.description }}</p>
-    <p>{{ workshop.date }}</p>
-    <p>{{ workshop.location }}</p>
+<div class="workshop-detail" *ngIf="workshop; else notFound">
+    <div class="workshop-header">
+      <h2>{{ workshop.title }}</h2>
+      <p class="location">{{ workshop.location }}</p>
+    </div>
+  
+    <div class="workshop-info">
+      <p class="description">{{ workshop.description }}</p>
+  
+      <div class="info-row">
+        <p><strong>Datum:</strong> {{ workshop.date }}</p>
+        <p>
+          <strong>Plätze frei:</strong>
+          <span [class.full]="workshop.availableSlots === 0">{{ workshop.availableSlots }}</span>
+        </p>
+        <p><strong>Max. Teilnehmer:</strong> {{ workshop.maxParticipants }}</p>
+      </div>
+    </div>
+  
+    <div class="action-row">
+      <!-- Button zum Anmelden -->
+      <button
+        (click)="onEnroll()"
+        [disabled]="workshop.availableSlots === 0"
+        aria-label="Anmelden zum Workshop"
+      >
+        Jetzt anmelden
+      </button>
+    </div>
   </div>
-  <p *ngIf="!workshop">Workshop nicht gefunden.</p>
+  
+  <!-- Fallback: Falls workshop = null oder nicht vorhanden -->
+  <ng-template #notFound>
+    <p class="not-found">Workshop nicht gefunden.</p>
+  </ng-template>
   

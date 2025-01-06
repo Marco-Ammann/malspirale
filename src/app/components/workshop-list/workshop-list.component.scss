@@ -1,21 +1,89 @@
 @use 'sass:color';
 @use 'variables' as vars;
+
+.workshop-container {
+  max-width: 1200px; /* oder was immer du möchtest */
+  margin: 0 auto; /* zentriert die Seite */
+  padding: vars.$padding-medium;
+}
+
+/* Container fürs Suchfeld */
+.search-container {
+  text-align: center;
+  margin-bottom: vars.$padding-medium;
+
+  .search-box {
+    width: 100%;
+    max-width: 400px;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    border: 1px solid vars.$secondary-color;
+    border-radius: 4px;
+    outline: none;
+    transition: border-color 0.3s ease;
+
+    &:focus {
+      border-color: color.adjust(vars.$secondary-color, $lightness: -10%);
+    }
+  }
+}
+
+/* Grid für die Workshop-Karten */
 .workshop-list {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: vars.$padding-medium;
-  padding: vars.$padding-medium;
 }
 
+/* Einzelne Workshop-Karte */
 .workshop-card {
   background: vars.$background-color;
   border: 1px solid vars.$primary-color;
   border-radius: 8px;
   padding: vars.$padding-medium;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+
+  h3 {
+    font-family: vars.$font-family;
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+    color: vars.$text-color;
+  }
+
+  p {
+    margin: 0.25rem 0;
+    color: vars.$text-color;
+    font-family: vars.$font-family;
+
+    strong {
+      font-weight: 600;
+      color: color.adjust(vars.$text-color, $lightness: -20%);
+    }
+  }
 
   &:hover {
-    transform: scale(1.05);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  }
+}
+
+/* Kein Workshop-Fallback */
+.no-workshops {
+  margin-top: vars.$padding-medium;
+  text-align: center;
+
+  p {
+    font-size: 1rem;
+    color: vars.$text-color;
+    font-family: vars.$font-family;
+  }
+}
+
+/* Responsive-Anpassungen nach Bedarf */
+@media (max-width: 768px) {
+  .search-box {
+    max-width: 90%;
   }
 }

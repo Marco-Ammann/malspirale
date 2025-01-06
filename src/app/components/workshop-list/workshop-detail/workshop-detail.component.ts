@@ -36,4 +36,16 @@ export class WorkshopDetailComponent implements OnInit {
       }
     }
   }
+
+  onEnroll(): void {
+    if (!this.workshop) return;
+
+    // Beispiel-Logik: verringere verfügbare Slots
+    if (this.workshop.availableSlots > 0) {
+      this.workshop.availableSlots--;
+      alert(`Du hast dich erfolgreich für "${this.workshop.title}" angemeldet!`);
+    } else {
+      alert('Keine freien Plätze mehr verfügbar!');
+    }
+  }
 }

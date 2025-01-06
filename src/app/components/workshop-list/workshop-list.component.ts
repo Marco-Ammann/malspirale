@@ -15,7 +15,7 @@ import { StateService } from '../../core/services/state.service';
 })
 export class WorkshopListComponent implements OnInit {
   workshops: Workshop[] = [];
-  searchTerm: string = '';
+  searchTerm = '';
 
   constructor(
     private stateService: StateService,
