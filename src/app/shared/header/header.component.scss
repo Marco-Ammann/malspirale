@@ -15,6 +15,9 @@
   }
 
   nav {
+    display: flex;
+    align-items: center;
+
     a {
       margin: 0 0.5rem;
       color: #fff;
@@ -26,9 +29,55 @@
       }
 
       &:hover {
-        // alt: lighten($primary-color, 20%)
         color: color.adjust(vars.$primary-color, $lightness: 20%);
         cursor: pointer;
+      }
+    }
+
+    /* Dropdown-Container */
+    .dropdown {
+      position: relative; /* wichtig, damit das Menü absolut positioniert werden kann */
+      margin: 0 0.5rem;
+
+      /* Toggle link */
+      .dropdown-toggle {
+        color: #fff;
+        text-decoration: none;
+        cursor: pointer;
+
+        &:hover {
+          color: color.adjust(vars.$primary-color, $lightness: 20%);
+        }
+      }
+
+      /* Menü, initially hidden */
+      .dropdown-menu {
+        display: none;
+        position: absolute;
+        top: 100%; /* direkt unter dem Toggle-Link */
+        left: 0;
+        background-color: vars.$background-color;
+        padding: 0.5rem 0;
+        border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+
+        /* Menü-Links */
+        a {
+          display: block;
+          white-space: nowrap; /* Damit Zeilenumbruch verhindert wird */
+          padding: 0.5rem 1rem;
+          color: vars.$text-color;
+          text-decoration: none;
+
+          &:hover {
+            background-color: color.adjust(vars.$background-color, $lightness: -5%);
+          }
+        }
+      }
+
+      /* Hover-Effekt auf Dropdown: Menu anzeigen */
+      &:hover .dropdown-menu {
+        display: block;
       }
     }
   }

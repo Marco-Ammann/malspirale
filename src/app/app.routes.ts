@@ -39,6 +39,30 @@ export const routes: Routes = [
         (m) => m.ContactComponent
       ),
   },
+  { 
+    path: 'about',
+    loadComponent: () =>
+      import('./components/about/about.component').then(m => m.AboutComponent),
+  },
+  { 
+    path: 'philosophie',
+    children: [
+      {
+        path: 'farben',
+        loadComponent: () =>
+          import('./components/philosophie/farben/farben.component').then(
+            m => m.FarbenComponent
+          ),
+      },
+      {
+        path: 'geschichten',
+        loadComponent: () =>
+          import('./components/philosophie/geschichten/geschichten.component').then(
+            m => m.GeschichtenComponent
+          ),
+      },
+    ],
+  },
   {
     path: '**',
     loadComponent: () =>

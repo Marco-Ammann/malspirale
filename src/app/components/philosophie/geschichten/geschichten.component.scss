@@ -1,0 +1,25 @@
+@use 'sass:color';
+@use 'variables' as vars;
+
+.geschichten-page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: vars.$padding-medium;
+  background-color: vars.$background-color;
+  border: 1px solid vars.$accent-color;
+  border-radius: 8px;
+
+  h2 {
+    font-size: 1.75rem;
+    margin-bottom: vars.$padding-small;
+    color: color.adjust(vars.$text-color, $lightness: -10%);
+    font-family: vars.$font-family;
+  }
+
+  p {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: vars.$text-color;
+    font-family: vars.$font-family;
+  }
+}
