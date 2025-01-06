@@ -2,62 +2,81 @@
 @use 'variables' as vars;
 
 .gallery {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: vars.$padding-medium;
+  /* Statt display: grid – jetzt Spaltenlayout */
+  column-count: 4;
+  column-gap: vars.$padding-medium;
   padding: vars.$padding-medium;
+  margin: 0 auto; /* optional: zentriert die Gallery */
 
-  .gallery-item {
-    position: relative;
-    overflow: hidden;
-    border-radius: 10px;
-    cursor: pointer;
-    background-color: vars.$background-color;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  max-width: 1200px;
+  margin: 0 auto;
+}
 
-    img {
-      width: 100%;
-      height: auto;
-      object-fit: cover;
-      transition: transform 0.3s ease-in-out;
-    }
+.gallery-item {
+  /* Wichtig für Masonry: inline-block, 100% Breite */
+  display: inline-block;
+  width: 100%;
+  margin-bottom: vars.$padding-medium;
 
-    &:hover img {
-      transform: scale(1.05);
-    }
+  position: relative;
+  border-radius: 10px;
+  cursor: pointer;
+  background-color: vars.$background-color;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 
-    h3 {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      background: rgba(0, 0, 0, 0.6);
-      color: #fff;
-      text-align: center;
-      padding: vars.$padding-small;
-      font-size: 1rem;
-      font-family: vars.$font-family;
-      transition: background 0.3s ease-in-out;
-    }
+  /* Bild styling */
+  img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    transition: transform 0.3s ease-in-out;
+    display: block; /* verhindert kleine Lücken am unteren Rand */
+  }
 
-    &:hover h3 {
-      background: rgba(0, 0, 0, 0.8);
-    }
+  &:hover img {
+    transform: scale(1.05);
+  }
+
+  /* Text-Overlay */
+  h3 {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    text-align: center;
+    padding: vars.$padding-small;
+    font-size: 1rem;
+    font-family: vars.$font-family;
+    transition: background 0.3s ease-in-out;
+  }
+
+  &:hover h3 {
+    background: rgba(0, 0, 0, 0.8);
+  }
+}
+
+/* Für kleinere Bildschirme die Anzahl Spalten reduzieren */
+@media (max-width: 1200px) {
+  .gallery {
+    column-count: 3;
   }
 }
 
 @media (max-width: 768px) {
   .gallery {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    column-count: 2;
   }
 }
 
 @media (max-width: 480px) {
   .gallery {
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    column-count: 1;
   }
 }
 
+/* Modal bleibt wie gehabt, ändert nichts am Masonry */
 .modal {
   position: fixed;
   top: 0;
@@ -90,7 +109,7 @@
 
     img {
       max-width: 100%;
-      max-height: 80vh;
+      max-height: 80vh; /* verhindert, dass zu große Bilder das Modal sprengen */
       height: auto;
       border-radius: 10px;
       margin-bottom: vars.$padding-medium;
@@ -121,7 +140,6 @@
       cursor: pointer;
 
       &:hover {
-        // alt: color.adjust(variables.$primary-color, $lightness: 10%)
         background-color: color.adjust(vars.$primary-color, $lightness: 10%);
       }
     }
