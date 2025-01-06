@@ -1,17 +1,54 @@
-// src/styles.scss
-
-@use 'sass:color'; // nur falls du hier selbst lighten/darken brauchst
+@use 'sass:color';
+@use 'sass:math';
 @use 'variables' as vars;
-@use 'mixins' as mixins;
 
-* {
+/* Allgemeine Reset-Styles */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
 }
 
 body {
-  font-family: vars.$font-family;
+  font-family: vars.$font-family, sans-serif;
   background-color: vars.$background-color;
   color: vars.$text-color;
+  line-height: 1.6;
+  font-size: 16px;
 }
+
+/* Button-Stile */
+.btn {
+  display: inline-block;
+  text-align: center;
+  text-decoration: none;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  font-family: vars.$font-family;
+}
+
+.btn-primary {
+  background-color: vars.$primary-color;
+  color: #fff;
+
+  &:hover {
+    background-color: color.adjust(vars.$primary-color, $lightness: 10%);
+    transform: scale(1.05);
+  }
+}
+
+.btn-secondary {
+  background-color: vars.$secondary-color;
+  color: #fff;
+
+  &:hover {
+    background-color: color.adjust(vars.$secondary-color, $lightness: 10%);
+    transform: scale(1.05);
+  }
+}
+
+/* Weitere globale Stile nach Bedarf */

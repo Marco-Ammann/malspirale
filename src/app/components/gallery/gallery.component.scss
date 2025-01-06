@@ -1,146 +1,73 @@
 @use 'sass:color';
 @use 'variables' as vars;
 
-.gallery {
-  /* Statt display: grid – jetzt Spaltenlayout */
-  column-count: 4;
-  column-gap: vars.$padding-medium;
-  padding: vars.$padding-medium;
-  margin: 0 auto; /* optional: zentriert die Gallery */
-
+.gallery-page {
   max-width: 1200px;
-  margin: 0 auto;
-}
-
-.gallery-item {
-  /* Wichtig für Masonry: inline-block, 100% Breite */
-  display: inline-block;
-  width: 100%;
-  margin-bottom: vars.$padding-medium;
-
-  position: relative;
-  border-radius: 10px;
-  cursor: pointer;
+  margin: 2rem auto;
+  padding: vars.$padding-medium;
   background-color: vars.$background-color;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid vars.$secondary-color;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 
-  /* Bild styling */
-  img {
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-    transition: transform 0.3s ease-in-out;
-    display: block; /* verhindert kleine Lücken am unteren Rand */
-  }
-
-  &:hover img {
-    transform: scale(1.05);
-  }
-
-  /* Text-Overlay */
-  h3 {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    color: #fff;
-    text-align: center;
-    padding: vars.$padding-small;
-    font-size: 1rem;
+  h2 {
+    font-size: 2rem;
+    margin-bottom: vars.$padding-small;
+    color: color.adjust(vars.$text-color, $lightness: -10%);
     font-family: vars.$font-family;
-    transition: background 0.3s ease-in-out;
-  }
-
-  &:hover h3 {
-    background: rgba(0, 0, 0, 0.8);
-  }
-}
-
-/* Für kleinere Bildschirme die Anzahl Spalten reduzieren */
-@media (max-width: 1200px) {
-  .gallery {
-    column-count: 3;
-  }
-}
-
-@media (max-width: 768px) {
-  .gallery {
-    column-count: 2;
-  }
-}
-
-@media (max-width: 480px) {
-  .gallery {
-    column-count: 1;
-  }
-}
-
-/* Modal bleibt wie gehabt, ändert nichts am Masonry */
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: rgba(0, 0, 0, 0.7);
-  z-index: 1000;
-
-  .modal-overlay {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: transparent;
-    cursor: pointer;
-  }
-
-  .modal-content {
-    position: relative;
-    background: vars.$background-color;
-    border-radius: 10px;
-    padding: vars.$padding-medium;
-    max-width: 90%;
-    max-height: 90%;
     text-align: center;
-    overflow-y: auto;
+  }
 
-    img {
-      max-width: 100%;
-      max-height: 80vh; /* verhindert, dass zu große Bilder das Modal sprengen */
-      height: auto;
-      border-radius: 10px;
-      margin-bottom: vars.$padding-medium;
-    }
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+  }
 
-    h3 {
-      margin-bottom: vars.$padding-small;
-      font-size: 1.5rem;
-      color: vars.$text-color;
-      font-family: vars.$font-family;
-    }
+  .artwork {
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
 
-    p {
-      margin-bottom: vars.$padding-medium;
-      font-size: 1rem;
-      color: vars.$text-color;
-      font-family: vars.$font-family;
-    }
+    .image-container {
+      position: relative;
+      width: 100%;
+      padding-top: 75%; /* 4:3 Aspect Ratio */
+      background-color: #e0e0e0;
 
-    button {
-      padding: vars.$padding-small vars.$padding-medium;
-      background-color: vars.$primary-color;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      font-size: 1rem;
-      font-family: vars.$font-family;
-      cursor: pointer;
+      img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease-in-out;
+      }
 
-      &:hover {
-        background-color: color.adjust(vars.$primary-color, $lightness: 10%);
+      &:hover img {
+        transform: scale(1.05);
+      }
+
+      .overlay {
+        position: absolute;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5); /* Black see-through */
+        color: #fff;
+        width: 100%;
+        transform: translateY(100%);
+        transition: transform 0.3s ease-in-out;
+        padding: 0.5rem;
+
+        .text {
+          text-align: center;
+          font-size: 1rem;
+          font-family: vars.$font-family;
+        }
+      }
+
+      &:hover .overlay {
+        transform: translateY(0);
       }
     }
   }

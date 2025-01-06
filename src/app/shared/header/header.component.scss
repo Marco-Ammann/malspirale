@@ -12,6 +12,7 @@
 
   h1 {
     font-size: 1.5rem;
+    font-family: vars.$font-family;
   }
 
   nav {
@@ -22,13 +23,15 @@
       margin: 0 0.5rem;
       color: #fff;
       text-decoration: none;
+      font-family: vars.$font-family;
 
       &.active {
         font-weight: bold;
         text-decoration: underline;
       }
 
-      &:hover {
+      &:hover,
+      &:focus {
         color: color.adjust(vars.$primary-color, $lightness: 20%);
         cursor: pointer;
       }
@@ -36,47 +39,60 @@
 
     /* Dropdown-Container */
     .dropdown {
-      position: relative; /* wichtig, damit das Menü absolut positioniert werden kann */
+      position: relative; /* Wichtig für absolute Positionierung des Menüs */
       margin: 0 0.5rem;
 
-      /* Toggle link */
+      /* Toggle-Link */
       .dropdown-toggle {
         color: #fff;
         text-decoration: none;
         cursor: pointer;
+        font-family: vars.$font-family;
+        display: flex;
+        align-items: center;
 
-        &:hover {
+        &:hover,
+        &:focus {
           color: color.adjust(vars.$primary-color, $lightness: 20%);
+        }
+
+        &::after {
+          content: '▼';
+          font-size: 0.8rem;
+          margin-left: 0.25rem;
         }
       }
 
-      /* Menü, initially hidden */
+      /* Dropdown-Menü */
       .dropdown-menu {
         display: none;
         position: absolute;
-        top: 100%; /* direkt unter dem Toggle-Link */
-        left: 0;
+        top: 100%; /* Direkt unter dem Toggle-Link */
+        right: -15px;
         background-color: vars.$background-color;
         padding: 0.5rem 0;
         border-radius: 4px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        min-width: 180px;
+        z-index: 1000;
 
-        /* Menü-Links */
         a {
           display: block;
-          white-space: nowrap; /* Damit Zeilenumbruch verhindert wird */
           padding: 0.5rem 1rem;
           color: vars.$text-color;
           text-decoration: none;
+          font-family: vars.$font-family;
 
-          &:hover {
+          &:hover,
+          &:focus {
             background-color: color.adjust(vars.$background-color, $lightness: -5%);
           }
         }
       }
 
-      /* Hover-Effekt auf Dropdown: Menu anzeigen */
-      &:hover .dropdown-menu {
+      /* Hover-Effekt: Menü anzeigen */
+      &:hover .dropdown-menu,
+      &:focus-within .dropdown-menu {
         display: block;
       }
     }

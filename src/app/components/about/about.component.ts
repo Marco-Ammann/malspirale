@@ -9,5 +9,5 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./about.component.scss'],
 })
 export class AboutComponent {
-  // Optional: Hier könntest du Logik oder Daten hinzufügen
+  // Optional: Hier kannst du zusätzliche Logik oder Daten hinzufügen
 }

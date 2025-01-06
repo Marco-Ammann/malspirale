@@ -9,5 +9,5 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./geschichten.component.scss'],
 })
 export class GeschichtenComponent {
-  // Optional: Eigene Logik, z. B. ein Array mit "Geschichten"
+  // Optional: Eigene Logik, z. B. ein Array mit Geschichten
 }

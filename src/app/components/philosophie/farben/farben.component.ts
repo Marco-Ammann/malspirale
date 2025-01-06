@@ -9,5 +9,5 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./farben.component.scss'],
 })
 export class FarbenComponent {
-  // Optional: Eigene Logik, z. B. Arrays von Farben, Bilder etc.
+  // Optional: Eigene Logik, z.B. ein Array mit Farben und deren Wirkungen
 }

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-contact',
@@ -10,19 +10,20 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./contact.component.scss'],
 })
 export class ContactComponent {
-  name = '';
-  email = '';
-  message = '';
+  contact = {
+    name: '',
+    email: '',
+    phone: '',
+    message: '',
+  };
 
-  onSubmit() {
-    console.log('Form submitted:', {
-      name: this.name,
-      email: this.email,
-      message: this.message,
-    });
-    alert('Danke für deine Nachricht!');
-    this.name = '';
-    this.email = '';
-    this.message = '';
+  onSubmit(form: NgForm) {
+    if (form.valid) {
+      // Hier könntest du eine echte Backend-Anfrage hinzufügen
+      alert('Vielen Dank für deine Nachricht! Isabel wird sich bald bei dir melden.');
+      form.resetForm();
+    } else {
+      alert('Bitte fülle alle Pflichtfelder korrekt aus.');
+    }
   }
 }

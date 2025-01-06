@@ -1,12 +1,12 @@
 @use 'sass:color';
 @use 'variables' as vars;
 
-.about-page {
+.malgeschichten-page {
   max-width: 800px;
   margin: 2rem auto;
   padding: vars.$padding-medium;
   background-color: vars.$background-color;
-  border: 1px solid vars.$primary-color;
+  border: 1px solid vars.$accent-color;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 
@@ -18,12 +18,22 @@
     text-align: center;
   }
 
-  p {
-    font-size: 1.1rem;
-    line-height: 1.6;
-    color: vars.$text-color;
-    font-family: vars.$font-family;
-    margin-bottom: 1rem;
-    text-align: justify;
+  .story {
+    margin-bottom: 1.5rem;
+
+    h3 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+      color: color.adjust(vars.$text-color, $lightness: -5%);
+      font-family: vars.$font-family;
+    }
+
+    p {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      color: vars.$text-color;
+      font-family: vars.$font-family;
+      text-align: justify;
+    }
   }
 }
