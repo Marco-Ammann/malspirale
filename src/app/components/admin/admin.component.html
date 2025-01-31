@@ -1,0 +1,19 @@
+<div class="admin-container">
+  <div *ngIf="isAdmin; else noAccess">
+    <h2>Willkommen, Admin!</h2>
+    <p>Hier kannst du Inhalte bearbeiten.</p>
+
+    <div class="admin-actions">
+      <button routerLink="/admin/workshops">Workshops verwalten</button>
+      <button routerLink="/admin/gallery">Galerie verwalten</button>
+      <button routerLink="/admin/pages">Seiten bearbeiten</button>
+    </div>
+
+    <button class="logout-btn" (click)="logout()">Abmelden</button>
+  </div>
+
+  <ng-template #noAccess>
+    <h2>Zugriff verweigert</h2>
+    <p>Du hast keine Berechtigung, diese Seite anzuzeigen.</p>
+  </ng-template>
+</div>

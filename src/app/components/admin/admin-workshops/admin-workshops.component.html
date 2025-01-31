@@ -1,0 +1,27 @@
+<div class="admin-workshops">
+  <h2>Workshop-Verwaltung</h2>
+  <p *ngIf="loading">Lade Workshops...</p>
+
+  <table *ngIf="!loading && workshops.length">
+    <thead>
+      <tr>
+        <th>Titel</th>
+        <th>Ort</th>
+        <th>Datum</th>
+        <th>Aktionen</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let workshop of workshops">
+        <td>{{ workshop.title }}</td>
+        <td>{{ workshop.location }}</td>
+        <td>{{ workshop.date }}</td>
+        <td>
+          <button (click)="deleteWorkshop(workshop.id)">Löschen</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p *ngIf="!loading && workshops.length === 0">Keine Workshops verfügbar.</p>
+</div>

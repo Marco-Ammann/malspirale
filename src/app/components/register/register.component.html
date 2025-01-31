@@ -1,0 +1,22 @@
+<div class="register-container">
+    <h2>Registrieren</h2>
+    <form (submit)="register(); $event.preventDefault()">
+      <input
+        type="email"
+        [(ngModel)]="email"
+        name="email"
+        placeholder="Email"
+        required
+      />
+      <input
+        type="password"
+        [(ngModel)]="password"
+        name="password"
+        placeholder="Passwort"
+        required
+      />
+      <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+      <button type="submit">Registrieren</button>
+    </form>
+  </div>
+  

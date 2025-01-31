@@ -20,3 +20,9 @@ export interface GalleryImage {
   description: string;
   imageUrl: string;
 }
+
+export interface User {
+  id: string;
+  email: string;
+  role: string;
+}

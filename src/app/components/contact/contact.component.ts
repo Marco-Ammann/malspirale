@@ -19,7 +19,7 @@ export class ContactComponent {
     message: '',
   };
 
-  private sendMailUrl = 'https://malspirale.ch/api/sendmail.php'; // Korrigiere die Domain
+  private sendMailUrl = 'https://malspirale.ch/api/sendmail.php';
 
   constructor(private http: HttpClient) {}
 

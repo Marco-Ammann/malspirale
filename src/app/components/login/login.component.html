@@ -1,0 +1,21 @@
+<div class="auth-container">
+    <h2>Login</h2>
+    <form (submit)="login(); $event.preventDefault()">
+      <input
+        type="email"
+        [(ngModel)]="email"
+        name="email"
+        placeholder="Email"
+        required
+      />
+      <input
+        type="password"
+        [(ngModel)]="password"
+        name="password"
+        placeholder="Passwort"
+        required
+      />
+      <button type="submit">Einloggen</button>
+    </form>
+  </div>
+  

@@ -1,0 +1,33 @@
+@use 'variables' as vars;
+@use 'mixins' as mix;
+
+.admin-workshops {
+  @include mix.standard-box;
+  text-align: center;
+
+  h2 {
+    color: vars.$primary-color;
+    font-size: 2rem;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: vars.$padding-medium;
+
+    th, td {
+      padding: vars.$padding-small;
+      border: 1px solid vars.$primary-color;
+    }
+
+    th {
+      background: vars.$secondary-color;
+      color: white;
+    }
+  }
+
+  button {
+    @include mix.button-style;
+    background-color: red;
+  }
+}

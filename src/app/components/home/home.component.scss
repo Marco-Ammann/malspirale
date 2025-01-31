@@ -2,6 +2,12 @@
 @use 'variables' as vars;
 
 /* Hero-Bereich */
+.test {
+  font-size: 2.5rem;
+  font-family: vars.$font-family;
+  margin-bottom: 1rem;
+}
+
 .hero {
   position: relative;
   text-align: center;
@@ -12,6 +18,7 @@
     max-height: 60vh;
     object-fit: cover;
   }
+
 
   .hero-text {
     position: absolute;
