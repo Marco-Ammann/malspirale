@@ -1,5 +1,6 @@
-// src/assets/styles/_variables.scss
+@use 'sass:color';
 
+// Farben
 $primary-color: #a6c8b7;
 $secondary-color: #d8bfd8;
 $accent-color: #ffd1dc;
@@ -17,3 +18,9 @@ $font-family: 'Arial', sans-serif;
 // Größen
 $header-height: 5rem;
 $footer-height: 4rem;
+
+// Schatten
+$box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+// Abgerundete Ecken
+$border-radius: 8px;

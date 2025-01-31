@@ -9,32 +9,44 @@
   align-items: center;
 }
 
+// Box-Shadow für Karten & Container
 @mixin box-shadow($color: rgba(0, 0, 0, 0.2), $blur: 10px, $spread: 0px) {
   box-shadow: 0px $spread $blur $color;
 }
 
+// Responsive Schriftgrößen
 @mixin responsive-text($min-size, $max-size) {
   font-size: calc(#{$min-size} + (#{$max-size} - #{$min-size}) * ((100vw - 320px) / (1920 - 320)));
 }
 
-// Typografische Mixins
+// Mixins für Typografie
 @mixin text-style($color, $size, $weight: normal) {
   color: $color;
   font-size: $size;
   font-weight: $weight;
 }
 
+// Button-Stile
 @mixin button-style($bg-color, $text-color) {
   background-color: $bg-color;
   color: $text-color;
   border: none;
-  border-radius: 4px;
+  border-radius: vars.$border-radius;
   padding: vars.$padding-medium;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.3s ease;
 
   &:hover {
-    // alt: darken($bg-color, 10%)
     background-color: color.adjust($bg-color, $lightness: -10%);
+    transform: scale(1.05);
   }
+}
+
+
+// Container-Style für Boxen
+@mixin container-box {
+  background-color: vars.$background-color;
+  padding: vars.$padding-medium;
+  border-radius: vars.$border-radius;
+  @include box-shadow;
 }

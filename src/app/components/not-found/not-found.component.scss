@@ -1,7 +1,32 @@
 @use 'sass:color';
 @use 'variables' as vars;
+@use 'mixins' as mix;
 
-h1 {
+
+.not-found-container {
+  @include mix.flex-center;
+  flex-direction: column;
+  padding: vars.$padding-large;
   text-align: center;
-  color: vars.$text-color;
+
+  h1 {
+    @include mix.text-style(vars.$primary-color, 3rem, bold);
+    margin-bottom: vars.$padding-medium;
+  }
+
+  p {
+    @include mix.text-style(vars.$text-color, 1.2rem);
+  }
+
+  a {
+    display: inline-block;
+    margin-top: vars.$padding-medium;
+    text-decoration: none;
+    color: vars.$secondary-color;
+    font-size: 1.2rem;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 }

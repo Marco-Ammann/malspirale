@@ -1,0 +1,35 @@
+@use 'sass:color';
+@use 'variables' as vars;
+@use 'mixins' as mix;
+
+.register-container {
+    @include mix.flex-center;
+    flex-direction: column;
+    padding: vars.$padding-medium;
+    background-color: vars.$background-color;
+    border: 1px solid vars.$primary-color;
+    border-radius: vars.$border-radius;
+    @include mix.box-shadow;
+  
+    h2 {
+      @include mix.text-style(vars.$primary-color, 2rem, bold);
+      margin-bottom: vars.$padding-medium;
+    }
+  
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: vars.$padding-small;
+  
+      input {
+        padding: vars.$padding-small;
+        border: 1px solid vars.$secondary-color;
+        border-radius: vars.$border-radius;
+        font-size: 1rem;
+      }
+  
+      button {
+        @include mix.button-style(vars.$primary-color, #fff);
+      }
+    }
+  }
