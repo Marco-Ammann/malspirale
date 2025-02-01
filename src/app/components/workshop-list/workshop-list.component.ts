@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-workshop-list',
+  standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './workshop-list.component.html',
   styleUrls: ['./workshop-list.component.scss'],

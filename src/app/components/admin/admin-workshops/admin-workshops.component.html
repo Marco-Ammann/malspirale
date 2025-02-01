@@ -2,39 +2,44 @@
   <h1>Workshops verwalten</h1>
 
   <div class="workshop-form">
-    <label>Titel:</label>
-    <input type="text" [(ngModel)]="title" />
-  
-    <label>Beschreibung:</label>
-    <textarea [(ngModel)]="description"></textarea>
-  
-    <label>Datum:</label>
-    <input type="date" [(ngModel)]="date" />
-  
-    <label>Maximale Teilnehmer:</label>
-    <input type="number" [(ngModel)]="maxParticipants" />
-  
-    <label>Freie Plätze:</label>
-    <input type="number" [(ngModel)]="availableSlots" />
-  
-    <label>Ort:</label>
-    <input type="text" [(ngModel)]="location" />
-  
-    <button (click)="createWorkshop()">
+    <label for="title">Titel:</label>
+    <input id="title" type="text" [(ngModel)]="title" placeholder="Workshop-Titel eingeben..." />
+
+    <label for="description">Beschreibung:</label>
+    <textarea id="description" [(ngModel)]="description" placeholder="Beschreibung hinzufügen..."></textarea>
+
+    <label for="date">Datum:</label>
+    <input id="date" type="date" [(ngModel)]="date" />
+
+    <label for="maxParticipants">Maximale Teilnehmer:</label>
+    <input id="maxParticipants" type="number" [(ngModel)]="maxParticipants" min="1" />
+
+    <label for="availableSlots">Freie Plätze:</label>
+    <input id="availableSlots" type="number" [(ngModel)]="availableSlots" min="0" />
+
+    <label for="location">Ort:</label>
+    <input id="location" type="text" [(ngModel)]="location" placeholder="Ort angeben..." />
+
+    <button class="btn btn-primary" (click)="createWorkshop()">
       {{ selectedWorkshopId ? 'Workshop aktualisieren' : 'Workshop erstellen' }}
     </button>
-    <button *ngIf="selectedWorkshopId" (click)="resetForm()">Abbrechen</button>
+    <button class="btn btn-secondary" *ngIf="selectedWorkshopId" (click)="resetForm()">Abbrechen</button>
   </div>
 
   <h2>Bestehende Workshops</h2>
   <div class="workshop-list">
     <div *ngFor="let workshop of workshops" class="workshop-card">
-      <h3>{{ workshop.title }}</h3>
-      <p><strong>Datum:</strong> {{ workshop.date }}</p>
-      <p>{{ workshop.description }}</p>
-
-      <button (click)="editWorkshop(workshop)">Bearbeiten</button>
-      <button class="delete" (click)="deleteWorkshop(workshop.id)">Löschen</button>
+      <div class="workshop-card-header">
+        <h3>{{ workshop.title }}</h3>
+        <p><strong>📅 Datum:</strong> {{ workshop.date }}</p>
+      </div>
+      <div class="workshop-card-body">
+        <p>{{ workshop.description }}</p>
+      </div>
+      <div class="workshop-card-footer">
+        <button class="btn btn-edit" (click)="editWorkshop(workshop)">Bearbeiten</button>
+        <button class="btn btn-delete" (click)="deleteWorkshop(workshop.id)">Löschen</button>
+      </div>
     </div>
   </div>
 </div>

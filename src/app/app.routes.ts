@@ -1,9 +1,15 @@
 import { Routes } from '@angular/router';
 import { AuthGuard } from './core/guards/auth.guard';
 import { AdminGuard } from './core/guards/admin-guard.guard';
+import { DatenschutzComponent } from './components/datenschutz/datenschutz.component';
+import { ImpressumComponent } from './components/impressum/impressum.component';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'home' },
+  { path: 'datenschutz', component: DatenschutzComponent },
+  { path: 'impressum', component: ImpressumComponent },
+
+  // ** Öffentliche Seiten **
   {
     path: 'home',
     loadComponent: () =>
@@ -12,101 +18,89 @@ export const routes: Routes = [
   {
     path: 'gallery',
     loadComponent: () =>
-      import('./components/gallery/gallery.component').then(
-        (m) => m.GalleryComponent
-      ),
+      import('./components/gallery/gallery.component').then((m) => m.GalleryComponent),
   },
   {
     path: 'workshops',
     loadComponent: () =>
-      import('./components/workshop-list/workshop-list.component').then(
-        (m) => m.WorkshopListComponent
-      ),
+      import('./components/workshop-list/workshop-list.component').then((m) => m.WorkshopListComponent),
   },
   {
     path: 'workshops/:id',
     loadComponent: () =>
-      import(
-        './components/workshop-list/workshop-detail/workshop-detail.component'
-      ).then((m) => m.WorkshopDetailComponent),
+      import('./components/workshop-list/workshop-detail/workshop-detail.component').then((m) => m.WorkshopDetailComponent),
   },
   {
     path: 'contact',
     loadComponent: () =>
-      import('./components/contact/contact.component').then(
-        (m) => m.ContactComponent
-      ),
+      import('./components/contact/contact.component').then((m) => m.ContactComponent),
   },
   {
     path: 'about',
     loadComponent: () =>
-      import('./components/about/about.component').then(
-        (m) => m.AboutComponent
-      ),
+      import('./components/about/about.component').then((m) => m.AboutComponent),
   },
+
+  // ** Philosophie-Bereich **
   {
     path: 'philosophie',
+    loadComponent: () =>
+      import('./components/philosophie/philosophie.component').then((m) => m.PhilosophieComponent),
     children: [
+      { path: '', pathMatch: 'full', redirectTo: 'farben' }, // Standardseite setzen
       {
         path: 'farben',
         loadComponent: () =>
-          import('./components/philosophie/farben/farben.component').then(
-            (m) => m.FarbenComponent
-          ),
+          import('./components/philosophie/farben/farben.component').then((m) => m.FarbenComponent),
       },
       {
         path: 'geschichten',
         loadComponent: () =>
-          import(
-            './components/philosophie/geschichten/geschichten.component'
-          ).then((m) => m.GeschichtenComponent),
+          import('./components/philosophie/geschichten/geschichten.component').then((m) => m.GeschichtenComponent),
       },
       {
         path: 'resonance-farben',
         loadComponent: () =>
-          import(
-            './components/philosophie/resonance-colors/resonance-colors.component'
-          ).then((m) => m.ResonanceColorsComponent),
+          import('./components/philosophie/resonance-colors/resonance-colors.component').then((m) => m.ResonanceColorsComponent),
       },
       {
         path: 'malgeschichten',
         loadComponent: () =>
-          import(
-            './components/philosophie/malgeschichten/malgeschichten.component'
-          ).then((m) => m.MalgeschichtenComponent),
+          import('./components/philosophie/malgeschichten/malgeschichten.component').then((m) => m.MalgeschichtenComponent),
       },
     ],
   },
+
+  // ** Auth & Registrierung **
   {
     path: 'login',
     loadComponent: () =>
-      import('./components/login/login.component').then(
-        (m) => m.LoginComponent
-      ),
+      import('./components/login/login.component').then((m) => m.LoginComponent),
   },
   {
     path: 'register',
     loadComponent: () =>
-      import('./components/register/register.component').then(
-        (m) => m.RegisterComponent
-      ),
+      import('./components/register/register.component').then((m) => m.RegisterComponent),
   },
   {
     path: 'user-dashboard',
     loadComponent: () =>
-      import('./components/user-dashboard/user-dashboard.component').then(
-        (m) => m.UserDashboardComponent
-      ),
-    canActivate: [AuthGuard],
+      import('./components/user-dashboard/user-dashboard.component').then((m) => m.UserDashboardComponent),
+    canActivate: [AuthGuard], // Schutz nur für eingeloggte Benutzer
   },
+
+  // ** Admin-Bereich (Nur für Admins) **
   {
     path: 'admin',
     loadComponent: () =>
-      import('./components/admin/admin.component').then(
-        (m) => m.AdminComponent
-      ),
+      import('./components/admin/admin.component').then((m) => m.AdminComponent),
     canActivate: [AdminGuard],
     children: [
+      {
+        path: '', // Standard-Redirect für "/admin" ohne weitere Angabe
+        pathMatch: 'full',
+        redirectTo: 'users', // Setze einen sinnvollen Standard, z. B. "users"
+      },
       {
         path: 'users',
         loadComponent: () =>
@@ -124,24 +118,19 @@ export const routes: Routes = [
       {
         path: 'content',
         loadComponent: () =>
-          import('./components/admin/admin-content/admin-content.component').then(
-            (m) => m.AdminContentComponent
-          ),
+          import(
+            './components/admin/admin-content/admin-content.component'
+          ).then((m) => m.AdminContentComponent),
       },
       {
         path: 'reports',
         loadComponent: () =>
-          import('./components/admin/admin-reports/admin-reports.component').then(
-            (m) => m.AdminReportsComponent
-          ),
+          import(
+            './components/admin/admin-reports/admin-reports.component'
+          ).then((m) => m.AdminReportsComponent),
       },
+      // Wildcard für falsche Unterseiten in /admin
+      { path: '**', redirectTo: 'users', pathMatch: 'full' },
     ],
-  },
-  {
-    path: '**',
-    loadComponent: () =>
-      import('./components/not-found/not-found.component').then(
-        (m) => m.NotFoundComponent
-      ),
   },
 ];

@@ -1,6 +1,17 @@
 <div class="gallery-page">
   <h2>Galerie</h2>
-  <div class="gallery-grid">
+
+  <!-- Ladeanzeige -->
+  <div *ngIf="loading" class="loading">
+    <p>Lade Bilder...</p>
+  </div>
+
+  <!-- Fehlermeldung -->
+  <div *ngIf="errorMessage" class="error-message">
+    <p>{{ errorMessage }}</p>
+  </div>
+
+  <div class="gallery-grid" *ngIf="!loading && artworks.length > 0">
     <div *ngFor="let artwork of artworks" class="artwork">
       <div class="image-container">
         <img [src]="artwork.src" [alt]="artwork.alt" />
@@ -9,5 +20,10 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- Fallback für leere Galerie -->
+  <div *ngIf="!loading && artworks.length === 0" class="no-artworks">
+    <p>Es sind derzeit keine Bilder verfügbar.</p>
   </div>
 </div>

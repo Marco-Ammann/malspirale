@@ -4,7 +4,7 @@
     <input
       type="text"
       [(ngModel)]="searchTerm"
-      placeholder="Workshop suchen..."
+      placeholder="🔍 Workshop suchen..."
       class="search-box"
     />
   </div>
@@ -16,15 +16,21 @@
       class="workshop-card"
       (click)="navigateToWorkshop(workshop)"
     >
-      <h3>{{ workshop.title }}</h3>
-      <p><strong>Datum:</strong> {{ workshop.date }}</p>
-      <p><strong>Freie Plätze:</strong> {{ workshop.availableSlots }}</p>
-      <p>{{ workshop.description }}</p>
+      <div class="workshop-image">
+        <img [src]="workshop.image || 'assets/images/default-workshop.webp'" alt="Workshop Bild">
+      </div>
+      <div class="workshop-info">
+        <h3>{{ workshop.title }}</h3>
+        <p><strong>📅 Datum:</strong> {{ workshop.date }}</p>
+        <p><strong>🪑 Freie Plätze:</strong> {{ workshop.availableSlots }}</p>
+        <p>{{ workshop.description }}</p>
+        <button class="btn btn-primary">Mehr erfahren</button>
+      </div>
     </div>
   </div>
 
   <!-- Fallback, wenn keine Workshops vorhanden -->
   <div class="no-workshops" *ngIf="workshops.length === 0">
-    <p>Keine Workshops gefunden.</p>  
+    <p>🚫 Keine Workshops gefunden.</p>  
   </div>
 </div>

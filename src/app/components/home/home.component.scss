@@ -1,194 +1,261 @@
-@use 'sass:color';
 @use 'variables' as vars;
+@use 'mixins' as mix;
 
-/* Hero-Bereich */
-.test {
-  font-size: 2.5rem;
-  font-family: vars.$font-family;
-  margin-bottom: 1rem;
-}
-
+// ** HERO SECTION **
 .hero {
-  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
-  color: #fff;
-
-  .hero-image {
-    width: 100%;
-    max-height: 60vh;
-    object-fit: cover;
-  }
-
-
-  .hero-text {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: rgba(0, 0, 0, 0.6);
-    padding: 2rem;
-    border-radius: 10px;
+  background: url('../../../assets/images/hero10.webp') center/cover no-repeat;
+  color: vars.$text-color;
+  height: 75vh;
+  padding: vars.$padding-large;
+  
+  .hero-content {
     max-width: 600px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: vars.$padding-large;
+    border-radius: vars.$border-radius;
+    box-shadow: vars.$shadow;
     text-align: center;
-
+    
     h1 {
-      font-size: 2.5rem;
-      margin-bottom: 1rem;
-      font-family: vars.$font-family;
+      font-size: vars.$font-size-xlarge;
+      font-weight: bold;
+      margin-bottom: vars.$padding-small;
     }
 
     p {
-      font-size: 1.1rem;
-      line-height: 1.5;
-      margin-bottom: 1.5rem;
-      font-family: vars.$font-family;
+      font-size: vars.$font-size-large;
+      margin-bottom: vars.$padding-medium;
+      color: darken(vars.$text-color, 10%);
     }
 
-    .btn-primary {
-      background-color: vars.$primary-color;
-      color: #fff;
-      padding: 0.75rem 1.5rem;
-      text-decoration: none;
-      border-radius: 5px;
-      font-size: 1rem;
-      cursor: pointer;
-      font-family: vars.$font-family;
-      transition: background-color 0.3s ease, transform 0.3s ease;
+    .btn {
+      font-size: vars.$font-size-xlarge;
+      padding: vars.$padding-large vars.$padding-extra-large;
+      box-shadow: vars.$hover-shadow;
+    }
+  }
+}
 
-      &:hover {
-        background-color: color.adjust(vars.$primary-color, $lightness: 10%);
-        transform: scale(1.05);
+// ** ABOUT SECTION **
+.about {
+  background: vars.$background-color;
+  padding: vars.$padding-large;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  text-align: left;
+
+  .about-content {
+    display: flex;
+    gap: vars.$padding-large;
+    max-width: 1100px;
+    width: 100%;
+    align-items: center;
+    
+    .about-text {
+      flex: 1;
+      max-width: 500px;
+    }
+
+    .about-image {
+      flex: 1;
+      max-width: 400px;
+
+      img {
+        width: 100%;
+        max-width: 400px;
+        border-radius: vars.$border-radius;
+        box-shadow: vars.$shadow;
       }
     }
   }
 }
 
-/* Über Isabel */
-.about,
-.gallery-preview {
-  background-color: #f7f4f1;
-  padding: 2rem 0;
+// ** WORKSHOP SECTION **
+.workshops {
+  text-align: center;
+  padding: vars.$padding-large;
+  background: vars.$secondary-color;
+  border-radius: vars.$border-radius-large;
 
-  .content-wrapper {
-    max-width: 800px;
+  h2 {
+    font-size: vars.$font-size-large;
+    margin-bottom: vars.$padding-small;
+  }
+
+  .workshop-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: vars.$padding-medium;
+    justify-content: center;
+  }
+
+  .workshop-card {
+    background: white;
+    padding: vars.$padding-medium;
+    border-radius: vars.$border-radius-large;
+    box-shadow: vars.$shadow;
+    max-width: 350px;
+    text-align: center;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, background 0.3s ease-in-out;
+
+    &:hover {
+      cursor: pointer;
+      box-shadow: vars.$hover-shadow;
+    }
+  
+
+    img {
+      width: 100%;
+      border-radius: vars.$border-radius;
+    }
+
+    .workshop-info {
+      padding: vars.$padding-small;
+    }
+
+    .btn {
+      font-size: vars.$font-size-large;
+      padding: vars.$padding-medium vars.$padding-large;
+    }
+  }
+}
+
+// ** GALERIE SECTION **
+.gallery-preview {
+  padding: vars.$padding-large;
+  text-align: center;
+  background: vars.$background-color;
+
+  h2 {
+    font-size: vars.$font-size-large;
+    margin-bottom: vars.$padding-medium;
+  }
+
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: vars.$padding-medium;
+    justify-content: center;
+    max-width: 1000px;
     margin: auto;
-    text-align: center;
+    justify-items: center;
 
-    h2 {
-      font-size: 2rem;
-      margin-bottom: 1rem;
-      font-family: vars.$font-family;
-      color: color.adjust(vars.$text-color, $lightness: -10%);
-    }
-
-    p {
-      font-size: 1.1rem;
-      line-height: 1.5;
-      margin-bottom: 1.5rem;
-      font-family: vars.$font-family;
-      color: vars.$text-color;
-    }
-
-    .btn-secondary {
-      background-color: vars.$secondary-color;
-      color: #fff;
-      padding: 0.5rem 1rem;
-      text-decoration: none;
-      border-radius: 5px;
-      font-size: 1rem;
-      cursor: pointer;
-      font-family: vars.$font-family;
-      transition: background-color 0.3s ease, transform 0.3s ease;
+    .gallery-item {
+      width: 200px;
+      height: 200px;
+      overflow: hidden;
+      border-radius: vars.$border-radius;
+      box-shadow: vars.$shadow;
+      transition: transform 0.3s ease-in-out;
 
       &:hover {
-        background-color: color.adjust(vars.$secondary-color, $lightness: 10%);
         transform: scale(1.05);
       }
-    }
-  }
-}
 
-/* Galerie-Vorschau */
-.gallery-preview {
-  .content-wrapper {
-    .artworks {
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-      flex-wrap: wrap;
-
-      .artwork {
-        width: 200px;
-        height: 200px;
-        position: relative;
-
-        .image-container {
-          position: relative;
-          width: 100%;
-          height: 100%;
-          overflow: hidden;
-          border-radius: 10px;
-
-          img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.3s ease-in-out;
-          }
-
-          &:hover img {
-            transform: scale(1.05);
-          }
-        }
-      }
-    }
-
-    .gallery-button {
-      margin-top: 1.5rem;
-
-      .btn-secondary {
-        background-color: vars.$secondary-color;
-        color: #fff;
-        padding: 0.5rem 1rem;
-        text-decoration: none;
-        border-radius: 5px;
-        font-size: 1rem;
-        cursor: pointer;
-        font-family: vars.$font-family;
-        transition: background-color 0.3s ease, transform 0.3s ease;
-
-        &:hover {
-          background-color: color.adjust(vars.$secondary-color, $lightness: 10%);
-          transform: scale(1.05);
-        }
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
       }
     }
   }
+
+  .gallery-btn {
+    margin-top: vars.$padding-medium;
+    font-size: vars.$font-size-large;
+    padding: vars.$padding-medium vars.$padding-large;
+  }
 }
 
-/* Responsive-Anpassungen */
+// ** BUTTON STYLE UPDATES **
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: vars.$font-size-large; // Größere Schrift
+  font-weight: bold;
+  padding: vars.$padding-medium vars.$padding-large; // Größere Buttons
+  border-radius: vars.$border-radius-large;
+  box-shadow: vars.$hover-shadow;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out, background-color 0.3s ease-in-out;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.btn-primary {
+  @include mix.button-style(vars.$primary-color, white);
+}
+
+.btn-secondary {
+  @include mix.button-style(vars.$secondary-color, white);
+}
+
+// ** RESPONSIVE DESIGN **
 @media (max-width: 768px) {
-  .hero-text {
-    padding: 1rem;
+  .hero {
+    height: auto;
+    padding: vars.$padding-medium;
 
-    h1 {
-      font-size: 1.8rem;
-    }
+    .hero-content {
+      max-width: 100%;
 
-    p {
-      font-size: 1rem;
+      h1 {
+        font-size: vars.$font-size-large;
+      }
+
+      p {
+        font-size: vars.$font-size-base;
+      }
     }
   }
 
-  .gallery-preview .artworks .artwork {
-    width: 150px;
-    height: 150px;
+  .about .about-content {
+    flex-direction: column;
+    text-align: center;
+    gap: vars.$padding-medium;
+
+    .about-text,
+    .about-image {
+      max-width: 90%;
+    }
+  }
+
+  .gallery-grid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
   }
 }
 
-@media (max-width: 480px) {
-  .gallery-preview .artworks .artwork {
-    width: 120px;
-    height: 120px;
+@media (max-width: 320px) {
+  h1 {
+    font-size: vars.$font-size-base;
+  }
+
+  .btn {
+    font-size: vars.$font-size-small;
+    padding: vars.$padding-small vars.$padding-medium;
+  }
+
+  .workshop-card {
+    padding: vars.$padding-extra-small;
+  }
+
+  .gallery-grid {
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    gap: vars.$padding-extra-small;
+
+    .gallery-item {
+      width: 80px;
+      height: 80px;
+    }
   }
 }

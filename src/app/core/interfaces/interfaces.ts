@@ -7,12 +7,13 @@ export interface State {
 export interface Workshop {
   id: string;
   title: string;
+  description: string;
   date: string;
   maxParticipants: number;
   availableSlots: number;
-  description: string;
   location: string;
-  participants?: string[];
+  participants: string[];
+  image?: string; // 🔹 Optionales Bildfeld hinzugefügt
 }
 
 export interface GalleryImage {

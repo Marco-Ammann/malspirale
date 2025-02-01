@@ -5,64 +5,133 @@
 .admin-workshops-container {
   text-align: center;
   padding: vars.$padding-large;
+  max-width: 900px;
+  margin: auto;
 
   h1 {
     @include mix.text-style(vars.$primary-color, 2rem, bold);
     margin-bottom: vars.$padding-medium;
   }
 
+  /* Workshop-Formular */
   .workshop-form {
     display: flex;
     flex-direction: column;
     gap: vars.$padding-small;
-    max-width: 500px;
-    margin: auto;
-    padding: vars.$padding-medium;
+    padding: vars.$padding-large;
     background: vars.$background-color;
     border-radius: vars.$border-radius;
     box-shadow: vars.$shadow;
+    text-align: left;
 
     label {
       font-weight: bold;
-      text-align: left;
-      width: 100%;
       color: vars.$text-color;
     }
 
     input, textarea {
       width: 100%;
       padding: vars.$padding-small;
-      border: 1px solid vars.$secondary-color;
+      border: 2px solid vars.$secondary-color;
       border-radius: vars.$border-radius;
       font-size: vars.$font-size-base;
+      transition: border 0.3s ease, box-shadow 0.3s ease;
+
+      &:focus {
+        border-color: color.adjust(vars.$secondary-color, $lightness: -10%);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      }
     }
 
-    button {
-      @include mix.button-style(vars.$primary-color, #fff);
-      margin-right: vars.$padding-small;
-      font-size: vars.$font-size-small;
-      padding: 5px 10px;
-      border-radius: vars.$border-radius-small;
+    .btn {
+      width: 100%;
+      padding: vars.$padding-small;
+      font-size: vars.$font-size-large;
+      border-radius: vars.$border-radius;
+      text-align: center;
+      cursor: pointer;
     }
   }
 
+  /* Workshop-Liste */
   .workshop-list {
     display: flex;
     flex-wrap: wrap;
     gap: vars.$padding-medium;
     justify-content: center;
     margin-top: vars.$padding-large;
-    
-    button {
-      @include mix.button-style(vars.$primary-color, #fff);
-      margin-right: vars.$padding-small;
-      font-size: vars.$font-size-small;
-      padding: 5px 10px;
-      border-radius: vars.$border-radius-small;
+  }
+
+  /* Einzelne Workshop-Karte */
+  .workshop-card {
+    background: white;
+    border-radius: vars.$border-radius-large;
+    box-shadow: vars.$shadow;
+    padding: vars.$padding-medium;
+    text-align: center;
+    max-width: 400px;
+    transition: transform 0.2s, box-shadow 0.3s ease-in-out;
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: vars.$hover-shadow;
     }
 
-    .delete {
-      background-color: #ff4d4d;
+    .workshop-card-header {
+      h3 {
+        font-size: vars.$font-size-large;
+        margin-bottom: vars.$padding-small;
+      }
+      p {
+        font-size: vars.$font-size-base;
+        color: vars.$text-color;
+      }
     }
+
+    .workshop-card-footer {
+      display: flex;
+      justify-content: space-between;
+      margin-top: vars.$padding-small;
+      gap: vars.$padding-small;
+
+      .btn {
+        padding: vars.$padding-small vars.$padding-medium;
+        font-size: vars.$font-size-base;
+        border-radius: vars.$border-radius;
+        cursor: pointer;
+      }
+
+      .btn-edit {
+        background: vars.$primary-color;
+        color: white;
+      }
+
+      .btn-delete {
+        background: #ff4d4d;
+        color: white;
+      }
+    }
+  }
+}
+
+/* Responsive-Anpassungen */
+@media (max-width: 768px) {
+  .workshop-list {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .workshop-card {
+    width: 90%;
+  }
+}
+
+@media (max-width: 480px) {
+  .workshop-form {
+    padding: vars.$padding-medium;
+  }
+
+  .btn {
+    font-size: vars.$font-size-base;
   }
 }

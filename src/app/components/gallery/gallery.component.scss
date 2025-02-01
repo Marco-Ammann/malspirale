@@ -1,38 +1,46 @@
 @use 'sass:color';
 @use 'variables' as vars;
+@use 'mixins' as mix;
 
 .gallery-page {
   max-width: 1200px;
-  margin: 2rem auto;
+  margin: 3rem auto;
   padding: vars.$padding-medium;
   background-color: vars.$background-color;
-  border: 1px solid vars.$secondary-color;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: vars.$border-radius-large;
+  box-shadow: vars.$shadow;
+  text-align: center;
 
   h2 {
-    font-size: 2rem;
-    margin-bottom: vars.$padding-small;
-    color: color.adjust(vars.$text-color, $lightness: -10%);
-    font-family: vars.$font-family;
-    text-align: center;
+    font-size: vars.$font-size-xlarge;
+    margin-bottom: vars.$padding-medium;
+    color: vars.$text-color;
+  }
+
+  .loading,
+  .error-message,
+  .no-artworks {
+    font-size: vars.$font-size-large;
+    color: vars.$text-color;
+    font-weight: bold;
+    padding: vars.$padding-medium;
   }
 
   .gallery-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1rem;
+    gap: vars.$padding-medium;
   }
 
   .artwork {
     position: relative;
     overflow: hidden;
-    border-radius: 10px;
+    border-radius: vars.$border-radius;
 
     .image-container {
       position: relative;
       width: 100%;
-      padding-top: 75%; /* 4:3 Aspect Ratio */
+      padding-top: 75%;
       background-color: #e0e0e0;
 
       img {
@@ -52,17 +60,17 @@
       .overlay {
         position: absolute;
         bottom: 0;
-        background: rgba(0, 0, 0, 0.5); /* Black see-through */
+        background: rgba(0, 0, 0, 0.5);
         color: #fff;
         width: 100%;
         transform: translateY(100%);
         transition: transform 0.3s ease-in-out;
-        padding: 0.5rem;
+        padding: vars.$padding-small;
 
         .text {
           text-align: center;
-          font-size: 1rem;
-          font-family: vars.$font-family;
+          font-size: vars.$font-size-base;
+          font-weight: bold;
         }
       }
 
@@ -70,5 +78,18 @@
         transform: translateY(0);
       }
     }
+  }
+}
+
+/* 📱 Responsive Anpassungen */
+@media (max-width: vars.$tablet) {
+  .gallery-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+}
+
+@media (max-width: vars.$mobile) {
+  .gallery-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   }
 }

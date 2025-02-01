@@ -1,5 +1,6 @@
 <div class="contact-page">
   <h2>Kontakt</h2>
+  
   <form #contactForm="ngForm" (ngSubmit)="onSubmit(contactForm)">
     <div class="form-group">
       <label for="name">Name *</label>
@@ -50,7 +51,7 @@
       ></textarea>
     </div>
 
-    <button type="submit" class="btn btn-primary" [disabled]="!contactForm.form.valid">
+    <button type="submit" class="btn-primary" [disabled]="!contactForm.form.valid">
       Nachricht senden
     </button>
   </form>

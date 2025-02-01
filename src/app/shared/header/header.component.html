@@ -1,5 +1,6 @@
 <header class="app-header">
   <h1>Malspirale</h1>
+
   <nav>
     <a routerLink="/home" routerLinkActive="active">Home</a>
     <a routerLink="/gallery" routerLinkActive="active">Galerie</a>
@@ -7,14 +8,25 @@
     <a routerLink="/contact" routerLinkActive="active">Kontakt</a>
     <a routerLink="/about" routerLinkActive="active">Über mich</a>
 
+    <!-- Dropdown für Philosophie -->
+    <div class="dropdown" [class.open]="dropdownOpen" (click)="toggleDropdown($event)">
+      <span class="dropdown-toggle">Philosophie ▼</span>
+      <div class="dropdown-menu">
+        <a routerLink="/philosophie/farben" routerLinkActive="active" (click)="closeDropdowns()">Farben</a>
+        <a routerLink="/philosophie/geschichten" routerLinkActive="active" (click)="closeDropdowns()">Geschichten</a>
+        <a routerLink="/philosophie/resonance-farben" routerLinkActive="active" (click)="closeDropdowns()">Resonance Colors</a>
+        <a routerLink="/philosophie/malgeschichten" routerLinkActive="active" (click)="closeDropdowns()">Malgeschichten</a>
+      </div>
+    </div>
+
     <!-- Benutzer-Optionen -->
     <div class="user-options" *ngIf="isLoggedIn">
-      <div class="dropdown">
-        <a class="dropdown-toggle" tabindex="0">{{ userEmail }}</a>
+      <div class="dropdown" [class.open]="userDropdownOpen" (click)="toggleUserDropdown($event)">
+        <span class="dropdown-toggle">{{ userEmail }} ▼</span>
         <div class="dropdown-menu">
-          <a routerLink="/user-dashboard" routerLinkActive="active">Profil</a>
-          <a *ngIf="isAdmin" routerLink="/admin" routerLinkActive="active">Admin-Bereich</a>
-          <a (click)="logout()">Abmelden</a>
+          <a routerLink="/user-dashboard" routerLinkActive="active" (click)="closeDropdowns()">Profil</a>
+          <a *ngIf="isAdmin" routerLink="/admin" routerLinkActive="active" (click)="closeDropdowns()">Admin-Bereich</a>
+          <a (click)="logout(); closeDropdowns()">Abmelden</a>
         </div>
       </div>
     </div>

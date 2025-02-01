@@ -1,29 +1,66 @@
 @use 'sass:color';
 @use 'variables' as vars;
+@use 'mixins' as mix;
 
 .about-page {
   max-width: 800px;
   margin: 2rem auto;
-  padding: vars.$padding-medium;
+  padding: vars.$padding-large;
   background-color: vars.$background-color;
-  border: 1px solid vars.$primary-color;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: vars.$border-radius;
+  box-shadow: vars.$shadow;
+  text-align: center;
 
-  h2 {
-    font-size: 2rem;
-    margin-bottom: vars.$padding-small;
-    color: color.adjust(vars.$text-color, $lightness: -10%);
-    font-family: vars.$font-family;
-    text-align: center;
+  /* Überschrift */
+  .about-header {
+    h2 {
+      font-size: vars.$font-size-xlarge;
+      margin-bottom: vars.$padding-medium;
+      color: vars.$primary-color;
+      font-family: vars.$font-family;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
   }
 
-  p {
-    font-size: 1.1rem;
-    line-height: 1.6;
-    color: vars.$text-color;
-    font-family: vars.$font-family;
-    margin-bottom: 1rem;
-    text-align: justify;
+  /* Inhalt */
+  .about-content {
+    p {
+      font-size: vars.$font-size-large;
+      line-height: 1.8;
+      color: vars.$text-color;
+      font-family: vars.$font-family;
+      margin-bottom: vars.$padding-medium;
+      text-align: justify;
+    }
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .about-page {
+    padding: vars.$padding-medium;
+  }
+
+  .about-header h2 {
+    font-size: vars.$font-size-large;
+  }
+
+  .about-content p {
+    font-size: vars.$font-size-base;
+  }
+}
+
+@media (max-width: 480px) {
+  .about-page {
+    padding: vars.$padding-small;
+  }
+
+  .about-header h2 {
+    font-size: vars.$font-size-base;
+  }
+
+  .about-content p {
+    font-size: vars.$font-size-small;
   }
 }

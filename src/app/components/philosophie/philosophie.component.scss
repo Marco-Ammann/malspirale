@@ -1,4 +1,65 @@
-/* Styles für philosophie */
-.app-philosophie {
-  display: block;
+@use 'sass:color';
+@use 'variables' as vars;
+@use 'mixins' as mix;
+
+.philosophie-page {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: vars.$padding-large;
+  background-color: vars.$background-color;
+  border-radius: vars.$border-radius-large;
+  box-shadow: vars.$shadow;
+  text-align: center;
+
+  h2 {
+    font-size: vars.$font-size-xlarge;
+    color: vars.$text-color;
+    margin-bottom: vars.$padding-medium;
+  }
+
+  // Subnavigation für die Philosophie-Seiten
+  .sub-nav {
+    display: flex;
+    justify-content: center;
+    gap: vars.$padding-medium;
+    margin-bottom: vars.$padding-medium;
+
+    a {
+      text-decoration: none;
+      font-size: vars.$font-size-base;
+      padding: vars.$padding-small vars.$padding-medium;
+      border-radius: vars.$border-radius-small;
+      color: vars.$text-color;
+      background: vars.$primary-color;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+
+      &:hover,
+      &.active {
+        background: color.adjust(vars.$primary-color, $lightness: -10%);
+        color: #fff;
+        transform: scale(1.05);
+      }
+    }
+  }
+
+  // Container für die Inhalte der Unterseiten
+  .philosophie-content {
+    background: white;
+    padding: vars.$padding-medium;
+    border-radius: vars.$border-radius;
+    box-shadow: vars.$hover-shadow;
+    text-align: left;
+  }
+}
+
+/* 📱 Responsive Anpassungen */
+@media (max-width: vars.$tablet) {
+  .sub-nav {
+    flex-direction: column;
+    gap: vars.$padding-small;
+  }
+
+  .philosophie-page {
+    padding: vars.$padding-medium;
+  }
 }

@@ -1,48 +1,68 @@
+<!-- Hero-Bereich -->
 <section class="hero">
-  <img [src]="heroImage" alt="Hero Image" class="hero-image" />
-  <div class="hero-text">
+  <div class="hero-content">
     <h1>Willkommen bei Malspirale</h1>
-    <p>
-      Tauche ein in die Welt der Farben und Formen. Isabel Kunz lädt dich ein,
-      Kunst auf eine neue Weise zu erleben. Lass dich inspirieren und werde
-      selbst kreativ!
-    </p>
-    <a routerLink="/workshops" class="btn btn-primary" aria-label="Unsere Workshops anzeigen">
-      Unsere Workshops
-    </a>
+    <p>Entdecke deine kreative Seite mit Farben, Malgeschichten und inspirierenden Workshops.</p>
+    <button (click)="navigateTo('/workshops')" class="btn btn-primary">
+      🎨 Jetzt entdecken
+    </button>
   </div>
 </section>
 
-<!-- Abschnitt: Über Isabel -->
+<!-- Über Isabel -->
 <section class="about">
-  <div class="content-wrapper">
-    <h2>Über Isabel</h2>
-    <p>
-      Isabel Kunz kombiniert die Farbenlehre mit künstlerischen Techniken, um einzigartige
-      Werke zu schaffen. Ihre Leidenschaft und Kreativität teilt sie in inspirierenden
-      Workshops, die sowohl Anfänger als auch Fortgeschrittene ansprechen.
-    </p>
-    <a routerLink="/about" class="btn btn-secondary" aria-label="Mehr über Isabel erfahren">
-      Mehr über Isabel
-    </a>
+  <div class="about-content">
+    <div class="about-image">
+      <img [src]="'assets/images/isabel.webp'" alt="Isabel Kunz - Künstlerin und Workshop-Leiterin" />
+    </div>
+    <div class="about-text">
+      <h2>Über Isabel Kunz</h2>
+      <p>Mit Leidenschaft für Kunst und Farbenlehre bietet Isabel Kunz einzigartige Workshops an, 
+         die Menschen inspirieren und ihre kreative Seite zum Vorschein bringen.</p>
+      <button (click)="navigateTo('/about')" class="btn btn-secondary">
+        📖 Mehr über Isabel
+      </button>
+    </div>
   </div>
 </section>
 
-<!-- Abschnitt: Galerie-Vorschau -->
-<section class="gallery-preview">
-  <div class="content-wrapper">
-    <h2>Galerie</h2>
-    <div class="artworks">
-      <div *ngFor="let artwork of artworks" class="artwork">
-        <div class="image-container">
-          <img [src]="artwork.src" [alt]="artwork.alt" />
+<!-- Workshop Sektion -->
+<section class="workshops">
+  <h2>Unsere Workshops</h2>
+  <p>Finde den perfekten Workshop für dich – ob Anfänger oder Fortgeschrittene.</p>
+
+  <div *ngIf="workshops.length > 0; else noWorkshops">
+    <div class="workshop-cards">
+      <div *ngFor="let workshop of workshops" class="workshop-card">
+        <img [src]="workshop.image || 'assets/images/default-workshop.webp'" [alt]="workshop.title" />
+        <div class="workshop-info">
+          <h3>{{ workshop.title }}</h3>
+          <p>{{ workshop.description }}</p>
+          <p><strong>Datum:</strong> {{ workshop.date }}</p>
+          <p><strong>Ort:</strong> {{ workshop.location }}</p>
+          <p><strong>Freie Plätze:</strong> {{ workshop.availableSlots }} / {{ workshop.maxParticipants }}</p>
+          <button (click)="navigateTo('/workshops')" class="btn btn-secondary">
+            Mehr erfahren
+          </button>
         </div>
       </div>
     </div>
-    <div class="gallery-button">
-      <a routerLink="/gallery" class="btn btn-secondary" aria-label="Zur Galerie">
-        Zur Galerie
-      </a>
+  </div>
+
+  <ng-template #noWorkshops>
+    <p class="no-workshops">Derzeit sind keine Workshops verfügbar. Schau später wieder vorbei!</p>
+  </ng-template>
+</section>
+
+<!-- Galerie Sektion -->
+<section class="gallery-preview">
+  <h2>Galerie</h2>
+  <div class="gallery-grid">
+    <div *ngFor="let artwork of artworks" class="gallery-item">
+      <img [src]="artwork.src" [alt]="artwork.alt" class="gallery-image" />
     </div>
   </div>
+  <button (click)="navigateTo('/gallery')" class="btn btn-secondary gallery-btn">
+    🖼️ Zur Galerie
+  </button>
 </section>

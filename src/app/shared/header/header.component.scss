@@ -1,3 +1,4 @@
+@use 'sass:color';
 @use 'variables' as vars;
 @use 'mixins' as mix;
 
@@ -5,13 +6,15 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background-color: vars.$primary-color;
   padding: vars.$padding-medium;
-  background: vars.$primary-color;
-  color: white;
+  color: #fff;
   box-shadow: vars.$shadow;
+  position: relative;
 
   h1 {
     font-size: vars.$font-size-large;
+    margin: 0;
   }
 
   nav {
@@ -20,63 +23,126 @@
     gap: vars.$padding-medium;
 
     a {
-      color: white;
+      color: #fff;
       text-decoration: none;
       font-size: vars.$font-size-base;
-      transition: color 0.3s;
+      padding: vars.$padding-small vars.$padding-medium;
+      border-radius: vars.$border-radius-small;
+      transition: background-color 0.3s ease;
 
       &:hover {
-        color: vars.$accent-color;
-      }
-    }
-
-    .dropdown {
-      position: relative;
-      display: inline-block;
-
-      .dropdown-toggle {
-        cursor: pointer;
-      }
-
-      .dropdown-menu {
-        display: none;
-        position: absolute;
-        right: 0;
-        background: vars.$background-color;
-        box-shadow: vars.$shadow;
-        border-radius: vars.$border-radius;
-        overflow: hidden;
-        min-width: 160px;
-        z-index: 10;
-
-        a {
-          display: block;
-          padding: vars.$padding-small;
-          color: vars.$text-color;
-          text-decoration: none;
-          transition: background 0.3s;
-
-          &:hover {
-            background: vars.$hover-color;
-          }
-        }
-      }
-
-      &:hover .dropdown-menu {
-        display: block;
+        background-color: color.adjust(vars.$primary-color, $lightness: -10%);
       }
     }
 
     .login-button {
-      background: vars.$accent-color;
-      padding: vars.$padding-small vars.$padding-medium;
-      border-radius: vars.$border-radius;
-      text-transform: uppercase;
-      font-weight: bold;
+      @include mix.button-style(vars.$accent-color, #fff);
+    }
 
-      &:hover {
-        background: vars.$secondary-color;
+    .dropdown {
+      position: relative;
+
+      .dropdown-toggle {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 5px;
       }
+
+      .dropdown-menu {
+        position: absolute;
+        background: #fff;
+        box-shadow: vars.$shadow;
+        border-radius: vars.$border-radius;
+        padding: vars.$padding-small;
+        top: 100%;
+        left: 0;
+        z-index: 10;
+        min-width: 180px;
+        display: none;
+        opacity: 0;
+        transform: translateY(5px);
+        transition: opacity 0.3s ease, transform 0.3s ease;
+
+        a {
+          display: block;
+          padding: vars.$padding-small vars.$padding-medium;
+          color: vars.$text-color;
+          transition: background-color 0.3s ease;
+
+          &:hover {
+            background-color: vars.$primary-color;
+            color: #fff;
+          }
+        }
+      }
+
+      &.open .dropdown-menu {
+        display: block;
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .user-options {
+      display: flex;
+      align-items: center;
+
+      .dropdown {
+        position: relative;
+        cursor: pointer;
+
+        .dropdown-toggle {
+          font-weight: bold;
+        }
+
+        .dropdown-menu {
+          position: absolute;
+          background: #fff;
+          box-shadow: vars.$shadow;
+          border-radius: vars.$border-radius;
+          padding: vars.$padding-small;
+          top: 100%;
+          right: 0;
+          z-index: 10;
+          min-width: 160px;
+          display: none;
+          opacity: 0;
+          transform: translateY(5px);
+          transition: opacity 0.3s ease, transform 0.3s ease;
+
+          a {
+            display: block;
+            padding: vars.$padding-small vars.$padding-medium;
+            color: vars.$text-color;
+            transition: background-color 0.3s ease;
+
+            &:hover {
+              background-color: vars.$primary-color;
+              color: #fff;
+            }
+          }
+        }
+
+        &.open .dropdown-menu {
+          display: block;
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    }
+  }
+}
+
+/* Responsive Anpassungen */
+@media (max-width: 768px) {
+  .app-header {
+    flex-direction: column;
+    text-align: center;
+
+    nav {
+      flex-direction: column;
+      gap: vars.$padding-small;
     }
   }
 }
