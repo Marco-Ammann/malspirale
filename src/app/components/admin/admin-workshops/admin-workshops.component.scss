@@ -1,3 +1,4 @@
+@use 'sass:color';
 @use 'variables' as vars;
 @use 'mixins' as mix;
 
@@ -38,9 +39,10 @@
 
     button {
       @include mix.button-style(vars.$primary-color, #fff);
-      margin-top: vars.$padding-medium;
-      width: 100%;
-      font-size: vars.$font-size-large;
+      margin-right: vars.$padding-small;
+      font-size: vars.$font-size-small;
+      padding: 5px 10px;
+      border-radius: vars.$border-radius-small;
     }
   }
 
@@ -50,5 +52,17 @@
     gap: vars.$padding-medium;
     justify-content: center;
     margin-top: vars.$padding-large;
+    
+    button {
+      @include mix.button-style(vars.$primary-color, #fff);
+      margin-right: vars.$padding-small;
+      font-size: vars.$font-size-small;
+      padding: 5px 10px;
+      border-radius: vars.$border-radius-small;
+    }
+
+    .delete {
+      background-color: #ff4d4d;
+    }
   }
 }

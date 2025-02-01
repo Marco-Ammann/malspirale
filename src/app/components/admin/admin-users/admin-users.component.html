@@ -5,15 +5,14 @@
       <table *ngIf="users.length > 0; else noUsers">
           <thead>
               <tr>
-                  <th>ID</th>
                   <th>Name</th>
                   <th>Email</th>
+                  <th>Telefonnummer</th>
                   <th>Aktionen</th>
               </tr>
           </thead>
           <tbody>
               <tr *ngFor="let user of users">
-                  <td>{{ user.id }}</td>
                   <td>{{ user.fullName }}</td>
                   <td>{{ user.email }}</td>
                   <td>{{ user.phoneNumber }}</td>
