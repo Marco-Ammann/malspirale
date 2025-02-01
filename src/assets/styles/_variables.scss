@@ -1,14 +1,20 @@
 @use 'sass:color';
 
-// 🎨 **Farben**
-$primary-color: #a6c8b7;
-$secondary-color: #d8bfd8;
-$accent-color: #ffd1dc;
-$background-color: #f7f4f1;
-$text-color: #5a5a5a;
-$hover-color: color.adjust($primary-color, $lightness: -10%);
-$error-color: #ff4d4d;
-$success-color: #4caf50;
+// Farben
+$primary-color: #A6C8B7;
+$secondary-color: #D8BFD8;
+$accent-color: #FFD1DC;
+$text-color: #5A5A5A;
+$link-color: #007BFF; 
+$background-color: #F7F4F1;
+$hover-color: darken($primary-color, 10%);
+$border-radius: 8px;
+$box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+$padding-small: 0.5rem;
+$padding-medium: 1rem;
+$padding-large: 2rem;
+$font-size-base: 1rem;
+$font-size-large: 1.25rem;
 
 // 🔲 **Abstände**
 $padding-extra-small: 4px;

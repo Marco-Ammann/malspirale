@@ -1,6 +1,26 @@
 @use 'sass:color';
 @use 'variables' as vars;
 @use 'mixins' as mix;
+.about {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: vars.$background-color;
+  border-radius: vars.$border-radius;
+  box-shadow: vars.$box-shadow;
+
+  h1 {
+    color: vars.$primary-color;
+    font-size: vars.$font-size-large;
+    margin-bottom: vars.$padding-medium;
+  }
+
+  div {
+    font-size: vars.$font-size-base;
+    line-height: 1.6;
+    color: vars.$text-color;
+  }
+}
 
 .about-page {
   max-width: 800px;

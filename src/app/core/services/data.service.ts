@@ -16,6 +16,7 @@ import {
   query,
   orderBy,
   limit,
+  setDoc,
 } from 'firebase/firestore';
 import { firebaseApp } from '../../../firebase-config';
 
@@ -127,4 +128,24 @@ export class DataService {
     }
     return null;
   }
+
+    // 🔹 Inhalt einer bestimmten Sektion abrufen (z. B. "about")
+    getContent(section: string): Observable<string | null> {
+      return new Observable((observer) => {
+        const docRef = doc(this.db, 'content', section);
+        getDoc(docRef).then((docSnap) => {
+          if (docSnap.exists()) {
+            observer.next(docSnap.data()['text']);
+          } else {
+            observer.next(null);
+          }
+        });
+      });
+    }
+  
+    // 🔹 Inhalt einer bestimmten Sektion aktualisieren oder erstellen
+    async updateContent(section: string, newData: string): Promise<void> {
+      const docRef = doc(this.db, 'content', section);
+      await setDoc(docRef, { text: newData }, { merge: true });
+    }
 }
