@@ -77,6 +77,14 @@ export class AuthService {
     return this.auth.currentUser !== null;
   }
 
+  async getUserRole(): Promise<string | null> {
+    const user = this.auth.currentUser;
+    if (!user) return null;
+  
+    const userDoc = await getDoc(doc(this.db, 'users', user.uid));
+    return userDoc.exists() ? userDoc.data()?.['role'] : null;
+  }
+
   // Prüfen, ob Benutzer Admin ist
   async isAdmin(): Promise<boolean> {
     const user = this.auth.currentUser;

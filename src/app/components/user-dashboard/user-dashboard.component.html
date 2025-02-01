@@ -1,0 +1,19 @@
+<div class="user-dashboard">
+    <h1>Willkommen, {{ userEmail }}</h1>
+  
+    <h2>Meine gebuchten Workshops</h2>
+    <div *ngIf="enrolledWorkshops.length > 0; else noWorkshops">
+      <ul>
+        <li *ngFor="let workshop of enrolledWorkshops">
+          <h3>{{ workshop.title }}</h3>
+          <p><strong>Datum:</strong> {{ workshop.date }}</p>
+          <p><strong>Ort:</strong> {{ workshop.location }}</p>
+        </li>
+      </ul>
+    </div>
+  
+    <ng-template #noWorkshops>
+      <p>Du hast noch keine Workshops gebucht.</p>
+    </ng-template>
+  </div>
+  

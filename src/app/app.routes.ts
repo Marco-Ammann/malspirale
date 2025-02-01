@@ -91,6 +91,14 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'user-dashboard',
+    loadComponent: () =>
+      import('./components/user-dashboard/user-dashboard.component').then(
+        (m) => m.UserDashboardComponent
+      ),
+    canActivate: [AuthGuard],
+  },
+  {
     path: 'admin',
     loadComponent: () =>
       import('./components/admin/admin.component').then(
@@ -117,6 +125,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./components/admin/admin-content/admin-content.component').then(
             (m) => m.AdminContentComponent
+          ),
+      },
+      {
+        path: 'reports',
+        loadComponent: () =>
+          import('./components/admin/admin-reports/admin-reports.component').then(
+            (m) => m.AdminReportsComponent
           ),
       },
     ],

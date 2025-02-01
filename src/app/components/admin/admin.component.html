@@ -7,29 +7,53 @@
       <a routerLink="/admin/users" routerLinkActive="active">Benutzerverwaltung</a>
       <a routerLink="/admin/workshops" routerLinkActive="active">Workshops</a>
       <a routerLink="/admin/content" routerLinkActive="active">Content-Management</a>
+      <a routerLink="/admin/reports" routerLinkActive="active">Berichte</a>
     </nav>
+
+    <div class="admin-logout">
+      <button (click)="logout()">Abmelden</button>
+    </div>
   </aside>
 
   <!-- Hauptinhalt -->
   <main class="admin-content">
-    <h1>Dashboard</h1>    
-    <div class="dashboard-stats">
+    <header class="admin-header">
+      <h1>Dashboard</h1>
+      <p class="user-role">Eingeloggt als: {{ userRole$ | async }}</p>
+    </header>
+
+    <section class="dashboard-stats">
       <div class="stat-card">
         <h3>Registrierte Benutzer</h3>
-        <p>{{ userCount }}</p>
+        <p *ngIf="(userCount$ | async) !== null; else loading"> 
+          {{ userCount$ | async }}
+        </p>
       </div>
       
       <div class="stat-card">
         <h3>Verfügbare Workshops</h3>
-        <p>{{ workshopCount }}</p>
+        <p *ngIf="(workshopCount$ | async) !== null; else loading"> 
+          {{ workshopCount$ | async }}
+        </p>
       </div>
       
       <div class="stat-card">
         <h3>Letzte Änderung</h3>
-        <p>{{ lastContentUpdate || 'Keine Änderungen' }}</p>
+        <p *ngIf="(lastContentUpdate$ | async) !== null; else noUpdates">
+          {{ lastContentUpdate$ | async | date:'short' }}
+        </p>
       </div>
-    </div>
+    </section>
 
     <router-outlet></router-outlet>
   </main>
 </div>
+
+<!-- Platzhalter für Ladezustand -->
+<ng-template #loading>
+  <p class="loading-text">Lädt...</p>
+</ng-template>
+
+<ng-template #noUpdates>
+  <p class="loading-text">Keine Änderungen</p>
+</ng-template>

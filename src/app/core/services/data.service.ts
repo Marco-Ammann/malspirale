@@ -13,6 +13,9 @@ import {
   arrayRemove,
   arrayUnion,
   onSnapshot,
+  query,
+  orderBy,
+  limit,
 } from 'firebase/firestore';
 import { firebaseApp } from '../../../firebase-config';
 
@@ -99,5 +102,29 @@ export class DataService {
         availableSlots: docSnap.data()?.['availableSlots'] + 1,
       });
     }
+  }
+
+  getEnrolledWorkshops(userId: string): Observable<Workshop[]> {
+    return new Observable((observer) => {
+      const workshopsCollection = collection(this.db, 'workshops');
+  
+      onSnapshot(workshopsCollection, (querySnapshot) => {
+        const enrolledWorkshops = querySnapshot.docs
+          .map((doc) => ({ id: doc.id, ...doc.data() } as Workshop))
+          .filter((workshop) => workshop.participants?.includes(userId));
+        observer.next(enrolledWorkshops);
+      });
+    });
+  }
+
+  async getLastContentUpdate(): Promise<Date | null> {
+    const contentCollection = collection(this.db, 'content');
+    const contentQuery = query(contentCollection, orderBy('updatedAt', 'desc'), limit(1));
+    const snapshot = await getDocs(contentQuery);
+  
+    if (!snapshot.empty) {
+      return new Date(snapshot.docs[0].data()['updatedAt']);
+    }
+    return null;
   }
 }
