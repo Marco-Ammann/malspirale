@@ -1,26 +1,46 @@
 @use 'sass:color';
 
-// Farben
+// 🎨 **Farben**
 $primary-color: #a6c8b7;
 $secondary-color: #d8bfd8;
 $accent-color: #ffd1dc;
 $background-color: #f7f4f1;
 $text-color: #5a5a5a;
+$hover-color: color.adjust($primary-color, $lightness: -10%);
+$error-color: #ff4d4d;
+$success-color: #4caf50;
 
-// Abstände
+// 🔲 **Abstände**
+$padding-extra-small: 4px;
 $padding-small: 8px;
 $padding-medium: 16px;
 $padding-large: 24px;
+$padding-extra-large: 32px;
 
-// Schrift
+// 🅰 **Schriftarten & Größen**
 $font-family: 'Arial', sans-serif;
+$font-size-small: 14px;
+$font-size-base: 16px;
+$font-size-large: 20px;
+$font-size-xlarge: 24px;
 
-// Größen
+// 📏 **Größen für UI-Elemente**
 $header-height: 5rem;
 $footer-height: 4rem;
+$input-height: 40px;
+$button-height: 44px;
 
-// Schatten
+// 🖼 **Schatten & Effekte**
 $box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+$shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+$hover-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
 
-// Abgerundete Ecken
+// 🔲 **Abgerundete Ecken**
+$border-radius-small: 4px;
 $border-radius: 8px;
+$border-radius-large: 12px;
+
+// 📱 **Responsive Breakpoints**
+$mobile: 480px;
+$tablet: 768px;
+$desktop: 1024px;

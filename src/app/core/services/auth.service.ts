@@ -16,7 +16,7 @@ import {
   getDocs
 } from 'firebase/firestore';
 import { firebaseApp } from '../../../firebase-config';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -26,14 +26,21 @@ export class AuthService {
   public db = getFirestore(firebaseApp);
   private userSubject = new BehaviorSubject<User | null>(null);
   user$ = this.userSubject.asObservable();
+  private roleSubject = new BehaviorSubject<string | null>(null);
+  role$ = this.roleSubject.asObservable();
   
   constructor() {
-    onAuthStateChanged(this.auth, (user) => {
+    onAuthStateChanged(this.auth, async (user) => {
       this.userSubject.next(user);
+      if (user) {
+        const userDoc = await getDoc(doc(this.db, 'users', user.uid));
+        this.roleSubject.next(userDoc.exists() ? userDoc.data()?.['role'] : null);
+      } else {
+        this.roleSubject.next(null);
+      }
     });
   }
 
-  // Benutzer registrieren
   async register(email: string, password: string): Promise<void> {
     return createUserWithEmailAndPassword(this.auth, email, password).then(async (userCredential) => {
       const user = userCredential.user;
@@ -45,7 +52,10 @@ export class AuthService {
     });
   }
 
-  // Aktuelle Benutzer-ID abrufen
+  getAuthInstance() {
+    return this.auth;
+  }
+
   getCurrentUserId(): Promise<string | null> {
     return new Promise((resolve) => {
       this.user$.subscribe((user) => {
@@ -54,47 +64,52 @@ export class AuthService {
     });
   }
 
-  // Benutzeranzahl abrufen
   async getUserCount(): Promise<number> {
     const usersCollection = collection(this.db, 'users');
     const snapshot = await getDocs(usersCollection);
     return snapshot.size;
   }
 
-  // Benutzer einloggen
   async login(email: string, password: string): Promise<void> {
-    await signInWithEmailAndPassword(this.auth, email, password);
+    const userCredential = await signInWithEmailAndPassword(this.auth, email, password);
+    this.userSubject.next(userCredential.user);
+    const userDoc = await getDoc(doc(this.db, 'users', userCredential.user.uid));
+    this.roleSubject.next(userDoc.exists() ? userDoc.data()?.['role'] : null);
   }
 
-
-  // Benutzer ausloggen
   async logout(): Promise<void> {
     await signOut(this.auth);
+    this.userSubject.next(null);
+    this.roleSubject.next(null);
   }
 
-  // Prüfen, ob Benutzer eingeloggt ist
   isLoggedIn(): boolean {
-    return this.auth.currentUser !== null;
+    return !!this.auth.currentUser;
   }
 
   async getUserRole(): Promise<string | null> {
     const user = this.auth.currentUser;
-    if (!user) return null;
+    if (!user) {
+      console.error("❌ Kein Benutzer eingeloggt!");
+      return null;
+    }
   
     const userDoc = await getDoc(doc(this.db, 'users', user.uid));
-    return userDoc.exists() ? userDoc.data()?.['role'] : null;
+  
+    if (userDoc.exists()) {
+      console.log("✅ Benutzerrolle:", userDoc.data()?.['role']);
+      return userDoc.data()?.['role'];
+    } else {
+      console.error("❌ Benutzer existiert nicht in Firestore!");
+      return null;
+    }
   }
 
-  // Prüfen, ob Benutzer Admin ist
   async isAdmin(): Promise<boolean> {
-    const user = this.auth.currentUser;
-    if (!user) return false;
-
-    const userDoc = await getDoc(doc(this.db, 'users', user.uid));
-    return userDoc.exists() && userDoc.data()?.['role'] === 'admin';
+    const role = await firstValueFrom(this.role$);
+    return role === 'admin';
   }
 
-  // Aktuellen Benutzer abrufen
   getCurrentUser(): User | null {
     return this.auth.currentUser;
   }

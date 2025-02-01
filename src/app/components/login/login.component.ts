@@ -20,9 +20,15 @@ export class LoginComponent {
   login() {
     this.authService
       .login(this.email, this.password)
-      .then(() => {
-        alert('Login erfolgreich!');
-        this.router.navigate(['/admin']); // Leitet den Benutzer zur Admin-Seite
+      .then(async () => {
+        const role = await this.authService.getUserRole();
+        if (role === 'admin') {
+          this.router.navigate(['/admin']);
+        } else if (role === 'user') {
+          this.router.navigate(['/user-dashboard']);
+        } else {
+          this.router.navigate(['/']);
+        }
       })
       .catch((error) => {
         alert('Login fehlgeschlagen: ' + error.message);

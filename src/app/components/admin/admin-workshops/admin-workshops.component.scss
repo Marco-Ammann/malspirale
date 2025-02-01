@@ -1,4 +1,3 @@
-@use 'sass:color';
 @use 'variables' as vars;
 @use 'mixins' as mix;
 
@@ -14,15 +13,19 @@
   .workshop-form {
     display: flex;
     flex-direction: column;
-    align-items: center;
     gap: vars.$padding-small;
     max-width: 500px;
     margin: auto;
+    padding: vars.$padding-medium;
+    background: vars.$background-color;
+    border-radius: vars.$border-radius;
+    box-shadow: vars.$shadow;
 
     label {
       font-weight: bold;
       text-align: left;
       width: 100%;
+      color: vars.$text-color;
     }
 
     input, textarea {
@@ -30,11 +33,22 @@
       padding: vars.$padding-small;
       border: 1px solid vars.$secondary-color;
       border-radius: vars.$border-radius;
+      font-size: vars.$font-size-base;
     }
 
     button {
       @include mix.button-style(vars.$primary-color, #fff);
       margin-top: vars.$padding-medium;
+      width: 100%;
+      font-size: vars.$font-size-large;
     }
+  }
+
+  .workshop-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: vars.$padding-medium;
+    justify-content: center;
+    margin-top: vars.$padding-large;
   }
 }

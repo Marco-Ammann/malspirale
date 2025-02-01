@@ -1,10 +1,8 @@
-@use 'sass:color';
 @use 'variables' as vars;
 @use 'mixins' as mix;
 
 .admin-users-container {
-  @include mix.flex-center;
-  flex-direction: column;
+  text-align: center;
   padding: vars.$padding-large;
 
   h1 {
@@ -14,29 +12,82 @@
 
   .user-list {
     width: 100%;
-    max-width: 800px;
+    max-width: 900px;
+    margin: auto;
+    border-radius: vars.$border-radius;
+    box-shadow: vars.$shadow;
+    background: vars.$background-color;
+    padding: vars.$padding-medium;
 
     table {
       width: 100%;
       border-collapse: collapse;
+      border-radius: vars.$border-radius;
+      overflow: hidden;
+      box-shadow: vars.$shadow;
 
       th, td {
         padding: vars.$padding-small;
-        border: 1px solid vars.$secondary-color;
+        border-bottom: 1px solid vars.$secondary-color;
+        text-align: left;
       }
 
       th {
-        background-color: vars.$primary-color;
+        background: vars.$primary-color;
         color: #fff;
+        font-weight: bold;
+        text-transform: uppercase;
+      }
+
+      tr {
+        &:hover {
+          background: vars.$hover-color;
+        }
+      }
+
+      td {
+        font-size: vars.$font-size-base;
+        color: vars.$text-color;
       }
 
       button {
         @include mix.button-style(vars.$primary-color, #fff);
         margin-right: vars.$padding-small;
+        font-size: vars.$font-size-small;
+        padding: 5px 10px;
+        border-radius: vars.$border-radius-small;
       }
 
       .delete {
-        background-color: red;
+        background-color: #ff4d4d;
+      }
+    }
+  }
+
+  .no-users {
+    font-style: italic;
+    color: vars.$secondary-color;
+    font-size: vars.$font-size-base;
+    margin-top: vars.$padding-medium;
+  }
+
+  /* Mobile-Optimierung */
+  @media (max-width: 768px) {
+    .user-list {
+      width: 100%;
+      padding: vars.$padding-small;
+    }
+
+    table {
+      font-size: vars.$font-size-small;
+
+      th, td {
+        padding: vars.$padding-extra-small;
+      }
+
+      button {
+        font-size: vars.$font-size-small;
+        padding: 4px 8px;
       }
     }
   }

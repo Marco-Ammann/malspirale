@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { DataService } from '../../../core/services/data.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { DataService } from '../../../core/services/data.service';
 import { Workshop } from '../../../core/interfaces/interfaces';
 
 @Component({
@@ -12,10 +12,13 @@ import { Workshop } from '../../../core/interfaces/interfaces';
   styleUrls: ['./admin-workshops.component.scss'],
 })
 export class AdminWorkshopsComponent implements OnInit {
-  workshops: any[] = [];
+  workshops: Workshop[] = [];
   title: string = '';
   description: string = '';
   date: string = '';
+  maxParticipants: number = 10;
+  availableSlots: number = 10;
+  location: string = '';
   selectedWorkshopId: string | null = null;
 
   constructor(private dataService: DataService) {}
@@ -31,7 +34,7 @@ export class AdminWorkshopsComponent implements OnInit {
   }
 
   createWorkshop(): void {
-    if (!this.title || !this.description || !this.date) {
+    if (!this.title || !this.description || !this.date || !this.maxParticipants || !this.availableSlots || !this.location) {
       alert('Bitte alle Felder ausfüllen!');
       return;
     }
@@ -40,9 +43,9 @@ export class AdminWorkshopsComponent implements OnInit {
       title: this.title,
       description: this.description,
       date: this.date,
-      maxParticipants: 10,
-      availableSlots: 10,
-      location: 'Noch nicht festgelegt',
+      maxParticipants: this.maxParticipants,
+      availableSlots: this.availableSlots,
+      location: this.location,
       participants: []
     };
 
@@ -64,6 +67,9 @@ export class AdminWorkshopsComponent implements OnInit {
     this.title = workshop.title;
     this.description = workshop.description;
     this.date = workshop.date;
+    this.maxParticipants = workshop.maxParticipants;
+    this.availableSlots = workshop.availableSlots;
+    this.location = workshop.location;
   }
 
   deleteWorkshop(id: string): void {
@@ -77,5 +83,8 @@ export class AdminWorkshopsComponent implements OnInit {
     this.title = '';
     this.description = '';
     this.date = '';
+    this.maxParticipants = 10;
+    this.availableSlots = 10;
+    this.location = '';
   }
 }

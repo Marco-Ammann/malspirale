@@ -4,13 +4,22 @@
   <div class="workshop-form">
     <label>Titel:</label>
     <input type="text" [(ngModel)]="title" />
-
+  
     <label>Beschreibung:</label>
     <textarea [(ngModel)]="description"></textarea>
-
+  
     <label>Datum:</label>
     <input type="date" [(ngModel)]="date" />
-
+  
+    <label>Maximale Teilnehmer:</label>
+    <input type="number" [(ngModel)]="maxParticipants" />
+  
+    <label>Freie Plätze:</label>
+    <input type="number" [(ngModel)]="availableSlots" />
+  
+    <label>Ort:</label>
+    <input type="text" [(ngModel)]="location" />
+  
     <button (click)="createWorkshop()">
       {{ selectedWorkshopId ? 'Workshop aktualisieren' : 'Workshop erstellen' }}
     </button>

@@ -6,16 +6,20 @@
     <a routerLink="/workshops" routerLinkActive="active">Workshops</a>
     <a routerLink="/contact" routerLinkActive="active">Kontakt</a>
     <a routerLink="/about" routerLinkActive="active">Über mich</a>
-    
-    <!-- NEU: Dropdown-Menü für Philosophie -->
-    <div class="dropdown">
-      <a class="dropdown-toggle" tabindex="0">Philosophie</a>
-      <div class="dropdown-menu">
-        <a routerLink="/philosophie/farben" routerLinkActive="active">Farben</a>
-        <a routerLink="/philosophie/geschichten" routerLinkActive="active">Geschichten</a>
-        <a routerLink="/philosophie/resonance-farben" routerLinkActive="active">Resonance Colors</a>
-        <a routerLink="/philosophie/malgeschichten" routerLinkActive="active">Malgeschichten</a>
+
+    <!-- Benutzer-Optionen -->
+    <div class="user-options" *ngIf="isLoggedIn">
+      <div class="dropdown">
+        <a class="dropdown-toggle" tabindex="0">{{ userEmail }}</a>
+        <div class="dropdown-menu">
+          <a routerLink="/user-dashboard" routerLinkActive="active">Profil</a>
+          <a *ngIf="isAdmin" routerLink="/admin" routerLinkActive="active">Admin-Bereich</a>
+          <a (click)="logout()">Abmelden</a>
+        </div>
       </div>
     </div>
+
+    <!-- Login-Button für nicht eingeloggte Benutzer -->
+    <a *ngIf="!isLoggedIn" routerLink="/login" class="login-button">Anmelden</a>
   </nav>
 </header>
