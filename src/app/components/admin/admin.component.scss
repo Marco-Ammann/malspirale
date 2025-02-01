@@ -2,32 +2,80 @@
 @use 'variables' as vars;
 @use 'mixins' as mix;
 
-.admin-container {
-    @include mix.flex-center;
-    flex-direction: column;
+.admin-layout {
+  display: flex;
+  height: 100vh;
+
+  .admin-sidebar {
+    width: 250px;
+    background-color: vars.$primary-color;
+    color: #fff;
     padding: vars.$padding-medium;
-    background-color: vars.$background-color;
-    border-radius: vars.$border-radius;
-    @include mix.box-shadow;
-  
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+
+    h2 {
+      margin-bottom: vars.$padding-medium;
+      font-size: 1.8rem;
+    }
+
+    nav {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+
+      a {
+        text-decoration: none;
+        color: #fff;
+        font-size: 1.2rem;
+        padding: vars.$padding-small;
+        margin: vars.$padding-small 0;
+        border-radius: vars.$border-radius;
+        transition: background-color 0.3s ease;
+
+        &:hover, &.active {
+          background-color: vars.$accent-color;
+          color: vars.$text-color;
+        }
+      }
+    }
+  }
+
+  .admin-content {
+    flex-grow: 1;
+    padding: vars.$padding-large;
+    overflow-y: auto;
+
     h1 {
       @include mix.text-style(vars.$primary-color, 2.5rem, bold);
       margin-bottom: vars.$padding-medium;
     }
-  
-    .admin-section {
+
+    .dashboard-stats {
       display: flex;
-      flex-wrap: wrap;
       gap: vars.$padding-medium;
       justify-content: center;
-  
-      .card {
-        width: 300px;
+      flex-wrap: wrap;
+
+      .stat-card {
+        @include mix.container-box;
         text-align: center;
         padding: vars.$padding-medium;
-        border: 1px solid vars.$primary-color;
-        border-radius: vars.$border-radius;
-        @include mix.box-shadow;
+        width: 250px;
+        
+        h3 {
+          @include mix.text-style(vars.$primary-color, 1.5rem, bold);
+          margin-bottom: vars.$padding-small;
+        }
+
+        p {
+          font-size: 1.8rem;
+          font-weight: bold;
+          color: vars.$text-color;
+        }
       }
     }
   }
+}

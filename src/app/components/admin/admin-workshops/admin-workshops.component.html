@@ -1,27 +1,31 @@
-<div class="admin-workshops">
-  <h2>Workshop-Verwaltung</h2>
-  <p *ngIf="loading">Lade Workshops...</p>
+<div class="admin-workshops-container">
+  <h1>Workshops verwalten</h1>
 
-  <table *ngIf="!loading && workshops.length">
-    <thead>
-      <tr>
-        <th>Titel</th>
-        <th>Ort</th>
-        <th>Datum</th>
-        <th>Aktionen</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let workshop of workshops">
-        <td>{{ workshop.title }}</td>
-        <td>{{ workshop.location }}</td>
-        <td>{{ workshop.date }}</td>
-        <td>
-          <button (click)="deleteWorkshop(workshop.id)">Löschen</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="workshop-form">
+    <label>Titel:</label>
+    <input type="text" [(ngModel)]="title" />
 
-  <p *ngIf="!loading && workshops.length === 0">Keine Workshops verfügbar.</p>
+    <label>Beschreibung:</label>
+    <textarea [(ngModel)]="description"></textarea>
+
+    <label>Datum:</label>
+    <input type="date" [(ngModel)]="date" />
+
+    <button (click)="createWorkshop()">
+      {{ selectedWorkshopId ? 'Workshop aktualisieren' : 'Workshop erstellen' }}
+    </button>
+    <button *ngIf="selectedWorkshopId" (click)="resetForm()">Abbrechen</button>
+  </div>
+
+  <h2>Bestehende Workshops</h2>
+  <div class="workshop-list">
+    <div *ngFor="let workshop of workshops" class="workshop-card">
+      <h3>{{ workshop.title }}</h3>
+      <p><strong>Datum:</strong> {{ workshop.date }}</p>
+      <p>{{ workshop.description }}</p>
+
+      <button (click)="editWorkshop(workshop)">Bearbeiten</button>
+      <button class="delete" (click)="deleteWorkshop(workshop.id)">Löschen</button>
+    </div>
+  </div>
 </div>

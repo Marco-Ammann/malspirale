@@ -1,33 +1,40 @@
+@use 'sass:color';
 @use 'variables' as vars;
 @use 'mixins' as mix;
 
-.admin-workshops {
-  @include mix.standard-box;
+.admin-workshops-container {
   text-align: center;
+  padding: vars.$padding-large;
 
-  h2 {
-    color: vars.$primary-color;
-    font-size: 2rem;
+  h1 {
+    @include mix.text-style(vars.$primary-color, 2rem, bold);
+    margin-bottom: vars.$padding-medium;
   }
 
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: vars.$padding-medium;
+  .workshop-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: vars.$padding-small;
+    max-width: 500px;
+    margin: auto;
 
-    th, td {
+    label {
+      font-weight: bold;
+      text-align: left;
+      width: 100%;
+    }
+
+    input, textarea {
+      width: 100%;
       padding: vars.$padding-small;
-      border: 1px solid vars.$primary-color;
+      border: 1px solid vars.$secondary-color;
+      border-radius: vars.$border-radius;
     }
 
-    th {
-      background: vars.$secondary-color;
-      color: white;
+    button {
+      @include mix.button-style(vars.$primary-color, #fff);
+      margin-top: vars.$padding-medium;
     }
-  }
-
-  button {
-    @include mix.button-style;
-    background-color: red;
   }
 }

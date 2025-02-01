@@ -1,51 +1,67 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Workshop } from '../../../core/interfaces/interfaces';
-import { StateService } from '../../../core/services/state.service';
 import { DataService } from '../../../core/services/data.service';
+import { AuthService } from '../../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+
 
 @Component({
   selector: 'app-workshop-detail',
+  imports: [CommonModule, FormsModule],
   templateUrl: './workshop-detail.component.html',
   styleUrls: ['./workshop-detail.component.scss'],
-  imports: [CommonModule],
 })
 export class WorkshopDetailComponent implements OnInit {
   workshop: Workshop | null = null;
+  userId: string | null = null;
+  isUserEnrolled: boolean = false;
 
   constructor(
-    private stateService: StateService,
     private route: ActivatedRoute,
-    private dataService: DataService
+    private dataService: DataService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
-    this.workshop = this.stateService.selectedWorkshop();
+    this.authService.getCurrentUserId().then((id) => {
+      this.userId = id;
+      this.loadWorkshop();
+    });
+  }
 
-    if (!this.workshop) {
-      const id = this.route.snapshot.paramMap.get('id');
-      if (id) {
-        this.dataService.getWorkshopById(id).subscribe((workshop) => {
-          if (workshop) {
-            this.workshop = workshop;
-          } else {
-            console.error('Workshop nicht gefunden!');
-          }
-        });
-      }
+  loadWorkshop(): void {
+    const workshopId = this.route.snapshot.paramMap.get('id');
+    if (workshopId) {
+      this.dataService.getWorkshopById(workshopId).subscribe((workshop) => {
+        if (workshop) {
+          this.workshop = workshop;
+          this.checkUserEnrollment();
+        }
+      });
     }
   }
 
-  onEnroll(): void {
-    if (!this.workshop) return;
+  checkUserEnrollment(): void {
+    if (this.workshop && this.userId) {
+      this.isUserEnrolled = this.workshop.participants?.includes(this.userId) || false;
+    }
+  }
 
-    // Beispiel-Logik: verringere verfügbare Slots
-    if (this.workshop.availableSlots > 0) {
-      this.workshop.availableSlots--;
-      alert(`Du hast dich erfolgreich für "${this.workshop.title}" angemeldet!`);
-    } else {
-      alert('Keine freien Plätze mehr verfügbar!');
+  async onEnroll(): Promise<void> {
+    if (this.workshop && this.userId) {
+      await this.dataService.enrollUser(this.workshop.id, this.userId);
+      this.workshop.availableSlots -= 1;
+      this.isUserEnrolled = true;
+    }
+  }
+
+  async onUnenroll(): Promise<void> {
+    if (this.workshop && this.userId) {
+      await this.dataService.unenrollUser(this.workshop.id, this.userId);
+      this.workshop.availableSlots += 1;
+      this.isUserEnrolled = false;
     }
   }
 }

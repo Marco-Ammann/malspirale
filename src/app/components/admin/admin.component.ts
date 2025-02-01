@@ -1,45 +1,58 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Firestore } from 'firebase/firestore';
 import { AuthService } from '../../core/services/auth.service';
-import { Router } from '@angular/router';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { firebaseApp } from '../../../firebase-config';
+import { DataService } from '../../core/services/data.service';
 
 @Component({
   selector: 'app-admin',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive],
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.scss']
 })
-export class AdminComponent implements OnInit {
-  user: any = null;
-  isAdmin: boolean = false;
+export class AdminComponent implements OnInit{
+  userCount: number = 0;
+  workshopCount: number = 0;
+  lastContentUpdate?: Date;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private router: Router, private authService: AuthService, private dataService: DataService) {}
 
-  ngOnInit() {
-    const auth = getAuth(firebaseApp);
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        this.user = user;
-        this.isAdmin = await this.authService.isAdmin(user);
-        if (!this.isAdmin) {
-          alert('Nicht autorisiert!');
-          this.router.navigate(['/login']);
-        }
-      } else {
-        this.router.navigate(['/login']);
-      }
+  ngOnInit(): void {
+    this.loadUserCount();
+    this.loadWorkshopCount();
+  }
+
+  loadUserCount(): void {
+    this.authService.getUserCount().then((count) => {
+      this.userCount = count;
     });
   }
 
-  logout() {
-    this.authService.logout().then(() => {
-      alert('Abgemeldet!');
-      this.router.navigate(['/login']);
-    }).catch((error) => {
-      alert('Fehler beim Abmelden: ' + error.message);
+  loadWorkshopCount(): void {
+    this.dataService.getWorkshops().subscribe((workshops) => {
+      this.workshopCount = workshops.length;
     });
+  }
+
+  manageUsers(): void {
+    this.router.navigate(['/admin/users']);
+  }
+
+  manageWorkshops(): void {
+    this.router.navigate(['/admin/workshops']);
+  }
+
+  editContent(): void {
+    this.router.navigate(['/admin/content']);
   }
 }
+function collection(firestore: Firestore, arg1: string) {
+  throw new Error('Function not implemented.');
+}
+
+function collectionData(usersCollection: any) {
+  throw new Error('Function not implemented.');
+}
+

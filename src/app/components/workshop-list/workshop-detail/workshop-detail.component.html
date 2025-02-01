@@ -1,36 +1,41 @@
 <div class="workshop-detail" *ngIf="workshop; else notFound">
-    <div class="workshop-header">
-      <h2>{{ workshop.title }}</h2>
-      <p class="location">{{ workshop.location }}</p>
-    </div>
-  
-    <div class="workshop-info">
-      <p class="description">{{ workshop.description }}</p>
-  
-      <div class="info-row">
-        <p><strong>Datum:</strong> {{ workshop.date }}</p>
-        <p>
-          <strong>Plätze frei:</strong>
-          <span [class.full]="workshop.availableSlots === 0">{{ workshop.availableSlots }}</span>
-        </p>
-        <p><strong>Max. Teilnehmer:</strong> {{ workshop.maxParticipants }}</p>
-      </div>
-    </div>
-  
-    <div class="action-row">
-      <!-- Button zum Anmelden -->
-      <button
-        (click)="onEnroll()"
-        [disabled]="workshop.availableSlots === 0"
-        aria-label="Anmelden zum Workshop"
-      >
-        Jetzt anmelden
-      </button>
+  <div class="workshop-header">
+    <h2>{{ workshop.title }}</h2>
+    <p class="location">{{ workshop.location }}</p>
+  </div>
+
+  <div class="workshop-info">
+    <p class="description">{{ workshop.description }}</p>
+
+    <div class="info-row">
+      <p><strong>Datum:</strong> {{ workshop.date }}</p>
+      <p>
+        <strong>Plätze frei:</strong>
+        <span [class.full]="workshop.availableSlots === 0">{{ workshop.availableSlots }}</span>
+      </p>
+      <p><strong>Max. Teilnehmer:</strong> {{ workshop.maxParticipants }}</p>
     </div>
   </div>
-  
-  <!-- Fallback: Falls workshop = null oder nicht vorhanden -->
-  <ng-template #notFound>
-    <p class="not-found">Workshop nicht gefunden.</p>
-  </ng-template>
-  
+
+  <div class="action-row">
+    <button
+      (click)="onEnroll()"
+      [disabled]="workshop.availableSlots === 0 || isUserEnrolled"
+      aria-label="Anmelden zum Workshop"
+    >
+      {{ isUserEnrolled ? 'Bereits angemeldet' : 'Jetzt anmelden' }}
+    </button>
+    <button
+      *ngIf="isUserEnrolled"
+      class="cancel-button"
+      (click)="onUnenroll()"
+    >
+      Abmelden
+    </button>
+  </div>
+</div>
+
+<!-- Fallback: Falls workshop nicht vorhanden -->
+<ng-template #notFound>
+  <p class="not-found">Workshop nicht gefunden.</p>
+</ng-template>

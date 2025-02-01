@@ -1,0 +1,43 @@
+@use 'sass:color';
+@use 'variables' as vars;
+@use 'mixins' as mix;
+
+.admin-users-container {
+  @include mix.flex-center;
+  flex-direction: column;
+  padding: vars.$padding-large;
+
+  h1 {
+    @include mix.text-style(vars.$primary-color, 2rem, bold);
+    margin-bottom: vars.$padding-medium;
+  }
+
+  .user-list {
+    width: 100%;
+    max-width: 800px;
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+
+      th, td {
+        padding: vars.$padding-small;
+        border: 1px solid vars.$secondary-color;
+      }
+
+      th {
+        background-color: vars.$primary-color;
+        color: #fff;
+      }
+
+      button {
+        @include mix.button-style(vars.$primary-color, #fff);
+        margin-right: vars.$padding-small;
+      }
+
+      .delete {
+        background-color: red;
+      }
+    }
+  }
+}

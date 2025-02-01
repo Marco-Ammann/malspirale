@@ -1,5 +1,6 @@
 <app-header></app-header>
 <main class="app-content">
-  <router-outlet></router-outlet>
+  <div *ngIf="loading">Lade Benutzer...</div>
+  <router-outlet *ngIf="!loading"></router-outlet>
 </main>
 <app-footer></app-footer>

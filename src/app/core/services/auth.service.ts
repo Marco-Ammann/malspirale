@@ -4,9 +4,19 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signOut,
+  User,
+  onAuthStateChanged
 } from 'firebase/auth';
-import { getFirestore, doc, setDoc, getDoc } from 'firebase/firestore';
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  getDoc,
+  collection,
+  getDocs
+} from 'firebase/firestore';
 import { firebaseApp } from '../../../firebase-config';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -14,62 +24,70 @@ import { firebaseApp } from '../../../firebase-config';
 export class AuthService {
   private auth = getAuth(firebaseApp);
   public db = getFirestore(firebaseApp);
-
-  constructor() {}
+  private userSubject = new BehaviorSubject<User | null>(null);
+  user$ = this.userSubject.asObservable();
+  
+  constructor() {
+    onAuthStateChanged(this.auth, (user) => {
+      this.userSubject.next(user);
+    });
+  }
 
   // Benutzer registrieren
   async register(email: string, password: string): Promise<void> {
-    return createUserWithEmailAndPassword(this.auth, email, password).then(
-      (userCredential) => {
-        const user = userCredential.user;
-        // Speichere Benutzer in Firestore
-        const userDocRef = doc(this.db, 'users', user.uid);
-        return setDoc(userDocRef, {
-          email: user.email,
-          role: 'user',
-        });
-      }
-    );
+    return createUserWithEmailAndPassword(this.auth, email, password).then(async (userCredential) => {
+      const user = userCredential.user;
+      await setDoc(doc(this.db, 'users', user.uid), {
+        email: user.email,
+        role: 'user',
+        createdAt: new Date(),
+      });
+    });
+  }
+
+  // Aktuelle Benutzer-ID abrufen
+  getCurrentUserId(): Promise<string | null> {
+    return new Promise((resolve) => {
+      this.user$.subscribe((user) => {
+        resolve(user ? user.uid : null);
+      });
+    });
+  }
+
+  // Benutzeranzahl abrufen
+  async getUserCount(): Promise<number> {
+    const usersCollection = collection(this.db, 'users');
+    const snapshot = await getDocs(usersCollection);
+    return snapshot.size;
   }
 
   // Benutzer einloggen
   async login(email: string, password: string): Promise<void> {
-    try {
-      await signInWithEmailAndPassword(this.auth, email, password);
-      console.log('Login erfolgreich!');
-    } catch (error: any) {
-      console.error('Login-Fehler:', error);
-      throw error;
-    }
+    await signInWithEmailAndPassword(this.auth, email, password);
   }
+
 
   // Benutzer ausloggen
   async logout(): Promise<void> {
-    try {
-      await signOut(this.auth);
-      console.log('Abgemeldet!');
-    } catch (error: any) {
-      console.error('Logout-Fehler:', error);
-      throw error;
-    }
+    await signOut(this.auth);
   }
 
+  // Prüfen, ob Benutzer eingeloggt ist
   isLoggedIn(): boolean {
-    const user = getAuth(firebaseApp).currentUser;
-    return !!user; // true, wenn eingeloggt
+    return this.auth.currentUser !== null;
   }
 
-  async isAdmin(user: any): Promise<boolean> {
-    const userDocRef = doc(this.db, 'users', user.uid);
-    const userDoc = await getDoc(userDocRef);
-    if (userDoc.exists()) {
-      const userData = userDoc.data();
-      return userData['role'] === 'admin';
-    }
-    return false;
+  // Prüfen, ob Benutzer Admin ist
+  async isAdmin(): Promise<boolean> {
+    const user = this.auth.currentUser;
+    if (!user) return false;
+
+    const userDoc = await getDoc(doc(this.db, 'users', user.uid));
+    return userDoc.exists() && userDoc.data()?.['role'] === 'admin';
   }
 
-  getCurrentUser() {
-    return getAuth(firebaseApp).currentUser;
+  // Aktuellen Benutzer abrufen
+  getCurrentUser(): User | null {
+    return this.auth.currentUser;
   }
 }

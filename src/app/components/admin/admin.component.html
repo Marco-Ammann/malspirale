@@ -1,19 +1,35 @@
-<div class="admin-container">
-  <div *ngIf="isAdmin; else noAccess">
-    <h2>Willkommen, Admin!</h2>
-    <p>Hier kannst du Inhalte bearbeiten.</p>
+<div class="admin-layout">
+  <!-- Sidebar -->
+  <aside class="admin-sidebar">
+    <h2>Admin</h2>
+    <nav>
+      <a routerLink="/admin" routerLinkActive="active" exact>Dashboard</a>
+      <a routerLink="/admin/users" routerLinkActive="active">Benutzerverwaltung</a>
+      <a routerLink="/admin/workshops" routerLinkActive="active">Workshops</a>
+      <a routerLink="/admin/content" routerLinkActive="active">Content-Management</a>
+    </nav>
+  </aside>
 
-    <div class="admin-actions">
-      <button routerLink="/admin/workshops">Workshops verwalten</button>
-      <button routerLink="/admin/gallery">Galerie verwalten</button>
-      <button routerLink="/admin/pages">Seiten bearbeiten</button>
+  <!-- Hauptinhalt -->
+  <main class="admin-content">
+    <h1>Dashboard</h1>    
+    <div class="dashboard-stats">
+      <div class="stat-card">
+        <h3>Registrierte Benutzer</h3>
+        <p>{{ userCount }}</p>
+      </div>
+      
+      <div class="stat-card">
+        <h3>Verfügbare Workshops</h3>
+        <p>{{ workshopCount }}</p>
+      </div>
+      
+      <div class="stat-card">
+        <h3>Letzte Änderung</h3>
+        <p>{{ lastContentUpdate || 'Keine Änderungen' }}</p>
+      </div>
     </div>
 
-    <button class="logout-btn" (click)="logout()">Abmelden</button>
-  </div>
-
-  <ng-template #noAccess>
-    <h2>Zugriff verweigert</h2>
-    <p>Du hast keine Berechtigung, diese Seite anzuzeigen.</p>
-  </ng-template>
+    <router-outlet></router-outlet>
+  </main>
 </div>

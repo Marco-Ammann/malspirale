@@ -12,6 +12,7 @@ export interface Workshop {
   availableSlots: number;
   description: string;
   location: string;
+  participants?: string[];
 }
 
 export interface GalleryImage {
