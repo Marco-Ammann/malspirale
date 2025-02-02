@@ -52,7 +52,12 @@ export class DataService {
     try {
       const docRef = doc(this.db, 'workshops', id);
       const docSnap = await getDoc(docRef);
-      return docSnap.exists() ? ({ id: docSnap.id, ...docSnap.data() } as Workshop) : null;
+      return docSnap.exists()
+        ? ({
+            id: docSnap.id,
+            ...docSnap.data(),
+          } as Workshop)
+        : null;
     } catch (error) {
       console.error('Fehler beim Abrufen des Workshops:', error);
       return null;
@@ -74,15 +79,13 @@ export class DataService {
   // ➕ Neuen Workshop hinzufügen
   async addWorkshop(workshop: Workshop): Promise<void> {
     try {
-      console.log("📡 Firestore: Speichere Workshop...", workshop);
       const workshopsCollection = collection(this.db, 'workshops');
       await addDoc(workshopsCollection, {
         ...workshop,
-        createdAt: new Date().toISOString(),  // Zeitstempel hinzufügen
+        createdAt: new Date().toISOString(),
       });
-      console.log("✅ Firestore: Workshop gespeichert!");
     } catch (error) {
-      console.error("❌ Firestore-Fehler beim Speichern:", error);
+      console.error('Fehler beim Erstellen des Workshops:', error);
       throw error;
     }
   }

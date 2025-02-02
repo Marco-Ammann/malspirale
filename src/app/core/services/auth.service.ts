@@ -95,10 +95,10 @@ export class AuthService {
     }
   
     const userDoc = await getDoc(doc(this.db, 'users', user.uid));
-  
     if (userDoc.exists()) {
-      console.log("✅ Benutzerrolle:", userDoc.data()?.['role']);
-      return userDoc.data()?.['role'];
+      const role = userDoc.data()?.['role'];
+      console.log("✅ Benutzerrolle:", role);
+      return role;
     } else {
       console.error("❌ Benutzer existiert nicht in Firestore!");
       return null;

@@ -45,9 +45,9 @@
     </select>
 
     <div *ngIf="workshopForm.controls['recurring'].value">
-      <label>Woche im Monat:</label>
+      <label>Woche im Monat (optional, für monatliche Wiederholung):</label>
       <input type="number" formControlName="recurringWeek" min="1" max="4" />
-
+    
       <label>Wochentag:</label>
       <select formControlName="recurringDay">
         <option [ngValue]="0">Sonntag</option>
@@ -58,6 +58,7 @@
         <option [ngValue]="5">Freitag</option>
         <option [ngValue]="6">Samstag</option>
       </select>
+    
     </div>
 
     <label>Bild hochladen:</label>

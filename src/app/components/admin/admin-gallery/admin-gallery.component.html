@@ -1,0 +1,37 @@
+<div class="admin-gallery-container">
+    <h1>Galerie verwalten</h1>
+
+    <form [formGroup]="galleryForm" (ngSubmit)="addArtwork()" class="gallery-form">
+        <label for="title">Titel:</label>
+        <input type="text" id="title" formControlName="title" required />
+
+        <label for="alt">Bildbeschreibung:</label>
+        <input type="text" id="alt" formControlName="alt" required />
+
+        <label for="filename">Dateiname:</label>
+        <input type="text" id="filename" formControlName="filename" placeholder="Neuer Dateiname (ohne .jpg)" required />
+
+        <label for="imageInput">Bild hochladen:</label>
+        <input type="file" id="imageInput" (change)="onFileSelected($event)" />
+
+        <!-- Bild-Vorschau -->
+        <div *ngIf="selectedImagePreview" class="image-preview">
+            <img [src]="selectedImagePreview" alt="Bildvorschau" />
+        </div>
+
+        <button type="submit" [disabled]="loading || galleryForm.invalid">
+            {{ editingArtwork ? "Bild aktualisieren" : "Bild hinzufügen" }}
+        </button>
+        <button type="button" (click)="cancelEdit()" *ngIf="editingArtwork">Abbrechen</button>
+    </form>
+
+    <h2>Galeriebilder</h2>
+    <div class="gallery-grid">
+        <div *ngFor="let artwork of artworks" class="gallery-item">
+            <img [src]="artwork.src || 'assets/images/placeholder.jpg'" [alt]="artwork.alt" />
+            <p>{{ artwork.title }}</p>
+            <button (click)="editArtwork(artwork)">🖊 Bearbeiten</button>
+            <button (click)="deleteArtwork(artwork)">🗑 Löschen</button>
+        </div>
+    </div>
+</div>

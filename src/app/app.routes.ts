@@ -97,41 +97,13 @@ export const routes: Routes = [
       import('./components/admin/admin.component').then((m) => m.AdminComponent),
     canActivate: [AdminGuard],
     children: [
-      {
-        path: '', // Standard-Redirect für "/admin" ohne weitere Angabe
-        pathMatch: 'full',
-        redirectTo: 'users', // Setze einen sinnvollen Standard, z. B. "users"
-      },
-      {
-        path: 'users',
-        loadComponent: () =>
-          import('./components/admin/admin-users/admin-users.component').then(
-            (m) => m.AdminUsersComponent
-          ),
-      },
-      {
-        path: 'workshops',
-        loadComponent: () =>
-          import(
-            './components/admin/admin-workshops/admin-workshops.component'
-          ).then((m) => m.AdminWorkshopsComponent),
-      },
-      {
-        path: 'content',
-        loadComponent: () =>
-          import(
-            './components/admin/admin-content/admin-content.component'
-          ).then((m) => m.AdminContentComponent),
-      },
-      {
-        path: 'reports',
-        loadComponent: () =>
-          import(
-            './components/admin/admin-reports/admin-reports.component'
-          ).then((m) => m.AdminReportsComponent),
-      },
-      // Wildcard für falsche Unterseiten in /admin
-      { path: '**', redirectTo: 'users', pathMatch: 'full' },
+      { path: '', pathMatch: 'full', redirectTo: 'users' },
+      { path: 'users', loadComponent: () => import('./components/admin/admin-users/admin-users.component').then((m) => m.AdminUsersComponent) },
+      { path: 'workshops', loadComponent: () => import('./components/admin/admin-workshops/admin-workshops.component').then((m) => m.AdminWorkshopsComponent) },
+      { path: 'content', loadComponent: () => import('./components/admin/admin-content/admin-content.component').then((m) => m.AdminContentComponent) },
+      { path: 'gallery', loadComponent: () => import('./components/admin/admin-gallery/admin-gallery.component').then((m) => m.AdminGalleryComponent) },
+      { path: 'reports', loadComponent: () => import('./components/admin/admin-reports/admin-reports.component').then((m) => m.AdminReportsComponent) },
+      { path: '**', redirectTo: 'users' },
     ],
   },
 ];

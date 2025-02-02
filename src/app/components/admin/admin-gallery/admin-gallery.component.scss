@@ -1,0 +1,81 @@
+@use "sass:color";
+@use "variables" as vars;
+@use "mixins" as mix;
+
+.admin-gallery-container {
+  text-align: center;
+  max-width: 900px;
+  margin: auto;
+}
+
+.gallery-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+
+  input {
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+
+  button {
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background-color: #0056b3;
+  }
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 15px;
+}
+
+.gallery-item {
+  text-align: center;
+  background: #f9f9f9;
+  padding: 10px;
+  border-radius: 5px;
+
+  img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 5px;
+  }
+
+  button {
+    margin-top: 5px;
+    padding: 5px;
+    width: 100%;
+    border: none;
+    cursor: pointer;
+  }
+
+  button:first-of-type {
+    background-color: #ffc107;
+  }
+
+  button:last-of-type {
+    background-color: #dc3545;
+    color: white;
+  }
+}
+
+.image-preview {
+  margin-top: 10px;
+  img {
+    max-width: 200px;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  }
+}

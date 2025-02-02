@@ -3,7 +3,7 @@
   <p class="location">{{ workshop.location }}</p>
 
   <div *ngIf="workshop.image" class="workshop-image">
-    <img [src]="workshop.image" alt="Workshop Bild" [ngClass]="workshop.imagePosition" />
+    <img [src]="workshop.image" alt="Workshop Bild" class="workshop-image" [ngClass]="workshop.imagePosition" />
   </div>
 
   <div class="workshop-info">
@@ -26,7 +26,7 @@
     <p><strong>📌 Verfügbare Plätze:</strong> {{ workshop.availableSlots }}</p>
 
     <p *ngIf="workshop.recurring">
-      <strong>🔄 Wiederkehrend:</strong> Wöchentlich in Woche {{ workshop.recurringWeek }}, am {{ workshop.recurringDay !== undefined ? getWeekday(workshop.recurringDay) : 'Unbekannt' }}
+      <strong>🔄 Wiederkehrend:</strong> {{ getRecurringLabel(workshop) }}
     </p>
 
     <p *ngIf="workshop.participants?.length">

@@ -46,4 +46,24 @@ export class WorkshopDetailComponent implements OnInit {
     const weekdays = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
     return weekdays[day] ?? 'Unbekannt';
   }
+
+  getRecurringLabel(workshop: Workshop): string {
+    if (!workshop.recurring) {
+      return 'Einmalig';
+    }
+  
+    if (workshop.recurring && workshop.recurringWeek) {
+      const weekday = this.getWeekday(workshop.recurringDay ?? -1);
+      return `Wöchentlich in Woche ${workshop.recurringWeek}, am ${weekday}`;
+    }
+  
+    if (workshop.recurring && workshop.recurringDay !== undefined) {
+      return `Jede Woche am ${this.getWeekday(workshop.recurringDay)}`;
+    }
+  
+
+    return 'Unbekanntes Muster';
+  }
+
+  
 }
