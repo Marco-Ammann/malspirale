@@ -47,7 +47,7 @@ export class AdminComponent implements OnInit {
 
   // Live-Update der Workshops
   loadWorkshopCount(): void {
-    this.dataService.getWorkshops().subscribe((workshops) => {
+    this.dataService.getAllWorkshops().then((workshops) => {
       this.workshopCount$.next(workshops.length);
     });
   }

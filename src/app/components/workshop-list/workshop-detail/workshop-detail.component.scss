@@ -1,93 +1,67 @@
 @use 'sass:color';
 @use 'variables' as vars;
 
+
 .workshop-detail {
-  max-width: 800px;
+  max-width: 900px;
   margin: 0 auto;
-  padding: vars.$padding-medium;
+  padding: 20px;
   background: vars.$background-color;
-  border: 1px solid vars.$primary-color;
-  border-radius: 8px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  
+  h2 {
+    text-align: center;
+    color: vars.$primary-color;
+  }
+  
+  .workshop-content {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 20px;
+  }
+  
+  .workshop-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 5px;
+  }
 
-  .workshop-header {
-    margin-bottom: vars.$padding-medium;
+  .workshop-image {
+    width: 100%;
+    height: 200px;
+    border-radius: 5px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
 
-    h2 {
-      font-size: 1.75rem;
-      margin-bottom: 0.25rem;
-      color: color.adjust(vars.$text-color, $lightness: -10%);
-      font-family: vars.$font-family;
+    &.oben {
+      display: block;
+      margin: 0 auto 20px;
     }
 
-    .location {
-      font-size: 1rem;
-      color: vars.$text-color;
-      margin: 0;
+    &.unten {
+      display: block;
+      margin: 20px auto 0;
+    }
+
+    &.links {
+      float: left;
+      margin-right: 20px;
+    }
+
+    &.rechts {
+      float: right;
+      margin-left: 20px;
+    }
+
+    &.zentriert {
+      display: block;
+      margin: 0 auto;
     }
   }
 
   .workshop-info {
-    .description {
-      margin-bottom: vars.$padding-medium;
-      font-size: 1.1rem;
-      line-height: 1.5;
-      color: vars.$text-color;
-      font-family: vars.$font-family;
-    }
-
-    .info-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-
-      p {
-        margin: 0;
-        font-size: 1rem;
-        color: vars.$text-color;
-        font-family: vars.$font-family;
-
-        strong {
-          font-weight: 600;
-        }
-
-        .full {
-          color: color.adjust(vars.$text-color, $lightness: -30%);
-          font-weight: bold;
-        }
-      }
-    }
+    flex: 1;
   }
-
-  .action-row {
-    margin-top: vars.$padding-medium;
-    text-align: center;
-
-    button {
-      padding: vars.$padding-small vars.$padding-medium;
-      background-color: vars.$primary-color;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 1rem;
-      transition: background-color 0.3s ease;
-      font-family: vars.$font-family;
-
-      &:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-      }
-
-      &:hover:not(:disabled) {
-        background-color: color.adjust(vars.$primary-color, $lightness: 10%);
-      }
-    }
-  }
-}
-
-/* Fallback text */
-.not-found {
-  text-align: center;
-  color: vars.$text-color;
-  margin: vars.$padding-medium 0;
 }

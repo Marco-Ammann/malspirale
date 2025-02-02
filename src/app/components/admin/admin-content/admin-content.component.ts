@@ -1,12 +1,17 @@
-import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { QuillModule } from 'ngx-quill';
 import { DataService } from '../../../core/services/data.service';
-import { StorageService } from '../../../core/services/storage.service';
+import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'firebase/storage';
+import { ContentData } from '../../../core/interfaces/interfaces';
+import Quill from 'quill';
+
 
 @Component({
   selector: 'app-admin-content',
   standalone: true,
-  imports: [CommonModule],
+  imports: [FormsModule, CommonModule, QuillModule],
   templateUrl: './admin-content.component.html',
   styleUrls: ['./admin-content.component.scss']
 })
@@ -14,75 +19,103 @@ export class AdminContentComponent implements OnInit {
   siteContent: string = '';
   loading: boolean = true;
   saveMessage: string = '';
-  activeFormats: string[] = [];
   images: { url: string; description: string }[] = [];
-  
-  constructor(private dataService: DataService, private storageService: StorageService) {}
+  storage = getStorage();
+
+  quillConfig = {
+    toolbar: [
+      ['bold', 'italic', 'underline'],
+      [{ header: 1 }, { header: 2 }],
+      [{ list: 'ordered' }, { list: 'bullet' }],
+      ['link', 'image'],
+    ],
+    clipboard: {
+      matchVisual: false,
+    },
+  };
+
+  constructor(private dataService: DataService) {}
 
   ngOnInit(): void {
     this.loadContent();
   }
 
-  loadContent(): void {
-    this.dataService.getContent('about').subscribe((content) => {
-      this.siteContent = content || 'Kein Inhalt verfügbar.';
+  async loadContent(): Promise<void> {
+    this.dataService.getContent('about').subscribe((content: ContentData | null) => {
+      if (content) {
+        this.siteContent = content.text || '';
+        this.images = content.images || [];
+      } else {
+        this.siteContent = '';
+        this.images = [];
+      }
       this.loading = false;
     });
+    
   }
 
-  saveContent(): void {
+  async saveContent(): Promise<void> {
     if (!this.siteContent.trim()) {
       this.saveMessage = '⚠️ Inhalt darf nicht leer sein.';
       return;
     }
-
-    this.dataService.updateContent('about', this.siteContent)
-      .then(() => {
-        this.saveMessage = '✅ Änderungen gespeichert!';
-      })
-      .catch((error) => {
-        console.error('Fehler beim Speichern:', error);
-        this.saveMessage = '❌ Fehler beim Speichern.';
-      });
+  
+    const contentData = {
+      text: this.siteContent,
+      images: this.images,
+    };
+  
+    await this.dataService.updateContent('about', contentData);
+    this.saveMessage = '✅ Änderungen gespeichert!';
   }
 
-  updateContent(event: Event): void {
-    const target = event.target as HTMLDivElement;
-    this.siteContent = target.innerHTML;
-  }
+  async uploadImage(event: Event): Promise<void> {
+    const target = event.target as HTMLInputElement;
+    if (!target.files || target.files.length === 0) return;
 
-  formatText(command: string): void {
-    document.execCommand(command, false, '');
-    this.checkActiveFormats();
-  }
+    const file = target.files[0];
 
-  insertLink(): void {
-    const url = prompt('Bitte geben Sie die URL ein:');
-    if (url) {
-      document.execCommand('createLink', false, url);
-      this.checkActiveFormats();
+    if (!file.type.startsWith('image/')) {
+      this.saveMessage = '❌ Nur Bilder erlaubt!';
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      this.saveMessage = '❌ Datei zu groß (max. 5MB erlaubt)!';
+      return;
+    }
+
+    try {
+      const filePath = `images/${Date.now()}_${file.name}`;
+      const storageRef = ref(this.storage, filePath);
+      const uploadTask = await uploadBytesResumable(storageRef, file);
+      const url = await getDownloadURL(uploadTask.ref);
+
+      this.images.push({ url, description: '' });
+      this.saveMessage = '✅ Bild erfolgreich hochgeladen!';
+    } catch (error) {
+      console.error('Fehler beim Upload:', error);
+      this.saveMessage = '❌ Fehler beim Hochladen!';
     }
   }
 
-  checkActiveFormats(): void {
-    const selection = window.getSelection();
-    if (!selection || selection.rangeCount === 0) return;
+  async deleteImage(index: number): Promise<void> {
+    const image = this.images[index];
 
-    const parentTag = selection.getRangeAt(0).commonAncestorContainer.parentElement;
-    if (!parentTag) return;
+    try {
+      const imagePath = this.extractFilePath(image.url);
+      const storageRef = ref(this.storage, imagePath);
 
-    this.activeFormats = [];
-    if (parentTag.tagName === 'B' || parentTag.style.fontWeight === 'bold') this.activeFormats.push('bold');
-    if (parentTag.tagName === 'I' || parentTag.style.fontStyle === 'italic') this.activeFormats.push('italic');
-    if (parentTag.tagName === 'H1') this.activeFormats.push('h1');
-    if (parentTag.tagName === 'H2') this.activeFormats.push('h2');
-    if (parentTag.tagName === 'P') this.activeFormats.push('p');
-    if (parentTag.tagName === 'UL') this.activeFormats.push('ul');
-    if (parentTag.tagName === 'OL') this.activeFormats.push('ol');
-    if (parentTag.tagName === 'A') this.activeFormats.push('a');
+      await deleteObject(storageRef);
+      this.images.splice(index, 1);
+      this.saveMessage = '✅ Bild erfolgreich gelöscht!';
+    } catch (error) {
+      console.error('Fehler beim Löschen:', error);
+      this.saveMessage = '❌ Fehler beim Löschen des Bildes!';
+    }
   }
 
-  isActive(format: string): boolean {
-    return this.activeFormats.includes(format);
+  private extractFilePath(url: string): string {
+    const matches = url.match(/images%2F(.*?)\?alt/);
+    return matches && matches.length > 1 ? `images/${decodeURIComponent(matches[1])}` : '';
   }
 }

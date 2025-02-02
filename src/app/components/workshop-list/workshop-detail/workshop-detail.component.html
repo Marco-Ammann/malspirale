@@ -1,41 +1,42 @@
 <div class="workshop-detail" *ngIf="workshop; else notFound">
-  <div class="workshop-header">
-    <h2>{{ workshop.title }}</h2>
-    <p class="location">{{ workshop.location }}</p>
+  <h2>{{ workshop.title }}</h2>
+  <p class="location">{{ workshop.location }}</p>
+
+  <div *ngIf="workshop.image" class="workshop-image">
+    <img [src]="workshop.image" alt="Workshop Bild" [ngClass]="workshop.imagePosition" />
   </div>
 
   <div class="workshop-info">
-    <p class="description">{{ workshop.description }}</p>
+    <p class="description">{{ workshop.longDescription }}</p>
 
-    <div class="info-row">
-      <p><strong>Datum:</strong> {{ workshop.date }}</p>
-      <p>
-        <strong>Plätze frei:</strong>
-        <span [class.full]="workshop.availableSlots === 0">{{ workshop.availableSlots }}</span>
-      </p>
-      <p><strong>Max. Teilnehmer:</strong> {{ workshop.maxParticipants }}</p>
-    </div>
-  </div>
+    <p><strong>📅 Datum:</strong> {{ workshop.date }}</p>
 
-  <div class="action-row">
-    <button
-      (click)="onEnroll()"
-      [disabled]="workshop.availableSlots === 0 || isUserEnrolled"
-      aria-label="Anmelden zum Workshop"
-    >
-      {{ isUserEnrolled ? 'Bereits angemeldet' : 'Jetzt anmelden' }}
-    </button>
-    <button
-      *ngIf="isUserEnrolled"
-      class="cancel-button"
-      (click)="onUnenroll()"
-    >
-      Abmelden
-    </button>
+    <p *ngIf="workshop.startTime && workshop.endTime">
+      <strong>⏰ Zeit:</strong> {{ workshop.startTime }} - {{ workshop.endTime }}
+    </p>
+
+    <p *ngIf="workshop.price">
+      <strong>💰 Preis:</strong> {{ workshop.price | currency:'EUR' }}
+    </p>
+
+    <p *ngIf="workshop.maxParticipants">
+      <strong>👥 Maximale Teilnehmer:</strong> {{ workshop.maxParticipants }}
+    </p>
+
+    <p><strong>📌 Verfügbare Plätze:</strong> {{ workshop.availableSlots }}</p>
+
+    <p *ngIf="workshop.recurring">
+      <strong>🔄 Wiederkehrend:</strong> Wöchentlich in Woche {{ workshop.recurringWeek }}, am {{ workshop.recurringDay !== undefined ? getWeekday(workshop.recurringDay) : 'Unbekannt' }}
+    </p>
+
+    <p *ngIf="workshop.participants?.length">
+      <strong>👤 Teilnehmer:</strong> {{ workshop.participants?.length }} angemeldet
+    </p>
+
+    <p><strong>🕒 Erstellt am:</strong> {{ workshop.createdAt | date:'dd.MM.yyyy HH:mm' }}</p>
   </div>
 </div>
 
-<!-- Fallback: Falls workshop nicht vorhanden -->
 <ng-template #notFound>
-  <p class="not-found">Workshop nicht gefunden.</p>
+  <p class="error">⚠️ Workshop nicht gefunden.</p>
 </ng-template>

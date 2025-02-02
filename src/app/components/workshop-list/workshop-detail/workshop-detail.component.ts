@@ -2,66 +2,48 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Workshop } from '../../../core/interfaces/interfaces';
 import { DataService } from '../../../core/services/data.service';
-import { AuthService } from '../../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-
 
 @Component({
   selector: 'app-workshop-detail',
-  imports: [CommonModule, FormsModule],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './workshop-detail.component.html',
   styleUrls: ['./workshop-detail.component.scss'],
 })
 export class WorkshopDetailComponent implements OnInit {
   workshop: Workshop | null = null;
-  userId: string | null = null;
-  isUserEnrolled: boolean = false;
+  loading = false;
+  errorMessage: string | null = null;
 
-  constructor(
-    private route: ActivatedRoute,
-    private dataService: DataService,
-    private authService: AuthService
-  ) {}
+  constructor(private route: ActivatedRoute, private dataService: DataService) {}
 
-  ngOnInit(): void {
-    this.authService.getCurrentUserId().then((id) => {
-      this.userId = id;
-      this.loadWorkshop();
-    });
+  ngOnInit() {
+    this.loadWorkshop();
   }
 
-  loadWorkshop(): void {
-    const workshopId = this.route.snapshot.paramMap.get('id');
-    if (workshopId) {
-      this.dataService.getWorkshopById(workshopId).subscribe((workshop) => {
-        if (workshop) {
-          this.workshop = workshop;
-          this.checkUserEnrollment();
-        }
-      });
+  async loadWorkshop() {
+    this.loading = true;
+    const id = this.route.snapshot.paramMap.get('id');
+    if (!id) {
+      this.errorMessage = 'Kein Workshop gefunden.';
+      this.loading = false;
+      return;
+    }
+
+    try {
+      this.workshop = await this.dataService.getWorkshop(id);
+      if (!this.workshop) this.errorMessage = 'Workshop nicht gefunden.';
+    } catch (error) {
+      this.errorMessage = 'Fehler beim Laden des Workshops.';
+      console.error(error);
+    } finally {
+      this.loading = false;
     }
   }
 
-  checkUserEnrollment(): void {
-    if (this.workshop && this.userId) {
-      this.isUserEnrolled = this.workshop.participants?.includes(this.userId) || false;
-    }
-  }
-
-  async onEnroll(): Promise<void> {
-    if (this.workshop && this.userId) {
-      await this.dataService.enrollUser(this.workshop.id, this.userId);
-      this.workshop.availableSlots -= 1;
-      this.isUserEnrolled = true;
-    }
-  }
-
-  async onUnenroll(): Promise<void> {
-    if (this.workshop && this.userId) {
-      await this.dataService.unenrollUser(this.workshop.id, this.userId);
-      this.workshop.availableSlots += 1;
-      this.isUserEnrolled = false;
-    }
+  getWeekday(day: number): string {
+    const weekdays = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
+    return weekdays[day] ?? 'Unbekannt';
   }
 }

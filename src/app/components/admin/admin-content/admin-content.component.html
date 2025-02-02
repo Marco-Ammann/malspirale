@@ -1,35 +1,12 @@
 <div class="admin-content">
   <h2>Über mich - Inhalt bearbeiten</h2>
 
-  <!-- Ladeanzeige -->
   <p *ngIf="loading">⏳ Lade aktuellen Inhalt...</p>
 
-  <!-- Rich-Text-Editor -->
-  <div class="editor">
-    <button (click)="formatText('bold')" [ngClass]="{'active': isActive('bold')}"><b>B</b></button>
-    <button (click)="formatText('italic')" [ngClass]="{'active': isActive('italic')}"><i>I</i></button>
-    <button (click)="formatText('h1')" [ngClass]="{'active': isActive('h1')}">H1</button>
-    <button (click)="formatText('h2')" [ngClass]="{'active': isActive('h2')}">H2</button>
-    <button (click)="formatText('p')" [ngClass]="{'active': isActive('p')}">P</button>
-    <button (click)="formatText('insertUnorderedList')" [ngClass]="{'active': isActive('ul')}">• Liste</button>
-    <button (click)="formatText('insertOrderedList')" [ngClass]="{'active': isActive('ol')}">1. Liste</button>
-    <button (click)="insertLink()">🔗 Link</button>
-  </div>
+  <!-- Quill Editor -->
+  <quill-editor [(ngModel)]="siteContent" [modules]="quillConfig"></quill-editor>
 
-  <!-- Contenteditable mit innerHTML -->
-  <div
-    contenteditable="true"
-    class="content-editor"
-    (input)="updateContent($event)"
-    (keyup)="checkActiveFormats()"
-    [innerHTML]="siteContent">
-  </div>
-
-  <!-- Speichern-Button -->
   <button (click)="saveContent()">💾 Speichern</button>
 
-  <!-- Feedback-Nachricht -->
   <p class="save-message" *ngIf="saveMessage">{{ saveMessage }}</p>
 </div>
-
-

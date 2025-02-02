@@ -91,4 +91,71 @@
   }
 }
 
+.editor {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 10px;
+
+  button {
+    background: #007BFF;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 3px;
+    font-size: 16px;
+
+    &:hover {
+      background: #0056b3;
+    }
+  }
+}
+
+.ql-editor {
+  min-height: 200px;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  background: white;
+}
+
+.file-upload {
+  display: inline-block;
+  padding: 10px 15px;
+  background: #007BFF;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 1rem;
+  font-weight: bold;
+  
+  input {
+    display: none;
+  }
+}
+
+.image-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1rem;
+
+  .image-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid #ddd;
+    padding: 1rem;
+    border-radius: 8px;
+    background: #fff;
+
+    img {
+      width: 150px;
+      height: auto;
+      border-radius: 4px;
+      margin-bottom: 0.5rem;
+    }
+  }
+}
 

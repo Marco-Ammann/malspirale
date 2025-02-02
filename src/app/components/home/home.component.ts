@@ -28,7 +28,7 @@ export class HomeComponent {
   }
 
   loadWorkshops(): void {
-    this.dataService.getWorkshops().subscribe((workshops) => {
+    this.dataService.getAllWorkshops().then((workshops) => {
       this.workshops = workshops;
     });
   }

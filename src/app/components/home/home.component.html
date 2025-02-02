@@ -34,10 +34,10 @@
   <div *ngIf="workshops.length > 0; else noWorkshops">
     <div class="workshop-cards">
       <div *ngFor="let workshop of workshops" class="workshop-card">
-        <img [src]="workshop.image || 'assets/images/default-workshop.webp'" [alt]="workshop.title" />
+        <img [src]="workshop.image || 'assets/images/default-workshop.jpg'" [alt]="workshop.title" />
         <div class="workshop-info">
           <h3>{{ workshop.title }}</h3>
-          <p>{{ workshop.description }}</p>
+          <p>{{ workshop.shortDescription }}</p>
           <p><strong>Datum:</strong> {{ workshop.date }}</p>
           <p><strong>Ort:</strong> {{ workshop.location }}</p>
           <p><strong>Freie Plätze:</strong> {{ workshop.availableSlots }} / {{ workshop.maxParticipants }}</p>

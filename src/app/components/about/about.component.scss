@@ -1,86 +1,176 @@
-@use 'sass:color';
-@use 'variables' as vars;
-@use 'mixins' as mix;
-.about {
-  max-width: 800px;
+@use "sass:color";
+@use "variables" as vars;
+@use "mixins" as mix;
+
+.about-container {
+  max-width: vars.$desktop;
   margin: 2rem auto;
-  padding: 2rem;
-  background-color: vars.$background-color;
-  border-radius: vars.$border-radius;
-  box-shadow: vars.$box-shadow;
-
-  h1 {
-    color: vars.$primary-color;
-    font-size: vars.$font-size-large;
-    margin-bottom: vars.$padding-medium;
-  }
-
-  div {
-    font-size: vars.$font-size-base;
-    line-height: 1.6;
-    color: vars.$text-color;
-  }
-}
-
-.about-page {
-  max-width: 800px;
-  margin: 2rem auto;
-  padding: vars.$padding-large;
-  background-color: vars.$background-color;
-  border-radius: vars.$border-radius;
-  box-shadow: vars.$shadow;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   text-align: center;
+  .about-card {
+    width: 100%;
+    background-color: vars.$background-color;
+    border-radius: vars.$border-radius;
+    box-shadow: vars.$box-shadow;
+    padding: vars.$padding-large;
+    display: flex;
+    flex-direction: column;
 
-  /* Überschrift */
-  .about-header {
-    h2 {
-      font-size: vars.$font-size-xlarge;
-      margin-bottom: vars.$padding-medium;
+    .about-card-title {
       color: vars.$primary-color;
-      font-family: vars.$font-family;
-      font-weight: bold;
-      text-transform: uppercase;
-    }
-  }
-
-  /* Inhalt */
-  .about-content {
-    p {
       font-size: vars.$font-size-large;
-      line-height: 1.8;
-      color: vars.$text-color;
-      font-family: vars.$font-family;
       margin-bottom: vars.$padding-medium;
-      text-align: justify;
+    }
+
+    .about-card-content {
+      display: flex;
+      justify-content: center;
+      align-items: start;
+      gap: vars.$padding-large;
+      width: 100%;
+      max-height: fit-content;
+
+      .about-image {
+        margin: 0;
+        height: 100%;
+        object-fit: cover;
+
+        img {
+          border-radius: vars.$border-radius;
+          box-shadow: vars.$box-shadow;
+          margin: 0;
+        }
+      }
+
+      .about-text {
+        display: flex;
+        align-items: start;
+        max-width: 60%;
+        // Stile für Quill-Editor
+        div {
+          font-size: vars.$font-size-base;
+          line-height: 1.8;
+          color: vars.$text-color;
+          text-align: left;
+          word-break: break-word;
+
+          p {
+            margin-bottom: vars.$padding-small;
+          }
+
+          h1,
+          h2,
+          h3 {
+            font-family: vars.$font-family;
+            font-weight: bold;
+            margin-top: vars.$padding-medium;
+            margin-bottom: vars.$padding-small;
+          }
+
+          h1 {
+            font-size: vars.$font-size-xlarge;
+            color: vars.$primary-color;
+          }
+
+          h2 {
+            font-size: vars.$font-size-large;
+            color: color.adjust(vars.$primary-color, $lightness: -10%);
+          }
+
+          h3 {
+            font-size: vars.$font-size-medium;
+            color: color.adjust(vars.$primary-color, $lightness: -20%);
+          }
+
+          b,
+          strong {
+            font-weight: bold;
+          }
+
+          i,
+          em {
+            font-style: italic;
+          }
+
+          u {
+            text-decoration: underline;
+          }
+
+          /* Quill-Editor Listen */
+          ul,
+          ol {
+            padding-left: 1.5rem;
+            margin-bottom: vars.$padding-small;
+          }
+
+          ul {
+            list-style-type: disc;
+          }
+
+          ol {
+            list-style-type: decimal;
+          }
+
+          li {
+            margin-bottom: 0.5rem;
+          }
+        }
+      }
+    }
+
+    .loading-indicator {
+      font-size: vars.$font-size-base;
+      font-style: italic;
+      color: vars.$primary-color;
     }
   }
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .about-page {
-    padding: vars.$padding-medium;
+  .about-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
-  .about-header h2 {
+  .about-card {
+    max-width: vars.$mobile;
+  }
+
+  .about-image img{
+   display: none;
+  }
+
+  .about-text {
+    max-width: 100%!important;
+  }
+  .about-card-content {
+    flex-direction: column;
+    gap: vars.$padding-large;
+  }
+
+  h1 {
     font-size: vars.$font-size-large;
   }
 
-  .about-content p {
+  div {
     font-size: vars.$font-size-base;
   }
 }
 
 @media (max-width: 480px) {
-  .about-page {
+  .about-card {
     padding: vars.$padding-small;
   }
 
-  .about-header h2 {
+  h1 {
     font-size: vars.$font-size-base;
   }
 
-  .about-content p {
+  div {
     font-size: vars.$font-size-small;
   }
 }

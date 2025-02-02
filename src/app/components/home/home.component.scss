@@ -29,7 +29,7 @@
     p {
       font-size: vars.$font-size-large;
       margin-bottom: vars.$padding-medium;
-      color: darken(vars.$text-color, 10%);
+      color: adjust-color(vars.$text-color, $lightness: -10%);
     }
 
     .btn {

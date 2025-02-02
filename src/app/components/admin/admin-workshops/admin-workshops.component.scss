@@ -13,125 +13,109 @@
     margin-bottom: vars.$padding-medium;
   }
 
-  /* Workshop-Formular */
+  .loading {
+    color: vars.$secondary-color;
+    font-weight: bold;
+  }
+
+  .error {
+    color: red;
+    font-weight: bold;
+  }
+
   .workshop-form {
     display: flex;
     flex-direction: column;
     gap: vars.$padding-small;
     padding: vars.$padding-large;
     background: vars.$background-color;
-    border-radius: vars.$border-radius;
-    box-shadow: vars.$shadow;
-    text-align: left;
-
-    label {
-      font-weight: bold;
-      color: vars.$text-color;
-    }
+    border-radius: 8px;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
 
     input, textarea {
-      width: 100%;
       padding: vars.$padding-small;
-      border: 2px solid vars.$secondary-color;
-      border-radius: vars.$border-radius;
-      font-size: vars.$font-size-base;
-      transition: border 0.3s ease, box-shadow 0.3s ease;
-
-      &:focus {
-        border-color: color.adjust(vars.$secondary-color, $lightness: -10%);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-      }
+      border: 1px solid vars.$primary-color;
+      border-radius: 4px;
     }
 
-    .btn {
-      width: 100%;
+    button {
+      background-color: vars.$primary-color;
+      color: white;
+      border: none;
       padding: vars.$padding-small;
-      font-size: vars.$font-size-large;
-      border-radius: vars.$border-radius;
-      text-align: center;
       cursor: pointer;
-    }
-  }
+      transition: 0.3s;
 
-  /* Workshop-Liste */
-  .workshop-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: vars.$padding-medium;
-    justify-content: center;
-    margin-top: vars.$padding-large;
-  }
-
-  /* Einzelne Workshop-Karte */
-  .workshop-card {
-    background: white;
-    border-radius: vars.$border-radius-large;
-    box-shadow: vars.$shadow;
-    padding: vars.$padding-medium;
-    text-align: center;
-    max-width: 400px;
-    transition: transform 0.2s, box-shadow 0.3s ease-in-out;
-
-    &:hover {
-      transform: translateY(-5px);
-      box-shadow: vars.$hover-shadow;
-    }
-
-    .workshop-card-header {
-      h3 {
-        font-size: vars.$font-size-large;
-        margin-bottom: vars.$padding-small;
-      }
-      p {
-        font-size: vars.$font-size-base;
-        color: vars.$text-color;
+      &:hover {
+        background-color: vars.$hover-color;
       }
     }
 
-    .workshop-card-footer {
+    .image-preview-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 10px 0;
+    
+      .image-preview {
+        max-width: 100%;
+        max-height: 250px;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    
+        &.oben {
+          display: block;
+          margin: 0 auto;
+        }
+    
+        &.unten {
+          display: block;
+          margin: 20px auto;
+        }
+    
+        &.links {
+          float: left;
+          margin-right: 10px;
+        }
+    
+        &.rechts {
+          float: right;
+          margin-left: 10px;
+        }
+    
+        &.links-oben {
+          position: absolute;
+          top: 0;
+          left: 0;
+        }
+    
+        &.rechts-oben {
+          position: absolute;
+          top: 0;
+          right: 0;
+        }
+    
+        &.zentriert {
+          display: block;
+          margin: 0 auto;
+        }
+      }
+    }
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+
+    li {
       display: flex;
       justify-content: space-between;
-      margin-top: vars.$padding-small;
-      gap: vars.$padding-small;
-
-      .btn {
-        padding: vars.$padding-small vars.$padding-medium;
-        font-size: vars.$font-size-base;
-        border-radius: vars.$border-radius;
-        cursor: pointer;
-      }
-
-      .btn-edit {
-        background: vars.$primary-color;
-        color: white;
-      }
-
-      .btn-delete {
-        background: #ff4d4d;
-        color: white;
-      }
+      padding: vars.$padding-small;
+      border-bottom: 1px solid vars.$secondary-color;
     }
-  }
-}
 
-/* Responsive-Anpassungen */
-@media (max-width: 768px) {
-  .workshop-list {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .workshop-card {
-    width: 90%;
-  }
-}
-
-@media (max-width: 480px) {
-  .workshop-form {
-    padding: vars.$padding-medium;
-  }
-
-  .btn {
-    font-size: vars.$font-size-base;
+    button {
+      margin-left: vars.$padding-small;
+    }
   }
 }

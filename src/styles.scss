@@ -50,3 +50,16 @@ body {
     transform: scale(1.05);
   }
 }
+.about-container img {
+  max-width: 100%;   // Bild passt sich dem Container an
+  height: auto;      // Höhe bleibt proportional
+  display: block;    // Kein Inline-Element
+  margin: 1rem auto;
+  border-radius: 8px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.about-container .about-card .about-card-content .about-text div p {
+  max-width: 100%;
+  
+}

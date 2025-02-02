@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { from, Observable } from 'rxjs';
-import { Workshop, GalleryImage } from '../interfaces/interfaces';
+import { BehaviorSubject, from, Observable } from 'rxjs';
+import { Workshop, GalleryImage, ContentData } from '../interfaces/interfaces';
 import {
   getFirestore,
   collection,
@@ -25,82 +25,148 @@ import { firebaseApp } from '../../../firebase-config';
 })
 export class DataService {
   private db = getFirestore(firebaseApp);
+  private workshopsSubject = new BehaviorSubject<Workshop[]>([]);
+  workshops$ = this.workshopsSubject.asObservable();
+  
+  constructor() {
+    this.loadWorkshops();
+  }
 
-  constructor() {}
 
-  // Workshops abrufen (Live-Updates)
-  getWorkshops(): Observable<Workshop[]> {
-    return new Observable((observer) => {
-      const workshopsCollection = collection(this.db, 'workshops');
+  // 🔄 Workshops mit Echtzeit-Updates laden
+  private loadWorkshops() {
+    const workshopsCollection = collection(this.db, 'workshops');
+    const q = query(workshopsCollection, orderBy('date', 'asc'));
 
-      // Firestore Live-Listener für Echtzeit-Updates
-      onSnapshot(workshopsCollection, (querySnapshot) => {
-        const workshops = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        })) as Workshop[];
-        observer.next(workshops);
-      });
+    onSnapshot(q, (querySnapshot) => {
+      const workshops = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as Workshop[];
+      this.workshopsSubject.next(workshops);
     });
   }
 
-  // Workshop anhand der ID abrufen
-  getWorkshopById(id: string): Observable<Workshop | null> {
-    return from(
-      getDoc(doc(this.db, 'workshops', id)).then((docSnap) =>
-        docSnap.exists()
-          ? ({ id: docSnap.id, ...docSnap.data() } as Workshop)
-          : null
-      )
-    );
+  // 🔍 Einzelnen Workshop abrufen
+  async getWorkshop(id: string): Promise<Workshop | null> {
+    try {
+      const docRef = doc(this.db, 'workshops', id);
+      const docSnap = await getDoc(docRef);
+      return docSnap.exists() ? ({ id: docSnap.id, ...docSnap.data() } as Workshop) : null;
+    } catch (error) {
+      console.error('Fehler beim Abrufen des Workshops:', error);
+      return null;
+    }
   }
 
-  // Workshop erstellen
-  createWorkshop(workshop: Omit<Workshop, 'id'>): Promise<void> {
-    return addDoc(collection(this.db, 'workshops'), {
-      ...workshop,
-      participants: [],
-      createdAt: new Date(),
-    }).then(() => console.log('Workshop erstellt!'));
+  // 📜 Alle Workshops abrufen (ohne Live-Updates)
+  async getAllWorkshops(): Promise<Workshop[]> {
+    try {
+      const querySnapshot = await getDocs(collection(this.db, 'workshops'));
+      return querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })) as Workshop[];
+    } catch (error) {
+      console.error('Fehler beim Abrufen der Workshops:', error);
+      return [];
+    }
   }
 
-  // Workshop aktualisieren (Live-Update in Firestore)
-  updateWorkshop(id: string, updates: Partial<Workshop>): Promise<void> {
-    return updateDoc(doc(this.db, 'workshops', id), updates);
+
+  // ➕ Neuen Workshop hinzufügen
+  async addWorkshop(workshop: Workshop): Promise<void> {
+    try {
+      console.log("📡 Firestore: Speichere Workshop...", workshop);
+      const workshopsCollection = collection(this.db, 'workshops');
+      await addDoc(workshopsCollection, {
+        ...workshop,
+        createdAt: new Date().toISOString(),  // Zeitstempel hinzufügen
+      });
+      console.log("✅ Firestore: Workshop gespeichert!");
+    } catch (error) {
+      console.error("❌ Firestore-Fehler beim Speichern:", error);
+      throw error;
+    }
   }
 
-  // Workshop löschen
-  deleteWorkshop(id: string): Promise<void> {
-    return deleteDoc(doc(this.db, 'workshops', id)).then(() =>
-      console.log('Workshop gelöscht!')
-    );
+  // 📝 Workshop aktualisieren
+  async updateWorkshop(id: string, data: Partial<Workshop>): Promise<void> {
+    try {
+      console.log(`📡 Firestore: Aktualisiere Workshop mit ID ${id}...`, data);
+      const workshopDoc = doc(this.db, 'workshops', id);
+      await updateDoc(workshopDoc, data);
+      console.log("✅ Firestore: Workshop aktualisiert!");
+    } catch (error) {
+      console.error("❌ Firestore-Fehler beim Aktualisieren:", error);
+      throw error;
+    }
+  }
+
+  // ❌ Workshop löschen
+  async deleteWorkshop(id: string): Promise<void> {
+    try {
+      const workshopDoc = doc(this.db, 'workshops', id);
+      await deleteDoc(workshopDoc);
+    } catch (error) {
+      console.error('Fehler beim Löschen des Workshops:', error);
+      throw error;
+    }
+  }
+
+  async createOrUpdateWorkshop(workshop: Workshop): Promise<void> {
+    const docRef = workshop.id
+      ? doc(this.db, 'workshops', workshop.id)
+      : doc(collection(this.db, 'workshops'));
+  
+    const workshopData = { ...workshop };
+  
+    // Falls der Workshop wiederkehrend ist, setzen wir das Datum automatisch
+    if (workshop.recurring) {
+      workshopData.date = this.calculateNextRecurringDate(workshop);
+    }
+  
+    await setDoc(docRef, workshopData, { merge: true });
+  }
+  
+  calculateNextRecurringDate(workshop: Workshop): string {
+    const today = new Date();
+    let nextDate = new Date(today.getFullYear(), today.getMonth(), 1);
+  
+    let weekCount = 0;
+    while (weekCount < workshop.recurringWeek!) {
+      if (nextDate.getDay() === workshop.recurringDay) {
+        weekCount++;
+      }
+      if (weekCount < workshop.recurringWeek!) {
+        nextDate.setDate(nextDate.getDate() + 1);
+      }
+    }
+    return nextDate.toISOString().split('T')[0]; // YYYY-MM-DD
   }
 
   // Nutzer anmelden
   async enrollUser(workshopId: string, userId: string): Promise<void> {
     const workshopRef = doc(this.db, 'workshops', workshopId);
     const docSnap = await getDoc(workshopRef);
-
+  
     if (docSnap.exists()) {
-      const workshop = docSnap.data();
-      if (workshop['availableSlots'] > 0) {
+      const workshop = docSnap.data() as Workshop;
+      if ((workshop.availableSlots ?? 0) > 0) {
         await updateDoc(workshopRef, {
           participants: arrayUnion(userId),
-          availableSlots: workshop['availableSlots'] - 1,
+          availableSlots: (workshop.availableSlots ?? 0) - 1,
         });
       }
     }
   }
-
-  // Nutzer abmelden
+  
   async unenrollUser(workshopId: string, userId: string): Promise<void> {
     const workshopRef = doc(this.db, 'workshops', workshopId);
     const docSnap = await getDoc(workshopRef);
-
+  
     if (docSnap.exists()) {
+      const workshop = docSnap.data() as Workshop;
       await updateDoc(workshopRef, {
         participants: arrayRemove(userId),
-        availableSlots: docSnap.data()?.['availableSlots'] + 1,
+        availableSlots: (workshop.availableSlots ?? 0) + 1,
       });
     }
   }
@@ -129,23 +195,23 @@ export class DataService {
     return null;
   }
 
-    // 🔹 Inhalt einer bestimmten Sektion abrufen (z. B. "about")
-    getContent(section: string): Observable<string | null> {
-      return new Observable((observer) => {
-        const docRef = doc(this.db, 'content', section);
-        getDoc(docRef).then((docSnap) => {
-          if (docSnap.exists()) {
-            observer.next(docSnap.data()['text']);
-          } else {
-            observer.next(null);
-          }
-        });
-      });
-    }
-  
-    // 🔹 Inhalt einer bestimmten Sektion aktualisieren oder erstellen
-    async updateContent(section: string, newData: string): Promise<void> {
+  // 🔹 Inhalt einer bestimmten Sektion abrufen (z. B. "about")
+  getContent(section: string): Observable<ContentData | null> {
+    return new Observable((observer) => {
       const docRef = doc(this.db, 'content', section);
-      await setDoc(docRef, { text: newData }, { merge: true });
-    }
+      getDoc(docRef).then((docSnap) => {
+        if (docSnap.exists()) {
+          observer.next(docSnap.data() as ContentData);
+        } else {
+          observer.next(null);
+        }
+      });
+    });
+  }
+  
+  // 🔹 Inhalt einer bestimmten Sektion aktualisieren oder erstellen
+  async updateContent(section: string, newData: ContentData): Promise<void> {
+    const docRef = doc(this.db, 'content', section);
+    await setDoc(docRef, newData, { merge: true });
+  }
 }

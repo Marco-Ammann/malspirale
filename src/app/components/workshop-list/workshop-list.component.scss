@@ -8,7 +8,6 @@
   padding: vars.$padding-large;
 }
 
-/* Container fürs Suchfeld */
 .search-container {
   text-align: center;
   margin-bottom: vars.$padding-medium;
@@ -21,115 +20,87 @@
     border: 2px solid vars.$secondary-color;
     border-radius: vars.$border-radius;
     outline: none;
-    transition: border-color 0.3s ease, box-shadow 0.2s ease;
-
-    &:focus {
-      border-color: color.adjust(vars.$secondary-color, $lightness: -10%);
-      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
-    }
   }
 }
 
-/* Grid für die Workshop-Karten */
+
 .workshop-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: vars.$padding-medium;
-}
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: center;
 
-/* Einzelne Workshop-Karte */
-.workshop-card {
-  background: white;
-  border-radius: vars.$border-radius-large;
-  box-shadow: vars.$shadow;
-  cursor: pointer;
-  overflow: hidden;
-  transition: transform 0.2s, box-shadow 0.3s ease-in-out;
-
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: vars.$hover-shadow;
-  }
-
-  .workshop-image {
-    width: 100%;
-    height: 200px;
+  .workshop-card {
+    background: vars.$background-color;
+    border-radius: 10px;
     overflow: hidden;
-
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.3s ease-in-out;
-    }
-
-    &:hover img {
-      transform: scale(1.05);
-    }
-  }
-
-  .workshop-info {
-    padding: vars.$padding-medium;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    width: 320px;
     text-align: center;
 
-    h3 {
-      font-family: vars.$font-family;
-      font-size: vars.$font-size-large;
-      margin-bottom: vars.$padding-small;
-      color: vars.$text-color;
+    &:hover {
+      transform: scale(1.05);
+      box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.15);
     }
 
-    p {
-      margin: vars.$padding-extra-small 0;
-      font-size: vars.$font-size-base;
-      color: vars.$text-color;
+    .workshop-image img {
+      object-fit: cover;
+      border-bottom: 2px solid vars.$primary-color;
     }
 
-    strong {
-      font-weight: bold;
-      color: color.adjust(vars.$text-color, $lightness: -20%);
+    .workshop-info {
+      padding: 15px;
     }
   }
+}
 
-  .btn {
+.workshop-image {
+  height: 200px;
+  overflow: hidden;
+  border-radius: 5px;
+
+  img {
     width: 100%;
-    padding: vars.$padding-small vars.$padding-medium;
-    font-size: vars.$font-size-large;
-    margin-top: vars.$padding-small;
-  }
-}
+    height: 100%;
+    object-fit: cover;
+    transition: object-position 0.3s ease-in-out;
 
-/* Kein Workshop-Fallback */
-.no-workshops {
-  margin-top: vars.$padding-medium;
-  text-align: center;
-
-  p {
-    font-size: vars.$font-size-large;
-    font-weight: bold;
-    color: vars.$text-color;
-  }
-}
-
-/* Responsive-Anpassungen */
-@media (max-width: 768px) {
-  .search-box {
-    max-width: 90%;
-  }
-
-  .workshop-list {
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  }
-}
-
-@media (max-width: 480px) {
-  .workshop-card {
-    .workshop-image {
-      height: 150px;
+    &.zentriert {
+      object-position: center;
     }
 
-    .btn {
-      font-size: vars.$font-size-base;
+    &.oben {
+      object-position: top;
+    }
+
+    &.unten {
+      object-position: bottom;
+    }
+
+    &.links {
+      object-position: left;
+    }
+
+    &.rechts {
+      object-position: right;
+    }
+
+    &.links-oben {
+      object-position: left top;
+    }
+
+    &.rechts-oben {
+      object-position: right top;
+    }
+
+    &.links-unten {
+      object-position: left bottom;
+    }
+
+    &.rechts-unten {
+      object-position: right bottom;
     }
   }
 }

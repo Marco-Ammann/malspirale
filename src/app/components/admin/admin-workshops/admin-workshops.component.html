@@ -1,45 +1,87 @@
 <div class="admin-workshops-container">
   <h1>Workshops verwalten</h1>
 
-  <div class="workshop-form">
-    <label for="title">Titel:</label>
-    <input id="title" type="text" [(ngModel)]="title" placeholder="Workshop-Titel eingeben..." />
+  <div *ngIf="loading" class="loading">⏳ Lädt...</div>
+  <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
 
-    <label for="description">Beschreibung:</label>
-    <textarea id="description" [(ngModel)]="description" placeholder="Beschreibung hinzufügen..."></textarea>
-
-    <label for="date">Datum:</label>
-    <input id="date" type="date" [(ngModel)]="date" />
-
-    <label for="maxParticipants">Maximale Teilnehmer:</label>
-    <input id="maxParticipants" type="number" [(ngModel)]="maxParticipants" min="1" />
-
-    <label for="availableSlots">Freie Plätze:</label>
-    <input id="availableSlots" type="number" [(ngModel)]="availableSlots" min="0" />
-
-    <label for="location">Ort:</label>
-    <input id="location" type="text" [(ngModel)]="location" placeholder="Ort angeben..." />
-
-    <button class="btn btn-primary" (click)="createWorkshop()">
-      {{ selectedWorkshopId ? 'Workshop aktualisieren' : 'Workshop erstellen' }}
-    </button>
-    <button class="btn btn-secondary" *ngIf="selectedWorkshopId" (click)="resetForm()">Abbrechen</button>
-  </div>
-
-  <h2>Bestehende Workshops</h2>
-  <div class="workshop-list">
-    <div *ngFor="let workshop of workshops" class="workshop-card">
-      <div class="workshop-card-header">
-        <h3>{{ workshop.title }}</h3>
-        <p><strong>📅 Datum:</strong> {{ workshop.date }}</p>
-      </div>
-      <div class="workshop-card-body">
-        <p>{{ workshop.description }}</p>
-      </div>
-      <div class="workshop-card-footer">
-        <button class="btn btn-edit" (click)="editWorkshop(workshop)">Bearbeiten</button>
-        <button class="btn btn-delete" (click)="deleteWorkshop(workshop.id)">Löschen</button>
-      </div>
+  <form [formGroup]="workshopForm" (ngSubmit)="saveWorkshop()" class="workshop-form">
+    <label>Titel:</label>
+    <input type="text" formControlName="title" required />
+    <div *ngIf="workshopForm.controls['title'].invalid && workshopForm.controls['title'].touched" class="error">
+      Titel ist erforderlich und muss mindestens 3 Zeichen haben.
     </div>
-  </div>
+
+    <label>Kurzbeschreibung:</label>
+    <textarea formControlName="shortDescription"></textarea>
+
+    <label>Lange Beschreibung:</label>
+    <textarea formControlName="longDescription"></textarea>
+
+    <label>Datum:</label>
+    <input type="date" formControlName="date" required />
+
+    <label>Startzeit:</label>
+    <input type="time" formControlName="startTime" />
+
+    <label>Endzeit:</label>
+    <input type="time" formControlName="endTime" />
+
+    <label>Preis (optional):</label>
+    <input type="number" formControlName="price" />
+
+    <label>Max. Teilnehmer:</label>
+    <input type="number" formControlName="maxParticipants" />
+
+    <label>Verfügbare Plätze:</label>
+    <input type="number" formControlName="availableSlots" required />
+
+    <label>Standort:</label>
+    <input type="text" formControlName="location" required />
+
+    <label>Wiederkehrend:</label>
+    <select formControlName="recurring">
+      <option [ngValue]="false">Einmalig</option>
+      <option [ngValue]="true">Wöchentlich</option>
+    </select>
+
+    <div *ngIf="workshopForm.controls['recurring'].value">
+      <label>Woche im Monat:</label>
+      <input type="number" formControlName="recurringWeek" min="1" max="4" />
+
+      <label>Wochentag:</label>
+      <select formControlName="recurringDay">
+        <option [ngValue]="0">Sonntag</option>
+        <option [ngValue]="1">Montag</option>
+        <option [ngValue]="2">Dienstag</option>
+        <option [ngValue]="3">Mittwoch</option>
+        <option [ngValue]="4">Donnerstag</option>
+        <option [ngValue]="5">Freitag</option>
+        <option [ngValue]="6">Samstag</option>
+      </select>
+    </div>
+
+    <label>Bild hochladen:</label>
+    <input type="file" (change)="handleFileInput($event)" accept="image/*" />
+    <div *ngIf="imagePreview" class="image-preview-container">
+      <img [src]="imagePreview" alt="Bildvorschau" class="image-preview" />
+    </div>
+    <label>Bild-Position:</label>
+    <select formControlName="imagePosition">
+      <option *ngFor="let position of imagePositions" [value]="position">{{ position }}</option>
+    </select>
+
+    <button type="submit" [disabled]="loading || workshopForm.invalid">
+      {{ editMode ? "Workshop aktualisieren" : "Workshop hinzufügen" }}
+    </button>
+    <button type="button" (click)="resetForm()" *ngIf="editMode">Abbrechen</button>
+  </form>
+
+  <h2>Vorhandene Workshops</h2>
+  <ul>
+    <li *ngFor="let workshop of workshops">
+      <span>{{ workshop.title }} - {{ workshop.date }}</span>
+      <button (click)="editWorkshop(workshop)">🖊 Bearbeiten</button>
+      <button (click)="deleteWorkshop(workshop.id!)">🗑 Löschen</button>
+    </li>
+  </ul>
 </div>

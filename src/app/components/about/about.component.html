@@ -1,9 +1,24 @@
-<div class="about">
-  <h1>Über mich</h1>
+<div class="about-container">
+  <div class="about-card">
+    <h1 class="about-card-title">Über mich</h1>
 
-  <!-- Ladeanzeige -->
-  <p *ngIf="loading">⏳ Lade Inhalt...</p>
+    <div class="about-card-content">
+      <div class="about-image">
 
-  <!-- Inhalt korrekt als HTML rendern -->
-  <div *ngIf="!loading" [innerHTML]="aboutText"></div>
+        <img src="../../../assets/images/isabel/isabel4.jpg" alt="">
+
+      </div>
+      
+      <div class="about-text">
+        <!-- Ladeanzeige -->
+        <p *ngIf="loading" class="loading-indicator">⏳ Lade Inhalt...</p>
+    
+        <!-- Inhalt korrekt als HTML rendern -->
+        <div *ngIf="!loading" [innerHTML]="aboutText"></div>
+  
+      </div>
+    </div>
+
+
+  </div>
 </div>

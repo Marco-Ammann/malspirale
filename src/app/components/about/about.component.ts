@@ -16,13 +16,17 @@ export class AboutComponent implements OnInit {
   constructor(private dataService: DataService) {}
 
   ngOnInit(): void {
-    this.loadAboutText();
+    this.loadContent();
   }
 
   // 🔹 Holt den aktuellen Inhalt aus Firestore
-  loadAboutText(): void {
+  loadContent(): void {
     this.dataService.getContent('about').subscribe((content) => {
-      this.aboutText = content || 'Kein Inhalt verfügbar.';
+      if (content) {
+        this.aboutText = content.text || '';
+      } else {
+        this.aboutText = 'Inhalt nicht gefunden!';
+      }
       this.loading = false;
     });
   }
