@@ -1,11 +1,9 @@
 <!-- Hero-Bereich -->
 <section class="hero">
   <div class="hero-content">
-    <h1>Willkommen bei Malspirale</h1>
-    <p>Entdecke deine kreative Seite mit Farben, Malgeschichten und inspirierenden Workshops.</p>
-    <button (click)="navigateTo('/workshops')" class="btn btn-primary">
-      🎨 Jetzt entdecken
-    </button>
+    <h1>Entfalte deine Kreativität</h1>
+    <p>Erlebe inspirierende Workshops und entdecke deine kreative Seite mit Farben und Formen.</p>
+    <button (click)="navigateTo('/workshops')" class="btn btn-primary">Jetzt entdecken!</button>
   </div>
 </section>
 
@@ -13,56 +11,44 @@
 <section class="about">
   <div class="about-content">
     <div class="about-image">
-      <img [src]="'assets/images/isabel.webp'" alt="Isabel Kunz - Künstlerin und Workshop-Leiterin" />
+      <img [src]="'assets/images/isabel.webp'" alt="Isabel Kunz - Künstlerin" />
     </div>
     <div class="about-text">
       <h2>Über Isabel Kunz</h2>
-      <p>Mit Leidenschaft für Kunst und Farbenlehre bietet Isabel Kunz einzigartige Workshops an, 
-         die Menschen inspirieren und ihre kreative Seite zum Vorschein bringen.</p>
-      <button (click)="navigateTo('/about')" class="btn btn-secondary">
-        📖 Mehr über Isabel
-      </button>
+      <p>Mit Leidenschaft für Kunst und Farbenlehre inspiriert Isabel Kunz Menschen, ihre kreative Ader zu entdecken.</p>
+      <button (click)="navigateTo('/about')" class="btn btn-secondary">Mehr erfahren</button>
     </div>
   </div>
 </section>
 
-<!-- Workshop Sektion -->
+<!-- Workshop Vorschau -->
 <section class="workshops">
-  <h2>Unsere Workshops</h2>
-  <p>Finde den perfekten Workshop für dich – ob Anfänger oder Fortgeschrittene.</p>
+  <div class="workshops-title">
+    <h2>Unsere Workshops</h2>
+    <p>Wähle deinen perfekten Workshop – für Anfänger und Fortgeschrittene.</p>
+  </div>
 
-  <div *ngIf="workshops.length > 0; else noWorkshops">
-    <div class="workshop-cards">
-      <div *ngFor="let workshop of workshops" class="workshop-card">
-        <img [src]="workshop.image || 'assets/images/default-workshop.jpg'" [alt]="workshop.title" />
-        <div class="workshop-info">
-          <h3>{{ workshop.title }}</h3>
-          <p>{{ workshop.shortDescription }}</p>
-          <p><strong>Datum:</strong> {{ workshop.date }}</p>
-          <p><strong>Ort:</strong> {{ workshop.location }}</p>
-          <p><strong>Freie Plätze:</strong> {{ workshop.availableSlots }} / {{ workshop.maxParticipants }}</p>
-          <button (click)="navigateTo('/workshops')" class="btn btn-secondary">
-            Mehr erfahren
-          </button>
-        </div>
+  <div class="workshops-grid">
+    <div *ngFor="let workshop of workshops.slice(0,3)" class="workshop-card">
+      <img [src]="workshop.image || 'assets/images/default-workshop.jpg'" [alt]="workshop.title" />
+      <div class="workshop-info">
+        <h3>{{ workshop.title }}</h3>
+        <p class="short-description">{{ workshop.shortDescription }}</p>
+        <button (click)="navigateTo('/workshops/' + workshop.id)" class="btn btn-primary">Mehr erfahren</button>
       </div>
     </div>
   </div>
 
-  <ng-template #noWorkshops>
-    <p class="no-workshops">Derzeit sind keine Workshops verfügbar. Schau später wieder vorbei!</p>
-  </ng-template>
+  <button (click)="navigateTo('/workshops')" class="btn btn-secondary">Alle Workshops anzeigen</button>
 </section>
 
-<!-- Galerie Sektion -->
-<section class="gallery-preview">
+<!-- Galerie Vorschau -->
+<section class="gallery">
   <h2>Galerie</h2>
   <div class="gallery-grid">
-    <div *ngFor="let artwork of artworks" class="gallery-item">
-      <img [src]="artwork.src" [alt]="artwork.alt" class="gallery-image" />
+    <div *ngFor="let artwork of artworks.slice(0,4)" class="gallery-item">
+      <img [src]="artwork.src" [alt]="artwork.alt" />
     </div>
   </div>
-  <button (click)="navigateTo('/gallery')" class="btn btn-secondary gallery-btn">
-    🖼️ Zur Galerie
-  </button>
+  <button (click)="navigateTo('/gallery')" class="btn btn-secondary">🖼️ Zur Galerie</button>
 </section>

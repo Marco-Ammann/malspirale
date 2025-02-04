@@ -54,8 +54,8 @@ export class AdminComponent implements OnInit {
 
   // Letzte Inhaltsänderung abrufen
   async loadLastContentUpdate(): Promise<void> {
-    const lastUpdate = await this.dataService.getLastContentUpdate();
-    this.lastContentUpdate$.next(lastUpdate);
+    // Implementiere später eine Firebase-Funktion für die letzte Inhaltsänderung
+
   }
 
   // Benutzerrolle abrufen

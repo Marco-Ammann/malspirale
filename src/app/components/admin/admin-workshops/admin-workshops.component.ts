@@ -1,83 +1,73 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Workshop } from '../../../core/interfaces/interfaces';
 import { DataService } from '../../../core/services/data.service';
 import { StorageService } from '../../../core/services/storage.service';
-import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'app-admin-workshops',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './admin-workshops.component.html',
   styleUrls: ['./admin-workshops.component.scss'],
+  standalone: true,
+  imports: [CommonModule, FormsModule, ReactiveFormsModule]
 })
 export class AdminWorkshopsComponent implements OnInit {
-  workshopForm: FormGroup;
   workshops: Workshop[] = [];
   loading = false;
-  errorMessage: string | null = null;
+  errorMessage = '';
+  workshopForm: FormGroup;
   editMode = false;
-  editingWorkshopId: string | null = null;
-  imageFile: File | null = null;
+  selectedWorkshop: Workshop | null = null;
   imagePreview: string | null = null;
-  imagePositions = ['oben', 'unten', 'links', 'rechts', 'links oben', 'rechts oben', 'zentriert'];
+  selectedFile: File | null = null;
 
-  constructor(
-    private fb: FormBuilder,
-    private dataService: DataService,
-    private storageService: StorageService
-  ) {
+  constructor(private dataService: DataService, private storageService: StorageService, private fb: FormBuilder) {
     this.workshopForm = this.fb.group({
       title: ['', [Validators.required, Validators.minLength(3)]],
-      shortDescription: ['', Validators.required],
-      longDescription: [''],
+      shortDescription: [''],
       date: ['', Validators.required],
       startTime: [''],
       endTime: [''],
-      price: ['', [Validators.pattern('^[0-9]+$')]],
-      maxParticipants: ['', [Validators.pattern('^[0-9]+$')]],
+      price: [''],
+      maxParticipants: [''],
       availableSlots: ['', Validators.required],
-      image: [''],
       location: ['', Validators.required],
-      recurring: [false],
-      recurringWeek: [null],
-      recurringDay: [null],
-      imagePosition: ['zentriert'], // Standardwert
+      image: [''],
     });
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.loadWorkshops();
   }
 
-  async loadWorkshops() {
+  async loadWorkshops(): Promise<void> {
     this.loading = true;
     try {
       this.workshops = await this.dataService.getAllWorkshops();
     } catch (error) {
       this.errorMessage = 'Fehler beim Laden der Workshops.';
-      console.error(error);
     } finally {
       this.loading = false;
     }
   }
 
-  async saveWorkshop() {
+  async saveWorkshop(): Promise<void> {
     if (this.workshopForm.invalid) return;
 
-    this.loading = true;
-    this.errorMessage = null;
-    let workshopData = this.workshopForm.value as Workshop;
+    let workshopData: Workshop = { ...this.workshopForm.value };
+
+    // Bild hochladen falls vorhanden
+    if (this.selectedFile) {
+      const imageUrl = await this.storageService.uploadImage(this.selectedFile);
+      workshopData.image = imageUrl;
+    }
 
     try {
-      if (this.imageFile) {
-        const imageUrl = await this.storageService.uploadImage(this.imageFile);
-        workshopData.image = imageUrl;
-      }
-
-      if (this.editMode && this.editingWorkshopId) {
-        await this.dataService.updateWorkshop(this.editingWorkshopId, workshopData);
+      if (this.editMode && this.selectedWorkshop) {
+        await this.dataService.updateWorkshop(this.selectedWorkshop.id!, workshopData);
       } else {
         await this.dataService.addWorkshop(workshopData);
       }
@@ -86,54 +76,38 @@ export class AdminWorkshopsComponent implements OnInit {
       this.loadWorkshops();
     } catch (error) {
       this.errorMessage = 'Fehler beim Speichern des Workshops.';
-      console.error(error);
-    } finally {
-      this.loading = false;
     }
   }
 
-  handleFileInput(event: Event) {
-    const target = event.target as HTMLInputElement;
-    if (target.files?.length) {
-      this.imageFile = target.files[0];
-
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        this.imagePreview = e.target?.result as string;
-      };
-      reader.readAsDataURL(this.imageFile);
-    }
-  }
-
-  editWorkshop(workshop: Workshop) {
-    this.workshopForm.patchValue({
-      ...workshop,
-      imagePosition: workshop.imagePosition || 'zentriert', // Standardwert setzen
-    });
+  editWorkshop(workshop: Workshop): void {
     this.editMode = true;
-    this.editingWorkshopId = workshop.id!;
-    this.imagePreview = workshop.image ?? null;
+    this.selectedWorkshop = workshop;
+    this.workshopForm.patchValue(workshop);
+    this.imagePreview = workshop.image || null;
   }
 
-  async deleteWorkshop(id: string) {
-    if (!confirm('Möchtest du diesen Workshop wirklich löschen?')) return;
-    this.loading = true;
-    try {
+  async deleteWorkshop(id: string): Promise<void> {
+    if (confirm('Workshop wirklich löschen?')) {
       await this.dataService.deleteWorkshop(id);
       this.loadWorkshops();
-    } catch (error) {
-      this.errorMessage = 'Fehler beim Löschen des Workshops.';
-      console.error(error);
-    } finally {
-      this.loading = false;
     }
   }
 
-  resetForm() {
+  handleFileInput(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+      const reader = new FileReader();
+      reader.onload = (e) => this.imagePreview = e.target?.result as string;
+      reader.readAsDataURL(file);
+    }
+  }
+
+  resetForm(): void {
     this.workshopForm.reset();
     this.editMode = false;
-    this.editingWorkshopId = null;
-    this.imageFile = null;
+    this.selectedWorkshop = null;
     this.imagePreview = null;
+    this.selectedFile = null;
   }
 }

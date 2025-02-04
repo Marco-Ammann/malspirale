@@ -15,12 +15,12 @@ import { DataService } from '../../core/services/data.service';
 export class HomeComponent {
   
   workshops: Workshop[] = [];
-  heroImage = 'assets/images/hero10.webp';
   artworks = [
-    { src: 'assets/images/art3.webp', alt: 'Kunstwerk 1', title: 'Kreative Inspiration' },
-    { src: 'assets/images/art2.webp', alt: 'Kunstwerk 2', title: 'Farben der Natur' },
-    { src: 'assets/images/art1.webp', alt: 'Kunstwerk 3', title: 'Lebendige Formen' },
+    { src: 'assets/images/art3.webp', alt: 'Kunstwerk 1' },
+    { src: 'assets/images/art2.webp', alt: 'Kunstwerk 2' },
+    { src: 'assets/images/art1.webp', alt: 'Kunstwerk 3' },
   ];
+
   constructor(private dataService: DataService, private router: Router) {}
 
   ngOnInit(): void {

@@ -1,67 +1,46 @@
-@use 'sass:color';
-@use 'variables' as vars;
-
+@use "variables" as vars;
+@use "mixins" as mix;
 
 .workshop-detail {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 20px;
-  background: vars.$background-color;
-  border-radius: 10px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  
-  h2 {
-    text-align: center;
-    color: vars.$primary-color;
+  max-width: 800px;
+  margin: auto;
+  padding: vars.$padding-large;
+  text-align: center;
+
+  .location {
+    font-size: vars.$font-size-large;
+    color: vars.$text-light;
   }
-  
-  .workshop-content {
+
+  .workshop-gallery {
     display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    gap: 20px;
-  }
-  
-  .workshop-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 5px;
-  }
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: vars.$padding-small;
+    margin-top: vars.$padding-medium;
 
-  .workshop-image {
-    width: 100%;
-    height: 200px;
-    border-radius: 5px;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+    .gallery-item {
+      width: 100%;
+      max-width: 350px;
+      border-radius: vars.$border-radius;
+      box-shadow: vars.$shadow;
 
-    &.oben {
-      display: block;
-      margin: 0 auto 20px;
-    }
-
-    &.unten {
-      display: block;
-      margin: 20px auto 0;
-    }
-
-    &.links {
-      float: left;
-      margin-right: 20px;
-    }
-
-    &.rechts {
-      float: right;
-      margin-left: 20px;
-    }
-
-    &.zentriert {
-      display: block;
-      margin: 0 auto;
+      img {
+        width: 100%;
+        border-radius: vars.$border-radius;
+      }
     }
   }
 
   .workshop-info {
-    flex: 1;
+    text-align: left;
+    margin-top: vars.$padding-medium;
+    font-size: vars.$font-size-medium;
+  }
+
+  .btn {
+    display: block;
+    margin: vars.$padding-medium auto;
+    width: fit-content;
   }
 }

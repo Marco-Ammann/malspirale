@@ -1,121 +1,52 @@
-@use 'sass:color';
-@use 'variables' as vars;
-@use 'mixins' as mix;
+@use "variables" as vars;
+@use "mixins" as mix;
 
-.admin-workshops-container {
-  text-align: center;
+.admin-workshops {
   padding: vars.$padding-large;
-  max-width: 900px;
-  margin: auto;
-
-  h1 {
-    @include mix.text-style(vars.$primary-color, 2rem, bold);
-    margin-bottom: vars.$padding-medium;
-  }
-
-  .loading {
-    color: vars.$secondary-color;
-    font-weight: bold;
-  }
-
-  .error {
-    color: red;
-    font-weight: bold;
-  }
+  text-align: center;
 
   .workshop-form {
-    display: flex;
-    flex-direction: column;
-    gap: vars.$padding-small;
-    padding: vars.$padding-large;
+    max-width: 600px;
+    margin: auto;
+    padding: vars.$padding-medium;
     background: vars.$background-color;
-    border-radius: 8px;
-    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: vars.$border-radius;
+    box-shadow: vars.$shadow;
+  }
 
-    input, textarea {
-      padding: vars.$padding-small;
-      border: 1px solid vars.$primary-color;
-      border-radius: 4px;
-    }
-
-    button {
-      background-color: vars.$primary-color;
-      color: white;
-      border: none;
-      padding: vars.$padding-small;
-      cursor: pointer;
-      transition: 0.3s;
-
-      &:hover {
-        background-color: vars.$hover-color;
-      }
-    }
-
-    .image-preview-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin: 10px 0;
-    
-      .image-preview {
-        max-width: 100%;
-        max-height: 250px;
-        border-radius: 5px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    
-        &.oben {
-          display: block;
-          margin: 0 auto;
-        }
-    
-        &.unten {
-          display: block;
-          margin: 20px auto;
-        }
-    
-        &.links {
-          float: left;
-          margin-right: 10px;
-        }
-    
-        &.rechts {
-          float: right;
-          margin-left: 10px;
-        }
-    
-        &.links-oben {
-          position: absolute;
-          top: 0;
-          left: 0;
-        }
-    
-        &.rechts-oben {
-          position: absolute;
-          top: 0;
-          right: 0;
-        }
-    
-        &.zentriert {
-          display: block;
-          margin: 0 auto;
-        }
-      }
+  .image-preview {
+    margin-top: vars.$padding-medium;
+    img {
+      width: 100%;
+      max-width: 200px;
+      border-radius: vars.$border-radius;
     }
   }
 
-  ul {
-    list-style: none;
-    padding: 0;
+  .workshop-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: vars.$padding-medium;
+  }
 
-    li {
-      display: flex;
-      justify-content: space-between;
-      padding: vars.$padding-small;
-      border-bottom: 1px solid vars.$secondary-color;
+  .workshop-card {
+    background: white;
+    border-radius: vars.$border-radius-large;
+    box-shadow: vars.$shadow;
+    padding: vars.$padding-medium;
+    text-align: left;
+
+    .workshop-image {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: vars.$border-radius;
     }
 
-    button {
-      margin-left: vars.$padding-small;
+    .workshop-actions {
+      display: flex;
+      justify-content: space-between;
+      margin-top: vars.$padding-small;
     }
   }
 }

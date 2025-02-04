@@ -1,39 +1,24 @@
 <div class="workshop-detail" *ngIf="workshop; else notFound">
   <h2>{{ workshop.title }}</h2>
-  <p class="location">{{ workshop.location }}</p>
+  <p class="location">📍 {{ workshop.location }}</p>
 
-  <div *ngIf="workshop.image" class="workshop-image">
-    <img [src]="workshop.image" alt="Workshop Bild" class="workshop-image" [ngClass]="workshop.imagePosition" />
+  <!-- Bildgalerie -->
+  <div *ngIf="workshop.image?.length" class="workshop-gallery">
+    <div *ngFor="let image of workshop.image" class="gallery-item">
+      <img [src]="image" alt="Workshop Bild" />
+    </div>
   </div>
 
+  <!-- Workshop-Informationen -->
   <div class="workshop-info">
-    <p class="description">{{ workshop.longDescription }}</p>
+    <p>{{ workshop.longDescription }}</p>
+    <p>📅 {{ workshop.date | date:'dd.MM.yyyy' }}</p>
+    <p *ngIf="workshop.startTime && workshop.endTime">⏰ {{ workshop.startTime }} - {{ workshop.endTime }}</p>
+    <p>💰 {{ workshop.price ? (workshop.price | currency:'CHF') : 'Kostenlos' }}</p>
+    <p>👥 Maximale Teilnehmer: {{ workshop.maxParticipants }}</p>
+    <p>📌 Verfügbare Plätze: {{ workshop.availableSlots }}</p>
 
-    <p><strong>📅 Datum:</strong> {{ workshop.date }}</p>
-
-    <p *ngIf="workshop.startTime && workshop.endTime">
-      <strong>⏰ Zeit:</strong> {{ workshop.startTime }} - {{ workshop.endTime }}
-    </p>
-
-    <p *ngIf="workshop.price">
-      <strong>💰 Preis:</strong> {{ workshop.price | currency:'EUR' }}
-    </p>
-
-    <p *ngIf="workshop.maxParticipants">
-      <strong>👥 Maximale Teilnehmer:</strong> {{ workshop.maxParticipants }}
-    </p>
-
-    <p><strong>📌 Verfügbare Plätze:</strong> {{ workshop.availableSlots }}</p>
-
-    <p *ngIf="workshop.recurring">
-      <strong>🔄 Wiederkehrend:</strong> {{ getRecurringLabel(workshop) }}
-    </p>
-
-    <p *ngIf="workshop.participants?.length">
-      <strong>👤 Teilnehmer:</strong> {{ workshop.participants?.length }} angemeldet
-    </p>
-
-    <p><strong>🕒 Erstellt am:</strong> {{ workshop.createdAt | date:'dd.MM.yyyy HH:mm' }}</p>
+    <button class="btn btn-primary">Jetzt anmelden</button>
   </div>
 </div>
 

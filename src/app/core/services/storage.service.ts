@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'firebase/storage';
+import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject, uploadBytes } from 'firebase/storage';
 
 @Injectable({
   providedIn: 'root',
@@ -9,12 +9,16 @@ export class StorageService {
 
   constructor() {}
 
-  // 🔹 Bild hochladen & Download-URL abrufen
+  /** Lädt ein Bild in Firebase Storage hoch und gibt die URL zurück */
   async uploadImage(file: File): Promise<string> {
-    const filePath = `images/${Date.now()}_${file.name}`;
-    const storageRef = ref(this.storage, filePath);
-    const uploadTask = await uploadBytesResumable(storageRef, file);
-    return await getDownloadURL(uploadTask.ref);
+    try {
+      const storageRef = ref(this.storage, `workshops/${file.name}`);
+      await uploadBytes(storageRef, file);
+      return await getDownloadURL(storageRef);
+    } catch (error) {
+      console.error("Fehler beim Hochladen des Bildes:", error);
+      throw error;
+    }
   }
 
   // 🔹 Bild aus Firebase Storage löschen

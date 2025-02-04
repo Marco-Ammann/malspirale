@@ -1,17 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { DataService } from '../../core/services/data.service';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-about',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './about.component.html',
-  styleUrls: ['./about.component.scss'],
+  styleUrls: ['./about.component.scss']
 })
 export class AboutComponent implements OnInit {
   aboutText: string = '';
-  loading: boolean = true;
+  loading = true;
 
   constructor(private dataService: DataService) {}
 
@@ -19,15 +20,14 @@ export class AboutComponent implements OnInit {
     this.loadContent();
   }
 
-  // 🔹 Holt den aktuellen Inhalt aus Firestore
-  loadContent(): void {
-    this.dataService.getContent('about').subscribe((content) => {
-      if (content) {
-        this.aboutText = content.text || '';
-      } else {
-        this.aboutText = 'Inhalt nicht gefunden!';
-      }
+  async loadContent(): Promise<void> {
+    try {
+      this.aboutText = await this.dataService.getContent('about');
+    } catch (error) {
+      console.error('Fehler beim Laden des Inhalts:', error);
+      this.aboutText = 'Fehler beim Laden des Inhalts.';
+    } finally {
       this.loading = false;
-    });
+    }
   }
 }

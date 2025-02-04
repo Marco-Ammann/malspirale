@@ -1,59 +1,47 @@
 <div class="workshop-container">
+  <!-- Suchfeld & Filter -->
   <div class="search-container">
     <input
       type="text"
       [(ngModel)]="searchTerm"
       (input)="filterWorkshops()"
-      placeholder="🔍 Suche nach Workshops..."
+      placeholder="🔍 Workshop suchen..."
       class="search-box"
     />
   </div>
 
+  <!-- Ladeanzeige oder Fehler -->
   <div *ngIf="loading" class="loading">⏳ Workshops werden geladen...</div>
   <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
 
+  <!-- Workshop-Karten -->
   <div class="workshop-list">
     <div
       class="workshop-card"
       *ngFor="let workshop of filteredWorkshops"
       (click)="goToDetail(workshop)"
     >
-    <div class="workshop-image">
-      <img
-        [src]="workshop.image || 'assets/images/default-workshop.jpg'"
-        alt="Workshop Bild"
-        [ngClass]="workshop.imagePosition"
-      />
-    </div>
+      <div class="workshop-image">
+        <img
+          [src]="workshop.image || 'assets/images/default-workshop.jpg'"
+          alt="Workshop Bild"
+          class="image"
+        />
+      </div>
 
       <div class="workshop-info">
         <h3>{{ workshop.title }}</h3>
-        <p class="location">{{ workshop.location }}</p>
-        <p><strong>📅 Datum:</strong> {{ workshop.date }}</p>
+        <p class="location">📍 {{ workshop.location }}</p>
+        <p>📅 {{ workshop.date | date:'dd.MM.yyyy' }}</p>
 
         <p *ngIf="workshop.startTime && workshop.endTime">
-          <strong>⏰ Zeit:</strong> {{ workshop.startTime }} - {{ workshop.endTime }}
+          ⏰ {{ workshop.startTime }} - {{ workshop.endTime }}
         </p>
 
-        <p *ngIf="workshop.price">
-          <strong>💰 Preis:</strong> {{ workshop.price | currency:'CHF ' }}
-        </p>
-
-        <p *ngIf="workshop.maxParticipants">
-          <strong>👥 Maximale Teilnehmer:</strong> {{ workshop.maxParticipants }}
-        </p>
-
-        <p><strong>📌 Verfügbare Plätze:</strong> {{ workshop.availableSlots }}</p>
-
-        <p *ngIf="workshop.recurring">
-          <strong>🔄 Wiederkehrend:</strong>
-          {{ getRecurringLabel(workshop) }}
-        </p>
-
-        <p *ngIf="workshop.participants?.length">
-          <strong>👤 Teilnehmer:</strong> {{ workshop.participants?.length }} angemeldet
-        </p>
+        <p>💰 {{ workshop.price ? (workshop.price | currency:'CHF') : 'Kostenlos' }}</p>
       </div>
+
+      <button class="btn btn-secondary" (click)="goToDetail(workshop)">Mehr erfahren</button>
     </div>
   </div>
 </div>

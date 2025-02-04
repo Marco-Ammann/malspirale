@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Workshop } from '../../../core/interfaces/interfaces';
 import { DataService } from '../../../core/services/data.service';
 import { CommonModule } from '@angular/common';
@@ -13,57 +13,37 @@ import { CommonModule } from '@angular/common';
 })
 export class WorkshopDetailComponent implements OnInit {
   workshop: Workshop | null = null;
-  loading = false;
-  errorMessage: string | null = null;
+  loading = true;
+  errorMessage = '';
 
-  constructor(private route: ActivatedRoute, private dataService: DataService) {}
+  constructor(
+    private route: ActivatedRoute,
+    private dataService: DataService,
+    private router: Router
+  ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.loadWorkshop();
   }
 
-  async loadWorkshop() {
-    this.loading = true;
-    const id = this.route.snapshot.paramMap.get('id');
-    if (!id) {
-      this.errorMessage = 'Kein Workshop gefunden.';
-      this.loading = false;
+  async loadWorkshop(): Promise<void> {
+    const workshopId = this.route.snapshot.paramMap.get('id');
+    if (!workshopId) {
+      this.errorMessage = 'Workshop-ID nicht gefunden.';
       return;
     }
 
     try {
-      this.workshop = await this.dataService.getWorkshop(id);
-      if (!this.workshop) this.errorMessage = 'Workshop nicht gefunden.';
+      this.workshop = await this.dataService.getWorkshopById(workshopId);
+      this.loading = false;
     } catch (error) {
       this.errorMessage = 'Fehler beim Laden des Workshops.';
-      console.error(error);
-    } finally {
       this.loading = false;
     }
   }
 
-  getWeekday(day: number): string {
-    const weekdays = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
-    return weekdays[day] ?? 'Unbekannt';
+  registerForWorkshop(): void {
+    // Implementiere später eine Firebase-Funktion für Workshop-Anmeldungen
+    alert('Anmeldefunktion folgt bald.');
   }
-
-  getRecurringLabel(workshop: Workshop): string {
-    if (!workshop.recurring) {
-      return 'Einmalig';
-    }
-  
-    if (workshop.recurring && workshop.recurringWeek) {
-      const weekday = this.getWeekday(workshop.recurringDay ?? -1);
-      return `Wöchentlich in Woche ${workshop.recurringWeek}, am ${weekday}`;
-    }
-  
-    if (workshop.recurring && workshop.recurringDay !== undefined) {
-      return `Jede Woche am ${this.getWeekday(workshop.recurringDay)}`;
-    }
-  
-
-    return 'Unbekanntes Muster';
-  }
-
-  
 }

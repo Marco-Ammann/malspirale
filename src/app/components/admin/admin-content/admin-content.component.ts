@@ -41,32 +41,25 @@ export class AdminContentComponent implements OnInit {
   }
 
   async loadContent(): Promise<void> {
-    this.dataService.getContent('about').subscribe((content: ContentData | null) => {
-      if (content) {
-        this.siteContent = content.text || '';
-        this.images = content.images || [];
-      } else {
-        this.siteContent = '';
-        this.images = [];
-      }
+    try {
+      this.siteContent = await this.dataService.getContent('about');
+    } catch (error) {
+      console.error('Fehler beim Laden des Inhalts:', error);
+      this.siteContent = 'Fehler beim Laden des Inhalts.';
+    } finally {
       this.loading = false;
-    });
-    
+    }
   }
 
+  
   async saveContent(): Promise<void> {
-    if (!this.siteContent.trim()) {
-      this.saveMessage = '⚠️ Inhalt darf nicht leer sein.';
-      return;
+    try {
+      await this.dataService.updateContent('about', { text: this.siteContent });
+      this.saveMessage = '✅ Inhalt erfolgreich gespeichert!';
+    } catch (error) {
+      console.error('Fehler beim Speichern des Inhalts:', error);
+      this.saveMessage = '⚠ Fehler beim Speichern.';
     }
-  
-    const contentData = {
-      text: this.siteContent,
-      images: this.images,
-    };
-  
-    await this.dataService.updateContent('about', contentData);
-    this.saveMessage = '✅ Änderungen gespeichert!';
   }
 
   async uploadImage(event: Event): Promise<void> {

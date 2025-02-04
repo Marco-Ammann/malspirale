@@ -1,220 +1,92 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, from, Observable } from 'rxjs';
-import { Workshop, GalleryImage, ContentData } from '../interfaces/interfaces';
-import {
-  getFirestore,
-  collection,
-  getDocs,
-  addDoc,
-  doc,
-  deleteDoc,
-  updateDoc,
-  getDoc,
-  arrayRemove,
-  arrayUnion,
-  onSnapshot,
-  query,
-  orderBy,
-  limit,
-  setDoc,
-} from 'firebase/firestore';
-import { firebaseApp } from '../../../firebase-config';
+import { getFirestore, collection, getDocs, doc, setDoc, updateDoc, deleteDoc, getDoc } from "firebase/firestore";
+import { Workshop } from '../interfaces/interfaces';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class DataService {
-  private db = getFirestore(firebaseApp);
-  private workshopsSubject = new BehaviorSubject<Workshop[]>([]);
-  workshops$ = this.workshopsSubject.asObservable();
-  
-  constructor() {
-    this.loadWorkshops();
-  }
+  private db = getFirestore();
+  private workshopsCollection = collection(this.db, "workshops");
 
+  constructor() {}
 
-  // 🔄 Workshops mit Echtzeit-Updates laden
-  private loadWorkshops() {
-    const workshopsCollection = collection(this.db, 'workshops');
-    const q = query(workshopsCollection, orderBy('date', 'asc'));
-
-    onSnapshot(q, (querySnapshot) => {
-      const workshops = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as Workshop[];
-      this.workshopsSubject.next(workshops);
-    });
-  }
-
-  // 🔍 Einzelnen Workshop abrufen
-  async getWorkshop(id: string): Promise<Workshop | null> {
-    try {
-      const docRef = doc(this.db, 'workshops', id);
-      const docSnap = await getDoc(docRef);
-      return docSnap.exists()
-        ? ({
-            id: docSnap.id,
-            ...docSnap.data(),
-          } as Workshop)
-        : null;
-    } catch (error) {
-      console.error('Fehler beim Abrufen des Workshops:', error);
-      return null;
-    }
-  }
-
-  // 📜 Alle Workshops abrufen (ohne Live-Updates)
+  /** Holt alle Workshops aus Firebase */
   async getAllWorkshops(): Promise<Workshop[]> {
     try {
-      const querySnapshot = await getDocs(collection(this.db, 'workshops'));
-      return querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })) as Workshop[];
+      const querySnapshot = await getDocs(this.workshopsCollection);
+      return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Workshop[];
     } catch (error) {
-      console.error('Fehler beim Abrufen der Workshops:', error);
-      return [];
+      console.error("Fehler beim Laden der Workshops:", error);
+      throw error;
     }
   }
 
+  /** Holt einen Workshop anhand der ID */
+  async getWorkshopById(id: string): Promise<Workshop | null> {
+    try {
+      const workshopRef = doc(this.db, "workshops", id);
+      const docSnap = await getDoc(workshopRef);
+      return docSnap.exists() ? { id: docSnap.id, ...docSnap.data() } as Workshop : null;
+    } catch (error) {
+      console.error("Fehler beim Abrufen des Workshops:", error);
+      throw error;
+    }
+  }
 
-  // ➕ Neuen Workshop hinzufügen
+  /** Erstellt einen neuen Workshop */
   async addWorkshop(workshop: Workshop): Promise<void> {
     try {
-      const workshopsCollection = collection(this.db, 'workshops');
-      await addDoc(workshopsCollection, {
-        ...workshop,
-        createdAt: new Date().toISOString(),
-      });
+      const newDocRef = doc(collection(this.db, "workshops"));
+      await setDoc(newDocRef, workshop);
     } catch (error) {
-      console.error('Fehler beim Erstellen des Workshops:', error);
+      console.error("Fehler beim Erstellen des Workshops:", error);
       throw error;
     }
   }
 
-  // 📝 Workshop aktualisieren
-  async updateWorkshop(id: string, data: Partial<Workshop>): Promise<void> {
+  /** Aktualisiert einen bestehenden Workshop */
+  async updateWorkshop(id: string, workshop: Partial<Workshop>): Promise<void> {
     try {
-      console.log(`📡 Firestore: Aktualisiere Workshop mit ID ${id}...`, data);
-      const workshopDoc = doc(this.db, 'workshops', id);
-      await updateDoc(workshopDoc, data);
-      console.log("✅ Firestore: Workshop aktualisiert!");
+      const workshopRef = doc(this.db, "workshops", id);
+      await updateDoc(workshopRef, workshop);
     } catch (error) {
-      console.error("❌ Firestore-Fehler beim Aktualisieren:", error);
+      console.error("Fehler beim Aktualisieren des Workshops:", error);
       throw error;
     }
   }
 
-  // ❌ Workshop löschen
+  /** Löscht einen Workshop */
   async deleteWorkshop(id: string): Promise<void> {
     try {
-      const workshopDoc = doc(this.db, 'workshops', id);
-      await deleteDoc(workshopDoc);
+      const workshopRef = doc(this.db, "workshops", id);
+      await deleteDoc(workshopRef);
     } catch (error) {
-      console.error('Fehler beim Löschen des Workshops:', error);
+      console.error("Fehler beim Löschen des Workshops:", error);
       throw error;
     }
   }
 
-  async createOrUpdateWorkshop(workshop: Workshop): Promise<void> {
-    const docRef = workshop.id
-      ? doc(this.db, 'workshops', workshop.id)
-      : doc(collection(this.db, 'workshops'));
-  
-    const workshopData = { ...workshop };
-  
-    // Falls der Workshop wiederkehrend ist, setzen wir das Datum automatisch
-    if (workshop.recurring) {
-      workshopData.date = this.calculateNextRecurringDate(workshop);
-    }
-  
-    await setDoc(docRef, workshopData, { merge: true });
-  }
-  
-  calculateNextRecurringDate(workshop: Workshop): string {
-    const today = new Date();
-    let nextDate = new Date(today.getFullYear(), today.getMonth(), 1);
-  
-    let weekCount = 0;
-    while (weekCount < workshop.recurringWeek!) {
-      if (nextDate.getDay() === workshop.recurringDay) {
-        weekCount++;
-      }
-      if (weekCount < workshop.recurringWeek!) {
-        nextDate.setDate(nextDate.getDate() + 1);
-      }
-    }
-    return nextDate.toISOString().split('T')[0]; // YYYY-MM-DD
-  }
-
-  // Nutzer anmelden
-  async enrollUser(workshopId: string, userId: string): Promise<void> {
-    const workshopRef = doc(this.db, 'workshops', workshopId);
-    const docSnap = await getDoc(workshopRef);
-  
-    if (docSnap.exists()) {
-      const workshop = docSnap.data() as Workshop;
-      if ((workshop.availableSlots ?? 0) > 0) {
-        await updateDoc(workshopRef, {
-          participants: arrayUnion(userId),
-          availableSlots: (workshop.availableSlots ?? 0) - 1,
-        });
-      }
-    }
-  }
-  
-  async unenrollUser(workshopId: string, userId: string): Promise<void> {
-    const workshopRef = doc(this.db, 'workshops', workshopId);
-    const docSnap = await getDoc(workshopRef);
-  
-    if (docSnap.exists()) {
-      const workshop = docSnap.data() as Workshop;
-      await updateDoc(workshopRef, {
-        participants: arrayRemove(userId),
-        availableSlots: (workshop.availableSlots ?? 0) + 1,
-      });
+  /** Holt Content aus Firestore */
+  async getContent(documentId: string): Promise<string> {
+    try {
+      const contentRef = doc(this.db, "content", documentId);
+      const docSnap = await getDoc(contentRef);
+      return docSnap.exists() ? docSnap.data()['text'] : "";
+    } catch (error) {
+      console.error("Fehler beim Laden des Contents:", error);
+      throw error;
     }
   }
 
-  getEnrolledWorkshops(userId: string): Observable<Workshop[]> {
-    return new Observable((observer) => {
-      const workshopsCollection = collection(this.db, 'workshops');
-  
-      onSnapshot(workshopsCollection, (querySnapshot) => {
-        const enrolledWorkshops = querySnapshot.docs
-          .map((doc) => ({ id: doc.id, ...doc.data() } as Workshop))
-          .filter((workshop) => workshop.participants?.includes(userId));
-        observer.next(enrolledWorkshops);
-      });
-    });
-  }
-
-  async getLastContentUpdate(): Promise<Date | null> {
-    const contentCollection = collection(this.db, 'content');
-    const contentQuery = query(contentCollection, orderBy('updatedAt', 'desc'), limit(1));
-    const snapshot = await getDocs(contentQuery);
-  
-    if (!snapshot.empty) {
-      return new Date(snapshot.docs[0].data()['updatedAt']);
+  /** Aktualisiert Content in Firestore */
+  async updateContent(documentId: string, contentData: { text: string }): Promise<void> {
+    try {
+      const contentRef = doc(this.db, "content", documentId);
+      await setDoc(contentRef, contentData, { merge: true });
+    } catch (error) {
+      console.error("Fehler beim Aktualisieren des Contents:", error);
+      throw error;
     }
-    return null;
-  }
-
-  // 🔹 Inhalt einer bestimmten Sektion abrufen (z. B. "about")
-  getContent(section: string): Observable<ContentData | null> {
-    return new Observable((observer) => {
-      const docRef = doc(this.db, 'content', section);
-      getDoc(docRef).then((docSnap) => {
-        if (docSnap.exists()) {
-          observer.next(docSnap.data() as ContentData);
-        } else {
-          observer.next(null);
-        }
-      });
-    });
-  }
-  
-  // 🔹 Inhalt einer bestimmten Sektion aktualisieren oder erstellen
-  async updateContent(section: string, newData: ContentData): Promise<void> {
-    const docRef = doc(this.db, 'content', section);
-    await setDoc(docRef, newData, { merge: true });
   }
 }

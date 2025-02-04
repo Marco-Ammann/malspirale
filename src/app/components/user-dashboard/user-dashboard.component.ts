@@ -28,8 +28,7 @@ export class UserDashboardComponent implements OnInit {
   }
 
   loadEnrolledWorkshops(userId: string): void {
-    this.dataService.getEnrolledWorkshops(userId).subscribe((workshops) => {
-      this.enrolledWorkshops = workshops;
-    });
+    // Implementiere später eine Firebase-Funktion für die Workshops des Benutzers
+
   }
 }

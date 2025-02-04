@@ -8,7 +8,8 @@ export interface Workshop {
   id?: string;
   title: string;
   location?: string;
-  shortDescription: string;
+  description?: string;
+  shortDescription?: string;
   longDescription?: string;
   date: string; // Startdatum
   startTime?: string; // HH:MM
