@@ -16,32 +16,27 @@
 
   <!-- Workshop-Karten -->
   <div class="workshop-list">
-    <div
-      class="workshop-card"
-      *ngFor="let workshop of filteredWorkshops"
-      (click)="goToDetail(workshop)"
-    >
+    <div class="workshop-card" *ngFor="let workshop of filteredWorkshops" (click)="goToDetail(workshop)">
       <div class="workshop-image">
-        <img
-          [src]="workshop.image || 'assets/images/default-workshop.jpg'"
-          alt="Workshop Bild"
-          class="image"
+        <img 
+          [src]="workshop.image || 'assets/images/default-workshop.jpg'" 
+          alt="Workshop Bild" 
+          (load)="workshop.imageLoaded = true" 
+          [ngClass]="{'loading': !workshop.imageLoaded}"
         />
+        <div *ngIf="!workshop.imageLoaded" class="spinner"></div>
       </div>
 
       <div class="workshop-info">
         <h3>{{ workshop.title }}</h3>
         <p class="location">📍 {{ workshop.location }}</p>
         <p>📅 {{ workshop.date | date:'dd.MM.yyyy' }}</p>
-
-        <p *ngIf="workshop.startTime && workshop.endTime">
-          ⏰ {{ workshop.startTime }} - {{ workshop.endTime }}
-        </p>
-
         <p>💰 {{ workshop.price ? (workshop.price | currency:'CHF') : 'Kostenlos' }}</p>
       </div>
 
-      <button class="btn btn-secondary" (click)="goToDetail(workshop)">Mehr erfahren</button>
+      <div class="workshop-actions">
+        <button class="btn btn-primary" (click)="goToDetail(workshop)">Mehr erfahren</button>
+      </div>
     </div>
   </div>
 </div>

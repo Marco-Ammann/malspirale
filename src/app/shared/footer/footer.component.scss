@@ -5,9 +5,11 @@
   text-align: center;
   padding: vars.$padding-medium;
   background: vars.$primary-color;
-  color: white;
+  color: #fff;
   font-size: vars.$font-size-base;
-  
+  position: relative;
+  box-shadow: vars.$shadow;
+
   a {
     color: vars.$accent-color;
     text-decoration: none;
@@ -16,6 +18,41 @@
 
     &:hover {
       text-decoration: underline;
+    }
+  }
+
+  .social-media {
+    margin-top: vars.$padding-small;
+    display: flex;
+    justify-content: center;
+    gap: vars.$padding-small;
+
+    a {
+      display: inline-block;
+      width: 24px;
+      height: 24px;
+
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+}
+
+/* Responsive Anpassungen */
+@media (max-width: vars.$tablet) {
+  .app-footer {
+    padding: vars.$padding-small;
+    font-size: vars.$font-size-small;
+  }
+
+  .social-media {
+    gap: vars.$padding-extra-small;
+
+    a {
+      width: 20px;
+      height: 20px;
     }
   }
 }

@@ -5,6 +5,10 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
+interface WorkshopWithImage extends Workshop {
+  imageLoaded: boolean;
+}
+
 @Component({
   selector: 'app-workshop-list',
   standalone: true,
@@ -13,8 +17,8 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./workshop-list.component.scss'],
 })
 export class WorkshopListComponent implements OnInit {
-  workshops: Workshop[] = [];
-  filteredWorkshops: Workshop[] = [];
+  workshops: WorkshopWithImage[] = [];
+  filteredWorkshops: WorkshopWithImage[] = [];
   loading = false;
   errorMessage: string | null = null;
   searchTerm = '';
@@ -28,8 +32,12 @@ export class WorkshopListComponent implements OnInit {
   async loadWorkshops() {
     this.loading = true;
     try {
-      this.workshops = await this.dataService.getAllWorkshops();
-      this.filteredWorkshops = this.workshops;
+      const workshops = await this.dataService.getAllWorkshops();
+      this.workshops = workshops.map(workshop => ({
+        ...workshop,
+        imageLoaded: false
+      }));
+      this.filteredWorkshops = [...this.workshops];
     } catch (error) {
       this.errorMessage = 'Fehler beim Laden der Workshops.';
       console.error(error);
@@ -42,15 +50,6 @@ export class WorkshopListComponent implements OnInit {
     this.filteredWorkshops = this.workshops.filter((workshop) =>
       workshop.title.toLowerCase().includes(this.searchTerm.toLowerCase())
     );
-  }
-
-  getRecurringLabel(workshop: Workshop): string {
-    return workshop.recurring && workshop.recurringDay !== undefined ? `Wöchentlich am ${this.getWeekday(workshop.recurringDay)}` : 'Einmalig';
-  }
-
-  getWeekday(day: number): string {
-    const weekdays = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
-    return weekdays[day] ?? 'Unbekannt';
   }
 
   goToDetail(workshop: Workshop) {

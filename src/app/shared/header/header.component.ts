@@ -1,57 +1,68 @@
-import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink, RouterLinkActive } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { Component, HostListener } from '@angular/core';
+import { RouterLink, RouterLinkActive } from '@angular/router';
+import { AuthService } from '../../core/services/auth.service';
+import { StateService } from '../../core/services/state.service';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterLinkActive, FormsModule],
+  imports: [CommonModule, RouterLink, RouterLinkActive],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
-export class HeaderComponent implements OnInit {
-  isLoggedIn: boolean = false;
-  isAdmin: boolean = false;
-  userEmail: string | null = null;
-  dropdownOpen: boolean = false;
-  userDropdownOpen: boolean = false;
+export class HeaderComponent {
+  mobileMenuOpen = false;
+  philosophyDropdownOpen = false;
+  userDropdownOpen = false;
+  isLoggedIn = false;
 
-  constructor(private authService: AuthService, private router: Router) {}
-
-
-  ngOnInit(): void {
+  constructor(
+    private authService: AuthService,
+    private stateService: StateService
+  ) {
     this.authService.user$.subscribe((user) => {
       this.isLoggedIn = !!user;
-      this.userEmail = user ? user.email : null;
-    });
-  
-    this.authService.role$.subscribe((role) => {
-      console.log('🔍 Header überprüft Admin-Status:', role);
-      this.isAdmin = role === 'admin';
     });
   }
-  
 
-
-  toggleDropdown(event: Event): void {
-    event.stopPropagation();
-    this.dropdownOpen = !this.dropdownOpen;
+  toggleMobileMenu(): void {
+    this.mobileMenuOpen = !this.mobileMenuOpen;
+    this.closeDropdowns();
   }
 
-  toggleUserDropdown(event: Event): void {
-    event.stopPropagation();
-    this.userDropdownOpen = !this.userDropdownOpen;
+  toggleDropdown(menu: string): void {
+    if (menu === 'philosophy') {
+      this.philosophyDropdownOpen = !this.philosophyDropdownOpen;
+      this.userDropdownOpen = false;
+    } else if (menu === 'user') {
+      this.userDropdownOpen = !this.userDropdownOpen;
+      this.philosophyDropdownOpen = false;
+    }
   }
 
-  closeDropdowns(): void {
-    this.dropdownOpen = false;
+  closeAllMenus(): void {
+    this.mobileMenuOpen = false;
+    this.philosophyDropdownOpen = false;
     this.userDropdownOpen = false;
   }
 
   logout(): void {
-    this.authService.logout();
-    this.router.navigate(['/login']);
+    this.authService.logout().then(() => {
+      this.isLoggedIn = false;
+      this.closeAllMenus();
+    });
+  }
+
+  @HostListener('document:click', ['$event'])
+  onClickOutside(event: Event): void {
+    if (!(event.target as HTMLElement).closest('.dropdown')) {
+      this.closeDropdowns();
+    }
+  }
+
+  private closeDropdowns(): void {
+    this.philosophyDropdownOpen = false;
+    this.userDropdownOpen = false;
   }
 }

@@ -1,27 +1,36 @@
-<!-- Hero-Bereich -->
 <section class="hero">
   <div class="hero-content">
     <h1>Entfalte deine Kreativität</h1>
-    <p>Erlebe inspirierende Workshops und entdecke deine kreative Seite mit Farben und Formen.</p>
-    <button (click)="navigateTo('/workshops')" class="btn btn-primary">Jetzt entdecken!</button>
+    <p>
+      Erlebe inspirierende Workshops und entdecke deine kreative Seite mit
+      Farben und Formen.
+    </p>
+    <button (click)="navigateTo('/workshops')" class="btn btn-cta">
+      Jetzt entdecken!
+    </button>
   </div>
 </section>
 
-<!-- Über Isabel -->
 <section class="about">
   <div class="about-content">
     <div class="about-image">
-      <img [src]="'assets/images/isabel.webp'" alt="Isabel Kunz - Künstlerin" />
+      <img src="assets/images/isabel.webp" alt="Isabel Kunz - Künstlerin" />
     </div>
     <div class="about-text">
       <h2>Über Isabel Kunz</h2>
-      <p>Mit Leidenschaft für Kunst und Farbenlehre inspiriert Isabel Kunz Menschen, ihre kreative Ader zu entdecken.</p>
-      <button (click)="navigateTo('/about')" class="btn btn-secondary">Mehr erfahren</button>
+      <p>
+        Mit Leidenschaft für Kunst und Farbenlehre inspiriere ich Menschen,
+        ihre kreative Ader zu entdecken. Meine Workshops sind eine wunderbare
+        Gelegenheit, neue Techniken zu erlernen und die eigene Kreativität
+        zu entfalten.
+      </p>
+      <button (click)="navigateTo('/about')" class="btn btn-cta">
+        Mehr erfahren
+      </button>
     </div>
   </div>
 </section>
 
-<!-- Workshop Vorschau -->
 <section class="workshops">
   <div class="workshops-title">
     <h2>Unsere Workshops</h2>
@@ -29,20 +38,48 @@
   </div>
 
   <div class="workshops-grid">
-    <div *ngFor="let workshop of workshops.slice(0,3)" class="workshop-card">
-      <img [src]="workshop.image || 'assets/images/default-workshop.jpg'" [alt]="workshop.title" />
+    <div
+      *ngFor="let workshop of workshops.slice(0,3)"
+      class="workshop-card"
+      aria-label="Workshop-card"
+      (click)="navigateTo('/workshop/' + workshop.id)"
+    >
+      <div class="workshop-image">
+        <img
+          [src]="workshop.image || 'assets/images/default-workshop.jpg'"
+          [alt]="workshop.title"
+          (load)="workshop.imageLoaded = true"
+          [ngClass]="{'loading': !workshop.imageLoaded}"
+        />
+        <div
+          *ngIf="!workshop.imageLoaded"
+          class="spinner"
+          aria-label="Lade-Indikator"
+        ></div>
+      </div>
       <div class="workshop-info">
         <h3>{{ workshop.title }}</h3>
         <p class="short-description">{{ workshop.shortDescription }}</p>
-        <button (click)="navigateTo('/workshops/' + workshop.id)" class="btn btn-primary">Mehr erfahren</button>
+        <div class="workshop-actions">
+          <button
+            (click)="navigateTo('/workshop/' + workshop.id)"
+            class="btn btn-accent"
+            attr.aria-label="Mehr Informationen zu {{ workshop.title }}"
+          >
+            Mehr erfahren
+          </button>
+        </div>
       </div>
     </div>
   </div>
 
-  <button (click)="navigateTo('/workshops')" class="btn btn-secondary">Alle Workshops anzeigen</button>
+  <div class="workshops-footer">
+    <button (click)="navigateTo('/workshops')" class="btn btn-cta">
+      Alle Workshops anzeigen
+    </button>
+  </div>
 </section>
 
-<!-- Galerie Vorschau -->
 <section class="gallery">
   <h2>Galerie</h2>
   <div class="gallery-grid">
@@ -50,5 +87,11 @@
       <img [src]="artwork.src" [alt]="artwork.alt" />
     </div>
   </div>
-  <button (click)="navigateTo('/gallery')" class="btn btn-secondary">🖼️ Zur Galerie</button>
+  <button
+    (click)="navigateTo('/gallery')"
+    class="btn btn-cta"
+    aria-label="Zur Galerie"
+  >
+    🖼️ Zur Galerie
+  </button>
 </section>

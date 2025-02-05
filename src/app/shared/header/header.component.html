@@ -1,37 +1,72 @@
 <header class="app-header">
-  <h1>Malspirale</h1>
+  <div class="brand">
+    <h1>Malspirale</h1>
+  </div>
 
-  <nav>
-    <a routerLink="/home" routerLinkActive="active">Home</a>
-    <a routerLink="/gallery" routerLinkActive="active">Galerie</a>
-    <a routerLink="/workshops" routerLinkActive="active">Workshops</a>
-    <a routerLink="/contact" routerLinkActive="active">Kontakt</a>
-    <a routerLink="/about" routerLinkActive="active">Über mich</a>
+  <!-- Desktop Navigation -->
+  <nav class="desktop-nav">
+    <a routerLink="/home" routerLinkActive="active" (click)="closeAllMenus()">Home</a>
+    <a routerLink="/gallery" routerLinkActive="active" (click)="closeAllMenus()">Galerie</a>
+    <a routerLink="/workshops" routerLinkActive="active" (click)="closeAllMenus()">Workshops</a>
+    <a routerLink="/contact" routerLinkActive="active" (click)="closeAllMenus()">Kontakt</a>
+    <a routerLink="/about" routerLinkActive="active" (click)="closeAllMenus()">Über mich</a>
 
-    <!-- Dropdown für Philosophie -->
-    <div class="dropdown" [class.open]="dropdownOpen" (click)="toggleDropdown($event)">
-      <span class="dropdown-toggle">Philosophie ▼</span>
+    <!-- Dropdown for Philosophy -->
+    <div class="dropdown" [class.open]="philosophyDropdownOpen">
+      <span class="dropdown-toggle" (click)="toggleDropdown('philosophy')">Philosophie ▼</span>
       <div class="dropdown-menu">
-        <a routerLink="/philosophie/farben" routerLinkActive="active" (click)="closeDropdowns()">Farben</a>
-        <a routerLink="/philosophie/geschichten" routerLinkActive="active" (click)="closeDropdowns()">Geschichten</a>
-        <a routerLink="/philosophie/resonance-farben" routerLinkActive="active" (click)="closeDropdowns()">Resonance Colors</a>
-        <a routerLink="/philosophie/malgeschichten" routerLinkActive="active" (click)="closeDropdowns()">Malgeschichten</a>
+        <a routerLink="/philosophie/farben" routerLinkActive="active" (click)="closeAllMenus()">Farben</a>
+        <a routerLink="/philosophie/geschichten" routerLinkActive="active" (click)="closeAllMenus()">Geschichten</a>
+        <a routerLink="/philosophie/resonance-farben" routerLinkActive="active" (click)="closeAllMenus()">Resonance Colors</a>
+        <a routerLink="/philosophie/malgeschichten" routerLinkActive="active" (click)="closeAllMenus()">Malgeschichten</a>
       </div>
     </div>
 
-    <!-- Benutzer-Optionen -->
-    <div class="user-options" *ngIf="isLoggedIn">
-      <div class="dropdown" [class.open]="userDropdownOpen" (click)="toggleUserDropdown($event)">
-        <span class="dropdown-toggle">{{ userEmail }} ▼</span>
-        <div class="dropdown-menu">
-          <a routerLink="/user-dashboard" routerLinkActive="active" (click)="closeDropdowns()">Profil</a>
-          <a *ngIf="isAdmin" routerLink="/admin" routerLinkActive="active" (click)="closeDropdowns()">Admin-Bereich</a>
-          <a (click)="logout(); closeDropdowns()">Abmelden</a>
-        </div>
+    <!-- User Menu -->
+    <div class="dropdown user-menu" [class.open]="userDropdownOpen">
+      <span class="dropdown-toggle" (click)="toggleDropdown('user')">
+        <img src="assets/icons/user.svg" alt="User" class="user-icon" />
+      </span>
+      <div class="dropdown-menu">
+        <a *ngIf="!isLoggedIn" routerLink="/login" routerLinkActive="active" (click)="closeAllMenus()">Login</a>
+        <a *ngIf="isLoggedIn" (click)="logout()">Logout</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu Toggle -->
+  <button class="menu-toggle" (click)="toggleMobileMenu()">
+    <img src="assets/icons/menu.svg" alt="Menu" class="menu-icon" />
+  </button>
+
+  <!-- Mobile Navigation -->
+  <nav class="mobile-nav" [class.open]="mobileMenuOpen">
+    <a routerLink="/home" routerLinkActive="active" (click)="closeAllMenus()">Home</a>
+    <a routerLink="/gallery" routerLinkActive="active" (click)="closeAllMenus()">Galerie</a>
+    <a routerLink="/workshops" routerLinkActive="active" (click)="closeAllMenus()">Workshops</a>
+    <a routerLink="/contact" routerLinkActive="active" (click)="closeAllMenus()">Kontakt</a>
+    <a routerLink="/about" routerLinkActive="active" (click)="closeAllMenus()">Über mich</a>
+
+    <!-- Mobile Dropdown for Philosophy -->
+    <div class="dropdown" [class.open]="philosophyDropdownOpen">
+      <span class="dropdown-toggle" (click)="toggleDropdown('philosophy')">Philosophie ▼</span>
+      <div class="dropdown-menu">
+        <a routerLink="/philosophie/farben" routerLinkActive="active" (click)="closeAllMenus()">Farben</a>
+        <a routerLink="/philosophie/geschichten" routerLinkActive="active" (click)="closeAllMenus()">Geschichten</a>
+        <a routerLink="/philosophie/resonance-farben" routerLinkActive="active" (click)="closeAllMenus()">Resonance Colors</a>
+        <a routerLink="/philosophie/malgeschichten" routerLinkActive="active" (click)="closeAllMenus()">Malgeschichten</a>
       </div>
     </div>
 
-    <!-- Login-Button für nicht eingeloggte Benutzer -->
-    <a *ngIf="!isLoggedIn" routerLink="/login" class="login-button">Anmelden</a>
+    <!-- Mobile User Menu -->
+    <div class="dropdown user-menu" [class.open]="userDropdownOpen" (click)="toggleDropdown('user')">
+      <span class="dropdown-toggle" >
+        <img src="assets/icons/user.svg" alt="User" class="user-icon" />
+      </span>
+      <div class="dropdown-menu">
+        <a *ngIf="!isLoggedIn" routerLink="/login" routerLinkActive="active" (click)="closeAllMenus()">Login</a>
+        <a *ngIf="isLoggedIn" (click)="logout()">Logout</a>
+      </div>
+    </div>
   </nav>
 </header>

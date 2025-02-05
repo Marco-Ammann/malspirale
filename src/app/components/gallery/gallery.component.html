@@ -24,6 +24,15 @@
 
   <!-- Fallback für leere Galerie -->
   <div *ngIf="!loading && artworks.length === 0" class="no-artworks">
-    <p>Es sind derzeit keine Bilder verfügbar.</p>
+    <div class="gallery-grid" *ngIf="!loading && artworks_default.length > 0">
+      <div *ngFor="let artwork of artworks_default" class="artwork">
+        <div class="image-container">
+          <img [src]="artwork.src" [alt]="artwork.alt" />
+          <div class="overlay">
+            <div class="text">{{ artwork.title }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

@@ -37,8 +37,10 @@
   transition: background-color 0.3s ease, transform 0.3s ease;
 
   &:hover {
-    background-color: color.adjust($bg-color, $lightness: -10%);
+    background-color: color.scale($bg-color, $lightness: 30%);
     transform: scale(1.05);
+    color: vars.$text-dark;
+    box-shadow: vars.$box-shadow-deep;
   }
 }
 

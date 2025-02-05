@@ -1,148 +1,218 @@
 @use 'sass:color';
 @use 'variables' as vars;
-@use 'mixins' as mix;
+@use 'mixins' as mixins;
+
+.active {
+  background-color: vars.$accent-color;
+  padding: 0.5rem 1rem;
+  border-radius: vars.$border-radius;
+}
 
 .app-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: vars.$primary-color;
-  padding: vars.$padding-medium;
-  color: #fff;
-  box-shadow: vars.$shadow;
-  position: relative;
+  padding: 1rem;
+  background: vars.$primary-color;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 
-  h1 {
-    font-size: vars.$font-size-large;
+  .brand h1 {
     margin: 0;
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: vars.$text-color-light;
   }
 
-  nav {
+  .desktop-nav {
     display: flex;
+    gap: 1.5rem;
     align-items: center;
-    gap: vars.$padding-medium;
 
-    a {
-      color: #fff;
+    a, .dropdown-toggle {
       text-decoration: none;
-      font-size: vars.$font-size-base;
-      padding: vars.$padding-small vars.$padding-medium;
-      border-radius: vars.$border-radius-small;
-      transition: background-color 0.3s ease;
+      font-size: 1rem;
+      color: vars.$text-color-light;
+      transition: color 0.3s ease;
+      cursor: pointer;
 
       &:hover {
-        background-color: color.adjust(vars.$primary-color, $lightness: -10%);
+        color: vars.$accent-color;
       }
     }
 
-    .login-button {
-      @include mix.button-style(vars.$accent-color, #fff);
+    .active {
+      color: vars.$text-color;
+      transition: ease-in-out 0.3s;
+      background-color: vars.$background-color;
+
+      &:hover {
+        background-color: vars.$accent-color;
+        color: vars.$text-color;
+      }
     }
 
     .dropdown {
       position: relative;
 
-      .dropdown-toggle {
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        gap: 5px;
-      }
-
       .dropdown-menu {
+        display: none;
         position: absolute;
-        background: #fff;
-        box-shadow: vars.$shadow;
-        border-radius: vars.$border-radius;
-        padding: vars.$padding-small;
         top: 100%;
         left: 0;
-        z-index: 10;
-        min-width: 180px;
-        display: none;
-        opacity: 0;
-        transform: translateY(5px);
-        transition: opacity 0.3s ease, transform 0.3s ease;
+        background: vars.$background-color;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 0.5rem 0;
+        border-radius: vars.$border-radius;
 
         a {
           display: block;
-          padding: vars.$padding-small vars.$padding-medium;
+          padding: 0.5rem 1rem;
           color: vars.$text-color;
-          transition: background-color 0.3s ease;
+          transition: 0.3s ease-in-out;
+          cursor: pointer;
+          border-radius: vars.$border-radius;
+          
 
           &:hover {
-            background-color: vars.$primary-color;
-            color: #fff;
+            color: vars.$text-color;
+            background-color: vars.$teritary-color;
           }
         }
       }
 
       &.open .dropdown-menu {
         display: block;
-        opacity: 1;
-        transform: translateY(0);
       }
     }
+  }
 
-    .user-options {
-      display: flex;
-      align-items: center;
+  .menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
 
-      .dropdown {
-        position: relative;
+    .menu-icon {
+      width: 32px;
+      height: 32px;
+    }
+  }
+
+  .mobile-nav {
+    display: none;
+  }
+
+  .user-menu {
+    .user-icon {
+      width: 32px;
+      height: 32px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .desktop-nav {
+      display: none;
+    }
+
+    .menu-toggle {
+      display: block;
+    }
+
+    .mobile-nav {
+      display: none;
+      flex-direction: column;
+      gap: 1rem;
+      background: vars.$background-color;
+      padding: 1rem;
+      position: absolute;
+      top: 60px;
+      left: 0;
+      right: 0;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+      border-radius: vars.$border-radius;
+      text-align: center;
+
+      &.open {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 100;
+      }
+
+
+      a {
+        text-decoration: none;
+        display: block;
+        padding: 0.5rem 1rem;
+        color: vars.$text-color;
+        transition: 0.3s ease-in-out;
         cursor: pointer;
+        border-radius: vars.$border-radius;
+        
 
-        .dropdown-toggle {
-          font-weight: bold;
+        &:hover {
+          color: vars.$text-color;
+          background-color: vars.$teritary-color;
         }
 
+
+      }
+
+      
+      .dropdown {
+        position: static;
+        display: block;
+        cursor: pointer;
+        padding: 0.5rem 1rem;
+        border-radius: vars.$border-radius;
+        
+        &:hover {
+          background-color: vars.$accent-color;
+        }
+        
+
+
         .dropdown-menu {
-          position: absolute;
-          background: #fff;
-          box-shadow: vars.$shadow;
-          border-radius: vars.$border-radius;
-          padding: vars.$padding-small;
-          top: 100%;
-          right: 0;
-          z-index: 10;
-          min-width: 160px;
           display: none;
-          opacity: 0;
-          transform: translateY(5px);
-          transition: opacity 0.3s ease, transform 0.3s ease;
+          position: static;
+          background: none;
+          box-shadow: none;
 
           a {
-            display: block;
-            padding: vars.$padding-small vars.$padding-medium;
+            padding: 0.5rem 1rem;
             color: vars.$text-color;
-            transition: background-color 0.3s ease;
+            transition: 0.3s ease-in-out;
+            cursor: pointer;
+            border-radius: vars.$border-radius;
 
             &:hover {
-              background-color: vars.$primary-color;
-              color: #fff;
+              color: vars.$text-color;
+              background-color: vars.$teritary-color;
             }
           }
         }
 
         &.open .dropdown-menu {
           display: block;
-          opacity: 1;
-          transform: translateY(0);
         }
+
+        .user-menu {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 1rem;
+          padding: 1rem;
+
+        }
+        .user-icon {
+          width: 32px;
+          height: 32px;
+          // darken the svg icon
+          filter: invert(0.7);
+        }
+
       }
-    }
-  }
-}
-
-/* Responsive Anpassungen */
-@media (max-width: 768px) {
-  .app-header {
-    flex-direction: column;
-    text-align: center;
-
-    nav {
-      flex-direction: column;
-      gap: vars.$padding-small;
     }
   }
 }

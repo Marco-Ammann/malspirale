@@ -15,6 +15,7 @@ export class WorkshopDetailComponent implements OnInit {
   workshop: Workshop | null = null;
   loading = true;
   errorMessage = '';
+  imageLoaded = false;
 
   constructor(
     private route: ActivatedRoute,

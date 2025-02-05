@@ -5,12 +5,16 @@ $primary-color: #A6C8B7;
 $secondary-color: #D8BFD8;
 $teritary-color: #FFD700;
 $accent-color: #FFD1DC;
+$accent-color-light: color.scale($accent-color, $lightness: 60%);
 $text-color: #5A5A5A;
-$text-light: color.adjust($text-color, $lightness: 20%);
-$text-dark: color.adjust($text-color, $lightness: -20%);
+$text-color-light: #fff;
+$text-light: color.scale($text-color, $lightness: 20%);
+$text-dark: color.scale($text-color, $lightness: -5%);
 $link-color: #007BFF;
 $background-color: #F7F4F1;
-$hover-color: color.adjust($primary-color, $lightness: -10%);
+$background-light: color.scale($background-color, $lightness: 5%);
+$background-dark: color.scale($background-color, $lightness: -5%);
+$hover-color: color.scale($primary-color, $lightness: -5%);
 
 // 🔲 Abstände
 $padding-extra-small: 4px;
@@ -29,11 +33,37 @@ $font-size-xlarge: 24px;
 $font-size-xxlarge: 32px;
 $font-size-xxxlarge: 40px;
 
+$font-weight-light: 300;
+$font-weight-normal: 400;
+$font-weight-bold: 700;
+$font-weight-bolder: 900;
+
+$word-spacing: 1px;
+$word-spacing-large: 2px;
+
+$letter-spacing: 0.5px;
+$letter-spacing-large: 1px;
+
+$line-height: 1.5;
+$line-height-large: 1.8;
+
 // 📏 Größen für UI-Elemente
 $header-height: 5rem;
 $footer-height: 4rem;
 $input-height: 40px;
 $button-height: 44px;
+
+// 📏 Größen für Layout
+$container-max-width-sm: 540px;
+$container-max-width-md: 720px;
+$container-max-width-lg: 960px;
+$container-max-width-xl: 1140px;
+
+$container-padding: 16px;
+$container-padding-large: 32px;
+
+$container-gap: 16px;
+$container-gap-large: 32px;
 
 // 🖼 Schatten & Effekte
 $box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -48,5 +78,6 @@ $border-radius-large: 12px;
 
 // 📱 Responsive Breakpoints
 $mobile: 480px;
+$mobile-large: 650px;
 $tablet: 768px;
 $desktop: 1024px;

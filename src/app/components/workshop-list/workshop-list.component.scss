@@ -23,6 +23,9 @@
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: vars.$padding-medium;
     justify-content: center;
+    align-items: start;
+    margin: 0 auto;
+    max-width: 1200px;
   }
 
   .workshop-card {
@@ -32,18 +35,44 @@
     padding: vars.$padding-medium;
     transition: transform 0.3s ease-in-out;
     cursor: pointer;
+    width: 100%;
+    max-width: 280px;
     
     &:hover {
-      transform: scale(1.05);
       box-shadow: vars.$hover-shadow;
     }
 
     .workshop-image {
+      position: relative;
+
       img {
         width: 100%;
         height: 180px;
         object-fit: cover;
         border-radius: vars.$border-radius;
+        opacity: 1;
+        transition: opacity 0.3s ease-in-out;
+
+        &.loading {
+          opacity: 0;
+        }
+      }
+
+      .spinner {
+        position: absolute;
+        top: calc(50% - 20px);
+        left: calc(50% - 20px);
+        border: 4px solid rgba(0, 0, 0, 0.1);
+        border-top: 4px solid vars.$primary-color;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
       }
     }
 
@@ -52,9 +81,37 @@
       text-align: left;
     }
 
-    .btn {
-      width: 100%;
+    .workshop-actions {
+      display: flex;
+      justify-content: center;
       margin-top: vars.$padding-small;
+
+      button {
+        padding: vars.$padding-small vars.$padding-medium;
+        border: none;
+        border-radius: vars.$border-radius;
+        background: vars.$primary-color;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background 0.3s ease;
+
+        &:hover {
+          background: vars.$hover-color;
+        }
+      }
+    }
+  }
+
+  @media (max-width: 320px) {
+    padding: vars.$padding-small;
+
+    .workshop-list {
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    }
+
+    .workshop-card {
+      max-width: 100%;
     }
   }
 }

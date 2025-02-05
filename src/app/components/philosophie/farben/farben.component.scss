@@ -1,38 +1,98 @@
-@use 'sass:color';
-@use 'variables' as vars;
-@use 'mixins' as mix;
+@use "variables" as vars;
+@use "mixins" as mix;
 
 .farben-page {
-  text-align: center;
-  padding: vars.$padding-large;
+  max-width: 900px;
+  margin: auto;
+  padding: vars.$container-padding-large;
+}
 
-  h2 {
-    font-size: vars.$font-size-large;
-    color: vars.$text-color;
+.farben-list {
+  display: flex;
+  flex-direction: column;
+  gap: vars.$padding-medium;
+  margin-top: vars.$padding-large;
+}
+
+.farbe {
+  display: flex;
+  align-items: center;
+  background: vars.$background-light;
+  padding: vars.$padding-medium;
+  border-radius: vars.$border-radius-large;
+  box-shadow: vars.$box-shadow;
+}
+
+.farbpunkt {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin-right: vars.$padding-medium;
+}
+
+.farbtext {
+  flex: 1;
+  
+  h3 {
+    margin: 0;
+    font-size: vars.$font-size-xlarge;
   }
 
   p {
-    font-size: vars.$font-size-base;
-    color: vars.$text-color;
-    line-height: 1.6;
-    margin-bottom: vars.$padding-medium;
+    margin: vars.$padding-small 0;
+    font-size: vars.$font-size-large;
+  }
+}
+
+@media (max-width: 768px) {
+  .farben-page {
+    padding: vars.$container-padding;
   }
 
-  ul {
-    list-style: none;
-    padding: 0;
+  .farbe {
+    flex-direction: column;
+    text-align: center;
+    padding: vars.$padding-medium;
+  }
 
-    li {
-      font-size: vars.$font-size-base;
-      padding: vars.$padding-small;
-      background: vars.$background-color;
-      border-radius: vars.$border-radius;
-      margin-bottom: vars.$padding-small;
-      transition: transform 0.2s ease;
+  .farbpunkt {
+    margin: 0 auto vars.$padding-small;
+  }
+}
 
-      &:hover {
-        transform: scale(1.05);
-      }
-    }
+@media (max-width: 480px) {
+  .farben-page {
+    padding: vars.$container-padding;
+  }
+
+  h2 {
+    font-size: vars.$font-size-xlarge;
+  }
+
+  p {
+    font-size: vars.$font-size-medium;
+  }
+
+  .farbe {
+    padding: vars.$padding-small;
+  }
+}
+
+@media (max-width: 320px) {
+  .farben-page {
+    padding: vars.$container-padding;
+  }
+
+  h2 {
+    font-size: vars.$font-size-large;
+  }
+
+  .farbpunkt {
+    width: 20px;
+    height: 20px;
+  }
+
+  .farbe {
+    padding: vars.$padding-small;
   }
 }

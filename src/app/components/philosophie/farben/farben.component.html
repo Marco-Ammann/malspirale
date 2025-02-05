@@ -1,29 +1,19 @@
 <div class="farben-page">
-  <h2>Farben und ihre Wirkung</h2>
+  <h2>Farben und ihre Bedeutung</h2>
   
   <p>
-    Farben sind ein mächtiges Werkzeug in der Kunst, das Emotionen weckt, Stimmungen schafft und Botschaften vermittelt.
-    Isabel Kunz legt großen Wert auf die bewusste Auswahl und Anwendung von Farben.
+    Farben haben eine tiefgehende Wirkung auf unsere Emotionen und unser Wohlbefinden. 
+    Jede Farbe besitzt eine spezifische Energie, die verschiedene Aspekte unseres Lebens beeinflusst.
   </p>
 
-  <h3>Resonance-Farben</h3>
-  <p>
-    <strong>Resonance</strong> ist eine bioaktivierte Gouache-Farbe, die aus reinen Pigmenten besteht und mit Salbeiöl angereichert ist.
-    Sie steigert die Kreativität und fördert die innere Ruhe.
-  </p>
-
-  <h3>Lascaux-Farben</h3>
-  <p>
-    Inspiriert von den alten Höhlenmalereien, ermöglichen diese Farben eine tiefe Verbindung zur Natur und dem künstlerischen Ausdruck.
-  </p>
-
-  <h3>Die Wirkung der Farben</h3>
-  <ul>
-    <li><strong>Rot:</strong> Energie, Leidenschaft, Dynamik</li>
-    <li><strong>Blau:</strong> Ruhe, Vertrauen, Stabilität</li>
-    <li><strong>Grün:</strong> Harmonie, Wachstum, Frische</li>
-    <li><strong>Gelb:</strong> Freude, Optimismus, Kreativität</li>
-    <li><strong>Violett:</strong> Spiritualität, Mystik, Luxus</li>
-    <li><strong>Orange:</strong> Wärme, Enthusiasmus, Abenteuerlust</li>
-  </ul>
+  <div class="farben-list">
+    <div class="farbe" *ngFor="let farbe of farben">
+      <div class="farbpunkt" [ngStyle]="{'background-color': farbe.color}"></div>
+      <div class="farbtext">
+        <h3>{{ farbe.name }}</h3>
+        <p>{{ farbe.bedeutung }}</p>
+        <p><strong>Passende Steine:</strong> {{ farbe.steine }}</p>
+      </div>
+    </div>
+  </div>
 </div>

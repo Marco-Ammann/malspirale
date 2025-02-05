@@ -6,3 +6,15 @@
   min-height: calc(100vh - (vars.$header-height + vars.$footer-height));
   background-color: #f7f4f1;
 }
+// ** RESPONSIVE DESIGN **
+@media (max-width: vars.$tablet) {
+  .app-content {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: vars.$mobile) {
+  .app-content {
+    padding: 0.5rem;
+  }
+}

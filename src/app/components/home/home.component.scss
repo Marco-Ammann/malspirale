@@ -1,30 +1,52 @@
 @use "variables" as vars;
 @use "mixins" as mix;
 
+//ng deep
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: vars.$container-gap-large;
+}
+
+section {
+  border-radius: vars.$border-radius-large;
+  box-shadow: vars.$box-shadow;
+  padding: vars.$container-padding-large;
+}
+
 // ** HERO SECTION **
 .hero {
   @include mix.flex-center;
   background: url("../../../assets/images/hero10.webp") center/cover no-repeat;
   height: 85vh;
   text-align: center;
-  color: white;
-  padding: vars.$padding-large;
 
   .hero-content {
-    max-width: 600px;
-    background: rgba(0, 0, 0, 0.6);
+    max-width: vars.$container-max-width-lg;
+    background: rgba(255, 255, 255, 0.6);
     padding: vars.$padding-large;
     border-radius: vars.$border-radius-large;
     box-shadow: vars.$shadow;
-    
+
     h1 {
-      font-size: vars.$font-size-xxlarge;
+      font-size: vars.$font-size-xxxlarge;
+      font-weight: vars.$font-weight-bolder;
       margin-bottom: vars.$padding-small;
+      letter-spacing: vars.$letter-spacing-large;
+      line-height: vars.$line-height;
     }
 
     p {
       font-size: vars.$font-size-large;
       margin-bottom: vars.$padding-medium;
+      line-height: 1.4;
+    }
+
+    button {
+      margin-top: vars.$padding-medium;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
     }
   }
 }
@@ -33,8 +55,7 @@
 .about {
   @include mix.flex-center;
   flex-wrap: wrap;
-  padding: vars.$padding-large;
-  background: vars.$background-color;
+  background: vars.$background-light;
 
   .about-content {
     display: flex;
@@ -42,6 +63,7 @@
     max-width: 1100px;
     width: 100%;
     align-items: center;
+    justify-content: center;
   }
 
   .about-image {
@@ -58,6 +80,7 @@
   .about-text {
     flex: 1;
     text-align: left;
+    max-width: 600px;
 
     h2 {
       font-size: vars.$font-size-xxlarge;
@@ -67,74 +90,158 @@
     p {
       font-size: vars.$font-size-large;
       margin-bottom: vars.$padding-medium;
+      line-height: 1.4;
+    }
+
+    .btn {
+      margin-top: vars.$padding-small;
     }
   }
 }
 
 // ** WORKSHOPS SECTION **
 .workshops {
-  padding: vars.$padding-large;
   text-align: center;
+  background-color: vars.$accent-color-light;
 
   .workshops-title {
     margin-bottom: vars.$padding-medium;
-    
+
     h2 {
       font-size: vars.$font-size-xxlarge;
+      margin-bottom: vars.$padding-small;
+    }
+
+    p {
+      font-size: vars.$font-size-base;
+      color: vars.$text-light;
+      line-height: 1.4;
     }
   }
 
   .workshops-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: vars.$padding-medium;
     justify-content: center;
+    max-width: 1200px;
+    margin: 0 auto;
   }
 
   .workshop-card {
-    background: white;
-    padding: vars.$padding-medium;
+    background: #fff;
     border-radius: vars.$border-radius-large;
     box-shadow: vars.$shadow;
-    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    overflow: hidden;
+    transition: 0.3s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    max-width: 320px;
+    margin: vars.$padding-small auto;
+    cursor: pointer;
 
     &:hover {
-      transform: scale(1.05);
       box-shadow: vars.$hover-shadow;
+      background-color: vars.$background-color;
     }
 
-    img {
-      width: 100%;
-      height: 200px;
-      object-fit: cover;
-      border-radius: vars.$border-radius;
+    .workshop-image {
+      position: relative;
+
+      img {
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
+        border-radius: vars.$border-radius;
+        opacity: 1;
+        transition: opacity 0.3s ease-in-out;
+
+        &.loading {
+          opacity: 0;
+        }
+      }
+
+      .spinner {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border: 4px solid rgba(0, 0, 0, 0.1);
+        border-top: 4px solid vars.$primary-color;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
     }
 
     .workshop-info {
       padding: vars.$padding-medium;
       text-align: left;
+      flex-grow: 1;
+
+      .short-description {
+        color: vars.$text-light;
+        margin-bottom: vars.$padding-small;
+        line-height: 1.4;
+      }
     }
+
+    .workshop-actions {
+      margin-top: vars.$padding-small;
+      padding: 0 vars.$padding-medium vars.$padding-medium;
+      display: flex;
+      justify-content: center;
+    }
+  }
+
+  .workshops-footer {
+    margin-top: vars.$padding-medium;
+    text-align: center;
+  }
+
+  button {
+    margin-top: vars.$padding-medium;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
   }
 }
 
-// ** GALERIE SECTION **
+// ** GALLERY SECTION **
 .gallery {
   text-align: center;
-  padding: vars.$padding-large;
-  background: vars.$background-color;
+  background: vars.$background-dark;
+
+  h2 {
+    font-size: vars.$font-size-xxlarge;
+    margin-bottom: vars.$padding-small;
+  }
 
   .gallery-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     gap: vars.$padding-medium;
     max-width: 1000px;
-    margin: auto;
+    margin: 0 auto;
+    justify-items: center;
   }
 
   .gallery-item {
     border-radius: vars.$border-radius-large;
     box-shadow: vars.$shadow;
     transition: transform 0.3s ease-in-out;
+    width: 200px;
+    height: 200px;
 
     &:hover {
       transform: scale(1.05);
@@ -142,9 +249,17 @@
 
     img {
       width: 100%;
+      height: 100%;
       object-fit: cover;
       border-radius: vars.$border-radius;
     }
+  }
+
+  button {
+    margin-top: vars.$padding-medium;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
   }
 }
 
@@ -157,7 +272,9 @@
   border-radius: vars.$border-radius;
   box-shadow: vars.$shadow;
   cursor: pointer;
-  transition: transform 0.2s ease-in-out, background-color 0.3s ease-in-out;
+  transition: 0.3s ease-in-out all;
+
+
 
   &:hover {
     transform: scale(1.05);
@@ -165,21 +282,44 @@
 }
 
 .btn-primary {
-  @include mix.button-style(vars.$accent-color, white);
+  @include mix.button-style(vars.$accent-color, #fff);
 }
 
 .btn-secondary {
   @include mix.button-style(vars.$secondary-color, vars.$text-color);
 }
 
+.btn-accent {
+  @include mix.button-style(vars.$primary-color, #fff);
+}
+
+.btn-cta {
+  @include mix.button-style(vars.$teritary-color, vars.$text-color);
+  margin-top: vars.$padding-large;
+}
+
 // ** RESPONSIVE DESIGN **
-@media (max-width: 768px) {
+@media (max-width: vars.$tablet) {
+  //ng deep
+  :host {
+    display: flex;
+    flex-direction: column;
+    gap: vars.$container-gap;
+  }
+
+  section {
+    padding: vars.$container-padding;
+  }
+
   .hero {
-    height: auto;
-    padding: vars.$padding-medium;
+    height: max-content;
 
     .hero-content {
       max-width: 100%;
+
+      h1 {
+        font-size: vars.$font-size-xlarge;
+      }
     }
   }
 
@@ -193,18 +333,46 @@
     }
   }
 
+  .workshop-card {
+    max-width: 280px;
+  }
+
   .workshops-grid,
   .gallery-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+}
+
+@media (max-width: vars.$mobile-large) {
+  .workshop-card {
+    max-width: 280px;
+  }
+
+  .workshop-info {
+    padding: vars.$padding-small;
+  }
+
+  .workshop-actions {
+    padding: 0 vars.$padding-small vars.$padding-small;
+  }
+
+  .gallery-item {
+    width: 150px;
+    height: 150px;
+  }
+
+  .workshop-grid, .gallery-grid {
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
   }
 }
 
-@media (max-width: 320px) {
+@media (max-width: vars.$mobile) {
   h1 {
     font-size: vars.$font-size-base;
   }
 
   .btn {
     font-size: vars.$font-size-small;
+    padding: vars.$padding-small;
   }
 }
