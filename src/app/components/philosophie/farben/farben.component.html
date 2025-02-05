@@ -1,14 +1,14 @@
 <div class="farben-page">
   <h2>Farben und ihre Bedeutung</h2>
-  
+
   <p>
-    Farben haben eine tiefgehende Wirkung auf unsere Emotionen und unser Wohlbefinden. 
+    Farben haben eine tiefgehende Wirkung auf unsere Emotionen und unser Wohlbefinden.
     Jede Farbe besitzt eine spezifische Energie, die verschiedene Aspekte unseres Lebens beeinflusst.
   </p>
 
   <div class="farben-list">
     <div class="farbe" *ngFor="let farbe of farben">
-      <div class="farbpunkt" [ngStyle]="{'background-color': farbe.color}"></div>
+      <div class="farblinie" [ngStyle]="{'background-color': farbe.color}"></div>
       <div class="farbtext">
         <h3>{{ farbe.name }}</h3>
         <p>{{ farbe.bedeutung }}</p>

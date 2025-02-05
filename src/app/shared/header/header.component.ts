@@ -17,12 +17,19 @@ export class HeaderComponent {
   userDropdownOpen = false;
   isLoggedIn = false;
 
+  isAdmin = false;
+
+
   constructor(
     private authService: AuthService,
     private stateService: StateService
   ) {
-    this.authService.user$.subscribe((user) => {
+    this.authService.user$.subscribe(user => {
       this.isLoggedIn = !!user;
+    });
+
+    this.authService.role$.subscribe(role => {
+      this.isAdmin = role === 'admin';
     });
   }
 

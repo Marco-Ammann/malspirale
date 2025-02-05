@@ -4,7 +4,7 @@ import { Component } from '@angular/core';
   selector: 'app-impressum',
   imports: [],
   templateUrl: './impressum.component.html',
-  styleUrl: './impressum.component.scss'
+  styleUrls: ['./impressum.component.scss']
 })
 export class ImpressumComponent {
 
