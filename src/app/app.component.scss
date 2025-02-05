@@ -1,10 +1,11 @@
 @use "../styles.scss" as *;
-@use 'variables' as vars;
+@use "variables" as vars;
+@use "mixins" as mix;
 
 .app-content {
   padding: 2rem;
   min-height: calc(100vh - (vars.$header-height + vars.$footer-height));
-  background-color: #f7f4f1;
+  background-color: vars.$background-color;
 }
 // ** RESPONSIVE DESIGN **
 @media (max-width: vars.$tablet) {

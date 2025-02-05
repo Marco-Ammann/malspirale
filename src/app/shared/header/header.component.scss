@@ -71,11 +71,11 @@
           transition: 0.3s ease-in-out;
           cursor: pointer;
           border-radius: vars.$border-radius;
-          
+
 
           &:hover {
             color: vars.$text-color;
-            background-color: vars.$teritary-color;
+            background-color: vars.$tertiary-color;
           }
         }
       }
@@ -149,28 +149,28 @@
         transition: 0.3s ease-in-out;
         cursor: pointer;
         border-radius: vars.$border-radius;
-        
+
 
         &:hover {
           color: vars.$text-color;
-          background-color: vars.$teritary-color;
+          background-color: vars.$tertiary-color;
         }
 
 
       }
 
-      
+
       .dropdown {
         position: static;
         display: block;
         cursor: pointer;
         padding: 0.5rem 1rem;
         border-radius: vars.$border-radius;
-        
+
         &:hover {
           background-color: vars.$accent-color;
         }
-        
+
 
 
         .dropdown-menu {
@@ -188,7 +188,7 @@
 
             &:hover {
               color: vars.$text-color;
-              background-color: vars.$teritary-color;
+              background-color: vars.$tertiary-color;
             }
           }
         }

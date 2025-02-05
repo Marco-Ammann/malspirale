@@ -19,9 +19,9 @@ interface WorkshopWithImage extends Workshop {
 export class HomeComponent implements OnInit {
   workshops: WorkshopWithImage[] = [];
   artworks = [
-    { src: 'assets/images/art1.webp', alt: 'Kunstwerk 1' },
-    { src: 'assets/images/art2.webp', alt: 'Kunstwerk 2' },
-    { src: 'assets/images/art3.webp', alt: 'Kunstwerk 3' },
+    { src: 'assets/images/art1.webp', alt: 'Kunstwerk 1', imageLoaded: false },
+    { src: 'assets/images/art2.webp', alt: 'Kunstwerk 2', imageLoaded: false },
+    { src: 'assets/images/art3.webp', alt: 'Kunstwerk 3', imageLoaded: false },
   ];
 
   constructor(private dataService: DataService, private router: Router) {}
@@ -31,12 +31,24 @@ export class HomeComponent implements OnInit {
   }
 
   loadWorkshops(): void {
-    this.dataService.getAllWorkshops().then((workshops) => {
-      this.workshops = workshops.map((workshop) => ({
-        ...workshop,
-        imageLoaded: false,
-      }));
-    });
+    this.dataService.getAllWorkshops()
+      .then((workshops) => {
+        this.workshops = workshops.map((workshop) => ({
+          ...workshop,
+          imageLoaded: false,
+        }));
+      })
+      .catch((error) => {
+        console.error('Fehler beim Laden der Workshops:', error);
+      });
+  }
+
+  onImageLoad(index: number, type: 'workshop' | 'artwork'): void {
+    if (type === 'workshop') {
+      this.workshops[index].imageLoaded = true;
+    } else if (type === 'artwork') {
+      this.artworks[index].imageLoaded = true;
+    }
   }
 
   navigateTo(route: string): void {

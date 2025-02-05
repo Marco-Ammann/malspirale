@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, OnDestroy } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { StateService } from '../../core/services/state.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-header',
@@ -11,26 +13,27 @@ import { StateService } from '../../core/services/state.service';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnDestroy {
   mobileMenuOpen = false;
   philosophyDropdownOpen = false;
   userDropdownOpen = false;
   isLoggedIn = false;
-
   isAdmin = false;
 
+  private unsubscribe$ = new Subject<void>();
 
-  constructor(
-    private authService: AuthService,
-    private stateService: StateService
-  ) {
-    this.authService.user$.subscribe(user => {
-      this.isLoggedIn = !!user;
-    });
+  constructor(private authService: AuthService, private stateService: StateService) {
+    this.authService.user$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(user => {
+        this.isLoggedIn = !!user;
+      });
 
-    this.authService.role$.subscribe(role => {
-      this.isAdmin = role === 'admin';
-    });
+    this.authService.role$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(role => {
+        this.isAdmin = role === 'admin';
+      });
   }
 
   toggleMobileMenu(): void {
@@ -50,8 +53,7 @@ export class HeaderComponent {
 
   closeAllMenus(): void {
     this.mobileMenuOpen = false;
-    this.philosophyDropdownOpen = false;
-    this.userDropdownOpen = false;
+    this.closeDropdowns();
   }
 
   logout(): void {
@@ -63,7 +65,7 @@ export class HeaderComponent {
 
   @HostListener('document:click', ['$event'])
   onClickOutside(event: Event): void {
-    if (!(event.target as HTMLElement).closest('.dropdown')) {
+    if (!(event.target as HTMLElement).closest('.dropdown, .menu-toggle')) {
       this.closeDropdowns();
     }
   }
@@ -71,5 +73,10 @@ export class HeaderComponent {
   private closeDropdowns(): void {
     this.philosophyDropdownOpen = false;
     this.userDropdownOpen = false;
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }

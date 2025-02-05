@@ -24,7 +24,7 @@
         Gelegenheit, neue Techniken zu erlernen und die eigene Kreativität
         zu entfalten.
       </p>
-      <button (click)="navigateTo('/about')" class="btn btn-cta">
+      <button (click)="navigateTo('/about')" class="btn btn-cta-secondary">
         Mehr erfahren
       </button>
     </div>
@@ -74,7 +74,7 @@
   </div>
 
   <div class="workshops-footer">
-    <button (click)="navigateTo('/workshops')" class="btn btn-cta">
+    <button (click)="navigateTo('/workshops')" class="btn btn-cta-secondary">
       Alle Workshops anzeigen
     </button>
   </div>
@@ -84,14 +84,10 @@
   <h2>Galerie</h2>
   <div class="gallery-grid">
     <div *ngFor="let artwork of artworks.slice(0,4)" class="gallery-item">
-      <img [src]="artwork.src" [alt]="artwork.alt" />
+      <img [src]="artwork.src" [alt]="artwork.alt" (load)="artwork.imageLoaded = true" [ngClass]="{'loading': !artwork.imageLoaded}" />
     </div>
   </div>
-  <button
-    (click)="navigateTo('/gallery')"
-    class="btn btn-cta"
-    aria-label="Zur Galerie"
-  >
-    🖼️ Zur Galerie
+  <button (click)="navigateTo('/gallery')" class="btn btn-cta-secondary" aria-label="Zur Galerie">
+    Zur Galerie
   </button>
 </section>
