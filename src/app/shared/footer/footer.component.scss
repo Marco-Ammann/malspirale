@@ -9,6 +9,7 @@
   font-size: vars.$font-size-base;
   position: relative;
   box-shadow: vars.$shadow;
+  height: vars.$footer-height;
 
   a {
     color: vars.$accent-color;

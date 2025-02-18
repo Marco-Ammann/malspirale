@@ -27,7 +27,8 @@ export class AdminContentComponent implements OnInit {
   storage = getStorage();
   quillConfig = {
     toolbar: [
-      ['bold', 'italic', 'underline'],
+      ['bold', 'italic', 'underline', 'blockquote'],
+      ['clean'],
       [{ header: [1, 2, false] }],
       [{ list: 'ordered' }, { list: 'bullet' }],
       ['link', 'image'],
