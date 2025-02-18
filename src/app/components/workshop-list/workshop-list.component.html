@@ -30,6 +30,7 @@
       <div class="workshop-info">
         <h3>{{ workshop.title }}</h3>
         <p class="location">📍 {{ workshop.location }}</p>
+        <p class="workshop-short-description">{{ workshop.shortDescription }}</p>
         <p>📅 {{ workshop.date | date:'dd.MM.yyyy' }}</p>
         <p>💰 {{ workshop.price ? (workshop.price | currency:'CHF') : 'Kostenlos' }}</p>
       </div>

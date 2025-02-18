@@ -15,12 +15,12 @@
     <div class="workshop-info">
       <h2>{{ workshop.title }}</h2>
       <p class="location">📍 {{ workshop.location }}</p>
-      <p>{{ workshop.longDescription }}</p>
+      <p>{{ workshop.description }}</p>
       <p>📅 {{ workshop.date | date:'dd.MM.yyyy' }}</p>
       <p *ngIf="workshop.startTime && workshop.endTime">⏰ {{ workshop.startTime }} - {{ workshop.endTime }}</p>
       <p>💰 {{ workshop.price ? (workshop.price | currency:'CHF') : 'Kostenlos' }}</p>
-      <p>👥 Maximale Teilnehmer: {{ workshop.maxParticipants }}</p>
-      <p>📌 Verfügbare Plätze: {{ workshop.availableSlots }}</p>
+      <p *ngIf="workshop.maxParticipants">👥 Maximale Teilnehmer: {{ workshop.maxParticipants }}</p>
+      <p *ngIf="workshop.availableSlots">📌 Verfügbare Plätze: {{ workshop.availableSlots }}</p>
 
       <div class="workshop-actions">
         <button class="btn btn-primary" (click)="registerForWorkshop()">Jetzt anmelden</button>

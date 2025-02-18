@@ -1,6 +1,14 @@
 @use "variables" as vars;
 @use "mixins" as mix;
 
+.workshop-short-description {
+  font-size: vars.$font-size-small;
+  color: vars.$text-light;
+  margin-top: vars.$padding-small;
+  margin-bottom: vars.$padding-small;
+
+}
+
 .workshop-container {
   padding: vars.$padding-large;
   text-align: center;
@@ -36,7 +44,7 @@
     transition: transform 0.3s ease-in-out;
     cursor: pointer;
     width: 100%;
-    max-width: 280px;
+    max-width: 350px;
     
     &:hover {
       box-shadow: vars.$hover-shadow;
@@ -77,8 +85,15 @@
     }
 
     .workshop-info {
-      padding: vars.$padding-medium;
       text-align: left;
+      padding: vars.$padding-extra-small;
+
+      h3 {
+        font-size: vars.$font-size-medium;
+        color: vars.$primary-color;
+        margin-top: vars.$padding-small;
+        margin-bottom: vars.$padding-small;
+      }
     }
 
     .workshop-actions {

@@ -5,25 +5,21 @@ export interface State {
 }
 
 export interface Workshop {
-  id?: string;
+  id: string;
   title: string;
-  location?: string;
-  description?: string;
-  shortDescription?: string;
-  longDescription?: string;
-  date: string; // Startdatum
-  startTime?: string; // HH:MM
-  endTime?: string; // HH:MM
+  shortDescription: string;
+  description: string;
+  image?: string;
+  imageUrl?: string;
+  date: Date;
+  location: string;
+  // Optional properties used in other components
   price?: number;
   maxParticipants?: number;
-  availableSlots: number;
-  image?: string;
-  recurring?: boolean; // Ist der Workshop wiederkehrend?
-  recurringWeek?: number; // In welcher Woche des Monats wiederkehrend?
-  recurringDay?: number; // An welchem Wochentag wiederkehrend?
-  createdAt?: string;
-  participants?: string[]; // 💡 NEU: Teilnehmer-Liste mit User-IDs
-  imagePosition?: 'zentriert' | 'links' | 'rechts' | 'oben' | 'unten' | 'links-oben' | 'rechts-oben' |'rechts-unten' | 'links-unten'; // Bildposition im Detail
+  availableSlots?: number;
+  // You can add more optional fields (startTime, endTime) if needed:
+  startTime?: string;
+  endTime?: string;
 }
 
 export interface GalleryImage {

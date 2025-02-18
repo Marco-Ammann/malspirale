@@ -31,6 +31,7 @@ export class WorkshopDetailComponent implements OnInit {
     const workshopId = this.route.snapshot.paramMap.get('id');
     if (!workshopId) {
       this.errorMessage = 'Workshop-ID nicht gefunden.';
+      this.loading = false;
       return;
     }
 

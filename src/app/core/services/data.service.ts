@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
-import { getFirestore, collection, getDocs, doc, setDoc, updateDoc, deleteDoc, getDoc } from "firebase/firestore";
+import { 
+  getFirestore, collection, getDocs, doc, setDoc, updateDoc, deleteDoc, getDoc 
+} from "firebase/firestore";
 import { Workshop } from '../interfaces/interfaces';
 
 @Injectable({
@@ -11,81 +13,81 @@ export class DataService {
 
   constructor() {}
 
-  /** Holt alle Workshops aus Firebase */
   async getAllWorkshops(): Promise<Workshop[]> {
     try {
       const querySnapshot = await getDocs(this.workshopsCollection);
-      return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Workshop[];
-    } catch (error) {
-      console.error("Fehler beim Laden der Workshops:", error);
+      return querySnapshot.docs.map(document => ({
+        id: document.id,
+        ...document.data()
+      })) as Workshop[];
+    } catch (error: unknown) {
+      console.error("Error loading workshops:", error);
       throw error;
     }
   }
 
-  /** Holt einen Workshop anhand der ID */
   async getWorkshopById(id: string): Promise<Workshop | null> {
     try {
       const workshopRef = doc(this.db, "workshops", id);
       const docSnap = await getDoc(workshopRef);
-      return docSnap.exists() ? { id: docSnap.id, ...docSnap.data() } as Workshop : null;
-    } catch (error) {
-      console.error("Fehler beim Abrufen des Workshops:", error);
+      return docSnap.exists() 
+        ? { id: docSnap.id, ...docSnap.data() } as Workshop
+        : null;
+    } catch (error: unknown) {
+      console.error("Error fetching workshop:", error);
       throw error;
     }
   }
 
-  /** Erstellt einen neuen Workshop */
   async addWorkshop(workshop: Workshop): Promise<void> {
     try {
       const newDocRef = doc(collection(this.db, "workshops"));
       await setDoc(newDocRef, workshop);
-    } catch (error) {
-      console.error("Fehler beim Erstellen des Workshops:", error);
+    } catch (error: unknown) {
+      console.error("Error creating workshop:", error);
       throw error;
     }
   }
 
-  /** Aktualisiert einen bestehenden Workshop */
   async updateWorkshop(id: string, workshop: Partial<Workshop>): Promise<void> {
     try {
       const workshopRef = doc(this.db, "workshops", id);
       await updateDoc(workshopRef, workshop);
-    } catch (error) {
-      console.error("Fehler beim Aktualisieren des Workshops:", error);
+    } catch (error: unknown) {
+      console.error("Error updating workshop:", error);
       throw error;
     }
   }
 
-  /** Löscht einen Workshop */
   async deleteWorkshop(id: string): Promise<void> {
     try {
       const workshopRef = doc(this.db, "workshops", id);
       await deleteDoc(workshopRef);
-    } catch (error) {
-      console.error("Fehler beim Löschen des Workshops:", error);
+    } catch (error: unknown) {
+      console.error("Error deleting workshop:", error);
       throw error;
     }
   }
 
-  /** Holt Content aus Firestore */
+  /** Retrieves content text from Firestore */
   async getContent(documentId: string): Promise<string> {
     try {
       const contentRef = doc(this.db, "content", documentId);
       const docSnap = await getDoc(contentRef);
-      return docSnap.exists() ? docSnap.data()['text'] : "";
-    } catch (error) {
-      console.error("Fehler beim Laden des Contents:", error);
+      return docSnap.exists() ? String(docSnap.data()?.['text'] ?? "") : "";
+    } catch (error: unknown) {
+      console.error("Error loading content:", error);
       throw error;
     }
   }
 
-  /** Aktualisiert Content in Firestore */
+  /** Updates content in Firestore */
   async updateContent(documentId: string, contentData: { text: string }): Promise<void> {
     try {
       const contentRef = doc(this.db, "content", documentId);
       await setDoc(contentRef, contentData, { merge: true });
-    } catch (error) {
-      console.error("Fehler beim Aktualisieren des Contents:", error);
+    } catch (error: unknown) {
+      console.error("Error updating content:", error);
       throw error;
     }
   }

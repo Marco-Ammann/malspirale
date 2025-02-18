@@ -1,64 +1,85 @@
 <div class="admin-workshops">
-  <h1>Workshop-Management</h1>
-
-  <!-- Formular für Erstellen/Bearbeiten -->
-  <form [formGroup]="workshopForm" (ngSubmit)="saveWorkshop()" class="workshop-form">
-    <h2>{{ editMode ? 'Workshop bearbeiten' : 'Neuen Workshop erstellen' }}</h2>
-
-    <label>Titel:</label>
-    <input type="text" formControlName="title" required />
-
-    <label>Kurzbeschreibung:</label>
-    <textarea formControlName="shortDescription"></textarea>
-
-    <label>Datum:</label>
-    <input type="date" formControlName="date" required />
-
-    <label>Startzeit:</label>
-    <input type="time" formControlName="startTime" />
-
-    <label>Endzeit:</label>
-    <input type="time" formControlName="endTime" />
-
-    <label>Preis (optional):</label>
-    <input type="number" formControlName="price" />
-
-    <label>Max. Teilnehmer:</label>
-    <input type="number" formControlName="maxParticipants" />
-
-    <label>Verfügbare Plätze:</label>
-    <input type="number" formControlName="availableSlots" required />
-
-    <label>Standort:</label>
-    <input type="text" formControlName="location" required />
-
-    <!-- Bild-Upload -->
-    <label>Bild hochladen:</label>
-    <input type="file" (change)="handleFileInput($event)" accept="image/*" />
-    <div *ngIf="imagePreview" class="image-preview">
-      <img [src]="imagePreview" alt="Bildvorschau" />
-    </div>
-
-    <button type="submit" [disabled]="loading || workshopForm.invalid">
-      {{ editMode ? 'Workshop aktualisieren' : 'Workshop hinzufügen' }}
-    </button>
-    <button type="button" (click)="resetForm()" *ngIf="editMode">Abbrechen</button>
-  </form>
-
-  <!-- Liste bestehender Workshops -->
-  <h2>Vorhandene Workshops</h2>
-  <div class="workshop-list">
-    <div class="workshop-card" *ngFor="let workshop of workshops">
-      <img [src]="workshop.image || 'assets/images/default-workshop.jpg'" alt="Workshop Bild" class="workshop-image" />
-      <div class="workshop-info">
+  <h2>Workshops verwalten</h2>
+  <div class="workshops-grid">
+    <div *ngFor="let workshop of workshops" class="workshop-card">
+      <img
+        [src]="workshop.imageUrl || 'assets/images/default-workshop.jpg'"
+        [alt]="workshop.title"
+      />
+      <div class="card-content">
         <h3>{{ workshop.title }}</h3>
-        <p>📅 {{ workshop.date | date:'dd.MM.yyyy' }}</p>
-        <p>💰 {{ workshop.price ? (workshop.price | currency:'CHF') : 'Kostenlos' }}</p>
-      </div>
-      <div class="workshop-actions">
-        <button (click)="editWorkshop(workshop)">✏ Bearbeiten</button>
-        <button (click)="deleteWorkshop(workshop.id!)">🗑 Löschen</button>
+        <p>{{ workshop.shortDescription }}</p>
+        <div class="workshop-info">
+          <span><strong>Datum:</strong> {{ workshop.date | date:'dd.MM.yyyy' }}</span>
+          <span><strong>Ort:</strong> {{ workshop.location }}</span>
+          <span>
+            <strong>Preis:</strong>
+            {{ workshop.price ? (workshop.price | currency:'CHF') : 'Kostenlos' }}
+          </span>
+        </div>
+        <div class="card-actions">
+          <button (click)="editWorkshop(workshop)">Bearbeiten</button>
+          <button (click)="deleteWorkshop(workshop.id)" class="btn-danger">
+            Löschen
+          </button>
+        </div>
       </div>
     </div>
+  </div>
+
+  <button (click)="createWorkshop()" class="new-workshop-btn">
+    Neuen Workshop hinzufügen
+  </button>
+
+  <div class="workshop-edit-form" *ngIf="selectedWorkshop">
+    <h3>
+      {{ selectedWorkshop.id ? 'Workshop bearbeiten' : 'Neuen Workshop erstellen' }}
+    </h3>
+    <form (ngSubmit)="saveWorkshop()">
+      <label for="title">Titel</label>
+      <input id="title" [(ngModel)]="selectedWorkshop.title" name="title" required />
+
+      <label for="shortDescription">Kurzbeschreibung</label>
+      <textarea
+        id="shortDescription"
+        [(ngModel)]="selectedWorkshop.shortDescription"
+        name="shortDescription"
+        required
+        rows="1"
+        style="overflow:hidden"
+        oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'"
+      ></textarea>
+
+      <label for="description">Beschreibung</label>
+      <textarea
+        id="description"
+        [(ngModel)]="selectedWorkshop.description"
+        name="description"
+        required
+        rows="1"
+        style="overflow:hidden"
+        oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'"
+      ></textarea>
+
+      <label for="date">Datum</label>
+      <input id="date" type="date" [(ngModel)]="selectedWorkshop.date" name="date" required />
+
+      <label for="location">Ort</label>
+      <input id="location" [(ngModel)]="selectedWorkshop.location" name="location" required />
+
+      <label for="price">Preis</label>
+      <input id="price" type="number" [(ngModel)]="selectedWorkshop.price" name="price" required />
+
+      <label for="imageUrl">Bild-URL</label>
+      <input id="imageUrl" [(ngModel)]="selectedWorkshop.imageUrl" name="imageUrl" />
+
+      <label for="imageUpload">Bild hochladen</label>
+      <input id="imageUpload" type="file" (change)="handleImageUpload($event)" />
+
+      <div class="form-buttons">
+        <button type="submit" class="btn-primary">Speichern</button>
+        <button type="button" (click)="cancelEdit()" class="cancel-btn">Abbrechen</button>
+      </div>
+    </form>
   </div>
 </div>

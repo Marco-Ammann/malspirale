@@ -1,4 +1,3 @@
-// src/assets/styles/_mixins.scss
 @use 'sass:color';
 @use 'variables' as vars;
 
@@ -43,7 +42,6 @@
     box-shadow: vars.$box-shadow-deep;
   }
 }
-
 
 // Container-Style für Boxen
 @mixin container-box {
