@@ -13,6 +13,7 @@ $text-color-light: #fff;
 $text-light: color.scale($text-color, $lightness: 20%);
 $text-dark: color.scale($text-color, $lightness: -5%);
 $link-color: #007BFF;
+$danger-color: #DC3545;
 
 $background-color: #F7F4F1;
 $background-light: color.scale($background-color, $lightness: 30%);
@@ -86,3 +87,9 @@ $mobile: 480px;
 $mobile-large: 650px;
 $tablet: 768px;
 $desktop: 1024px;
+
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 992px;
+$breakpoint-xl: 1200px;
+

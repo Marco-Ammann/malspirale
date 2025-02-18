@@ -1,31 +1,34 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { QuillModule } from 'ngx-quill';
 import { DataService } from '../../../core/services/data.service';
-import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'firebase/storage';
-import { ContentData } from '../../../core/interfaces/interfaces';
-import Quill from 'quill';
-
+import {
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+  deleteObject,
+} from 'firebase/storage';
 
 @Component({
   selector: 'app-admin-content',
   standalone: true,
-  imports: [FormsModule, CommonModule, QuillModule],
+  imports: [CommonModule, FormsModule, QuillModule],
   templateUrl: './admin-content.component.html',
-  styleUrls: ['./admin-content.component.scss']
+  styleUrls: ['./admin-content.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class AdminContentComponent implements OnInit {
   siteContent: string = '';
-  loading: boolean = true;
+  loading = true;
   saveMessage: string = '';
   images: { url: string; description: string }[] = [];
   storage = getStorage();
-
   quillConfig = {
     toolbar: [
       ['bold', 'italic', 'underline'],
-      [{ header: 1 }, { header: 2 }],
+      [{ header: [1, 2, false] }],
       [{ list: 'ordered' }, { list: 'bullet' }],
       ['link', 'image'],
     ],
@@ -44,66 +47,58 @@ export class AdminContentComponent implements OnInit {
     try {
       this.siteContent = await this.dataService.getContent('about');
     } catch (error) {
-      console.error('Fehler beim Laden des Inhalts:', error);
-      this.siteContent = 'Fehler beim Laden des Inhalts.';
+      console.error('Error loading content:', error);
+      this.siteContent = 'Error loading content.';
     } finally {
       this.loading = false;
     }
   }
 
-  
+  private fixEmptyParagraphs(html: string): string {
+    // Replaces <p></p> and <p>&nbsp;</p> (or similar) with <p><br/></p>
+    return html.replace(/<p>(\s|&nbsp;)*<\/p>/g, '<p><br/></p>');
+  }
+
   async saveContent(): Promise<void> {
     try {
-      await this.dataService.updateContent('about', { text: this.siteContent });
-      this.saveMessage = '✅ Inhalt erfolgreich gespeichert!';
+      let cleanedContent = this.siteContent.replace(/&nbsp;/g, ' ');
+      cleanedContent = this.fixEmptyParagraphs(cleanedContent);
+      await this.dataService.updateContent('about', { text: cleanedContent });
+      this.saveMessage = '✅ Content saved successfully!';
     } catch (error) {
-      console.error('Fehler beim Speichern des Inhalts:', error);
-      this.saveMessage = '⚠ Fehler beim Speichern.';
+      console.error('Error saving content:', error);
+      this.saveMessage = '⚠ Error saving content.';
     }
   }
 
   async uploadImage(event: Event): Promise<void> {
-    const target = event.target as HTMLInputElement;
-    if (!target.files || target.files.length === 0) return;
-
-    const file = target.files[0];
-
-    if (!file.type.startsWith('image/')) {
-      this.saveMessage = '❌ Nur Bilder erlaubt!';
-      return;
-    }
-    if (file.size > 5 * 1024 * 1024) {
-      this.saveMessage = '❌ Datei zu groß (max. 5MB erlaubt)!';
-      return;
-    }
-
+    const input = event.target as HTMLInputElement;
+    if (!input.files || input.files.length === 0) return;
+    const file = input.files[0];
+    const filePath = `images/${file.name}`;
     try {
-      const filePath = `images/${Date.now()}_${file.name}`;
       const storageRef = ref(this.storage, filePath);
       const uploadTask = await uploadBytesResumable(storageRef, file);
       const url = await getDownloadURL(uploadTask.ref);
-
       this.images.push({ url, description: '' });
-      this.saveMessage = '✅ Bild erfolgreich hochgeladen!';
+      this.saveMessage = '✅ Image uploaded successfully!';
     } catch (error) {
-      console.error('Fehler beim Upload:', error);
-      this.saveMessage = '❌ Fehler beim Hochladen!';
+      console.error('Upload error:', error);
+      this.saveMessage = '❌ Error uploading image!';
     }
   }
 
   async deleteImage(index: number): Promise<void> {
     const image = this.images[index];
-
     try {
       const imagePath = this.extractFilePath(image.url);
       const storageRef = ref(this.storage, imagePath);
-
       await deleteObject(storageRef);
       this.images.splice(index, 1);
-      this.saveMessage = '✅ Bild erfolgreich gelöscht!';
+      this.saveMessage = '✅ Image deleted successfully!';
     } catch (error) {
-      console.error('Fehler beim Löschen:', error);
-      this.saveMessage = '❌ Fehler beim Löschen des Bildes!';
+      console.error('Delete error:', error);
+      this.saveMessage = '❌ Error deleting image!';
     }
   }
 

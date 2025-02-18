@@ -1,24 +1,17 @@
 <div class="about-container">
-  <div class="about-card">
-    <h1 class="about-card-title">Über mich</h1>
+  <header class="hero-banner">
+    <h1 class="page-title">About Me</h1>
+    <p class="subtitle">Creative Expression &amp; Malspirale</p>
+  </header>
 
-    <div class="about-card-content">
-      <div class="about-image">
+  <section class="about-content">
+    <figure class="about-image">
+      <img src="assets/images/isabel/isabel4.jpg" alt="Isabel Kunz">
+    </figure>
 
-        <img src="../../../assets/images/isabel/isabel4.jpg" alt="">
-
-      </div>
-      
-      <div class="about-text">
-        <!-- Ladeanzeige -->
-        <p *ngIf="loading" class="loading-indicator">⏳ Lade Inhalt...</p>
-    
-        <!-- Inhalt korrekt als HTML rendern -->
-        <div *ngIf="!loading" [innerHTML]="aboutText"></div>
-  
-      </div>
-    </div>
-
-
-  </div>
+    <article class="about-text">
+      <p *ngIf="loading" class="loading-indicator">⏳ Loading content...</p>
+      <div *ngIf="!loading" [innerHTML]="aboutText"></div>
+    </article>
+  </section>
 </div>

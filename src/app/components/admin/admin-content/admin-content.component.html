@@ -1,12 +1,16 @@
 <div class="admin-content">
-  <h2>Über mich - Inhalt bearbeiten</h2>
+  <h2>Edit "About Me" Content</h2>
 
-  <p *ngIf="loading">⏳ Lade aktuellen Inhalt...</p>
+  <p *ngIf="loading" class="loading-indicator">⏳ Loading current content...</p>
 
   <!-- Quill Editor -->
-  <quill-editor [(ngModel)]="siteContent" [modules]="quillConfig"></quill-editor>
+  <quill-editor
+    class="quill-editor"
+    [(ngModel)]="siteContent"
+    [modules]="quillConfig"
+    *ngIf="!loading">
+  </quill-editor>
 
-  <button (click)="saveContent()">💾 Speichern</button>
-
+  <button class="btn btn-primary" (click)="saveContent()">💾 Save</button>
   <p class="save-message" *ngIf="saveMessage">{{ saveMessage }}</p>
 </div>

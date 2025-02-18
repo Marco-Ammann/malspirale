@@ -1,161 +1,84 @@
+@use 'sass:color';
 @use 'variables' as vars;
-@use 'mixins' as mix;
 
 .admin-content {
-  max-width: 800px;
-  margin: 2rem auto;
   padding: vars.$padding-large;
-  background-color: vars.$background-color;
+  background: vars.$background-light;
   border-radius: vars.$border-radius;
-  box-shadow: vars.$box-shadow;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  box-shadow: vars.$shadow;
+  text-align: center;
 
   h2 {
     color: vars.$primary-color;
-    font-size: vars.$font-size-large;
+    font-size: vars.$font-size-xxlarge;
     margin-bottom: vars.$padding-medium;
   }
 
-  .editor {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 1rem;
-
-    button {
-      padding: 8px 12px;
-      border: none;
-      cursor: pointer;
-      background-color: vars.$secondary-color;
-      color: #fff;
-      font-weight: bold;
-      border-radius: 4px;
-      transition: background-color 0.3s ease, transform 0.1s ease;
-
-      &:hover {
-        background-color: vars.$primary-color;
-      }
-
-      &.active {
-        background-color: vars.$accent-color;
-        transform: scale(1.1);
-      }
-    }
+  .loading-indicator {
+    font-style: italic;
+    color: vars.$secondary-color;
   }
 
-  .content-editor {
-    width: 100%;
-    height: 250px;
-    padding: vars.$padding-medium;
-    font-size: vars.$font-size-base;
-    border: 1px solid vars.$secondary-color;
-    border-radius: vars.$border-radius;
-    background-color: #fff;
-    resize: vertical;
-    transition: border-color 0.3s ease;
-    outline: none;
-    overflow-y: auto;
+  .quill-editor {
+    margin: vars.$padding-large auto;
+    max-width: 800px;
 
+    .ql-toolbar {
+      border-radius: vars.$border-radius-small;
+      background: vars.$background-color;
+      box-shadow: vars.$shadow;
+    }
+    .ql-container {
+      border-radius: vars.$border-radius-small;
+      background: #fff;
+      min-height: 200px;
+      box-shadow: vars.$shadow;
+    }
+  
+    // Style list elements within Quill editor
     ul, ol {
-      margin-left: 1.5rem;
-      padding-left: 1rem;
-    }
-
-    ul {
-      list-style-type: disc;
-    }
-
-    ol {
-      list-style-type: decimal;
-    }
-
-    a {
-      color: vars.$link-color;
-      text-decoration: underline;
-      cursor: pointer;
+      margin: vars.$padding-small 0;
+      padding-left: vars.$padding-medium;
+      li {
+        margin-bottom: vars.$padding-small;
+        line-height: 1.6;
+      }
     }
   }
 
-  button {
-    @include mix.button-style(vars.$primary-color, #fff);
+  .btn-primary {
     margin-top: vars.$padding-medium;
-    width: 100%;
-    font-size: vars.$font-size-large;
+    padding: vars.$padding-small vars.$padding-medium;
+    background-color: vars.$primary-color;
+    color: vars.$text-color-light;
+    border: none;
+    border-radius: vars.$border-radius;
+    cursor: pointer;
+    transition: background 0.3s ease;
+
+    &:hover {
+      background-color: vars.$hover-color;
+    }
   }
 
   .save-message {
-    margin-top: vars.$padding-small;
+    margin-top: vars.$padding-medium;
     font-size: vars.$font-size-base;
     color: vars.$text-color;
   }
 }
 
-.editor {
-  display: flex;
-  gap: 5px;
-  margin-bottom: 10px;
-
-  button {
-    background: #007BFF;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-    border-radius: 3px;
-    font-size: 16px;
-
-    &:hover {
-      background: #0056b3;
+// Better responsiveness using breakpoints from variables
+@media (max-width: vars.$breakpoint-md) {
+  .admin-content {
+    padding: vars.$padding-medium;
+    
+    .quill-editor {
+      max-width: 100%;
+    }
+    
+    .btn-primary {
+      width: 100%;
     }
   }
 }
-
-.ql-editor {
-  min-height: 200px;
-  border: 1px solid #ccc;
-  padding: 10px;
-  border-radius: 5px;
-  margin-bottom: 10px;
-  background: white;
-}
-
-.file-upload {
-  display: inline-block;
-  padding: 10px 15px;
-  background: #007BFF;
-  color: white;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-bottom: 1rem;
-  font-weight: bold;
-  
-  input {
-    display: none;
-  }
-}
-
-.image-gallery {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-top: 1rem;
-
-  .image-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    border: 1px solid #ddd;
-    padding: 1rem;
-    border-radius: 8px;
-    background: #fff;
-
-    img {
-      width: 150px;
-      height: auto;
-      border-radius: 4px;
-      margin-bottom: 0.5rem;
-    }
-  }
-}
-

@@ -1,176 +1,111 @@
-@use "sass:color";
-@use "variables" as vars;
-@use "mixins" as mix;
+@use 'sass:color';
+@use 'variables' as vars;
 
 .about-container {
-  max-width: vars.$desktop;
+  max-width: 1200px;
   margin: 2rem auto;
+  padding: vars.$padding-large;
+  background: vars.$background-light;
+  border-radius: vars.$border-radius;
+  box-shadow: vars.$shadow;
+  text-align: center;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  text-align: center;
-  .about-card {
-    width: 100%;
-    background-color: vars.$background-color;
-    border-radius: vars.$border-radius;
-    box-shadow: vars.$box-shadow;
-    padding: vars.$padding-large;
-    display: flex;
-    flex-direction: column;
+  gap: vars.$padding-medium;
 
-    .about-card-title {
-      color: vars.$primary-color;
-      font-size: vars.$font-size-large;
-      margin-bottom: vars.$padding-medium;
+  .hero-banner {
+    background: vars.$primary-color;
+    color: vars.$text-color-light;
+    border-radius: vars.$border-radius-small;
+    padding: vars.$padding-medium;
+    box-shadow: vars.$shadow;
+
+    .page-title {
+      margin: 0;
+      font-size: vars.$font-size-xxlarge;
+      font-weight: bold;
     }
 
-    .about-card-content {
-      display: flex;
-      justify-content: center;
-      align-items: start;
-      gap: vars.$padding-large;
-      width: 100%;
-      max-height: fit-content;
-
-      .about-image {
-        margin: 0;
-        height: 100%;
-        object-fit: cover;
-
-        img {
-          border-radius: vars.$border-radius;
-          box-shadow: vars.$box-shadow;
-          margin: 0;
-        }
-      }
-
-      .about-text {
-        display: flex;
-        align-items: start;
-        max-width: 60%;
-        // Stile für Quill-Editor
-        div {
-          font-size: vars.$font-size-base;
-          line-height: 1.8;
-          color: vars.$text-color;
-          text-align: left;
-          word-break: break-word;
-
-          p {
-            margin-bottom: vars.$padding-small;
-          }
-
-          h1,
-          h2,
-          h3 {
-            font-family: vars.$font-family;
-            font-weight: bold;
-            margin-top: vars.$padding-medium;
-            margin-bottom: vars.$padding-small;
-          }
-
-          h1 {
-            font-size: vars.$font-size-xlarge;
-            color: vars.$primary-color;
-          }
-
-          h2 {
-            font-size: vars.$font-size-large;
-            color: color.adjust(vars.$primary-color, $lightness: -10%);
-          }
-
-          h3 {
-            font-size: vars.$font-size-medium;
-            color: color.adjust(vars.$primary-color, $lightness: -20%);
-          }
-
-          b,
-          strong {
-            font-weight: bold;
-          }
-
-          i,
-          em {
-            font-style: italic;
-          }
-
-          u {
-            text-decoration: underline;
-          }
-
-          /* Quill-Editor Listen */
-          ul,
-          ol {
-            padding-left: 1.5rem;
-            margin-bottom: vars.$padding-small;
-          }
-
-          ul {
-            list-style-type: disc;
-          }
-
-          ol {
-            list-style-type: decimal;
-          }
-
-          li {
-            margin-bottom: 0.5rem;
-          }
-        }
-      }
-    }
-
-    .loading-indicator {
+    .subtitle {
+      margin-top: vars.$padding-small;
       font-size: vars.$font-size-base;
       font-style: italic;
-      color: vars.$primary-color;
+    }
+  }
+
+  .about-content {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: vars.$padding-large;
+    margin-top: vars.$padding-medium;
+
+    .about-image {
+      flex: 1;
+      max-width: 300px;
+
+      img {
+        width: 100%;
+        border-radius: vars.$border-radius;
+        box-shadow: vars.$shadow;
+      }
+    }
+
+    .about-text {
+      flex: 2;
+      text-align: left;
+
+      .loading-indicator {
+        font-style: italic;
+        color: vars.$primary-color;
+      }
+      
+      // Redesign list elements inside content
+      ul, ol {
+        margin: vars.$padding-small 0;
+        padding-left: vars.$padding-medium;
+        li {
+          margin-bottom: vars.$padding-small;
+          line-height: 1.6;
+        }
+      }
+
+      p {
+        font-size: vars.$font-size-base;
+        line-height: 1.7;
+        color: vars.$text-color;
+        margin-bottom: vars.$padding-small;
+      }
+
+      h1, h2, h3, h4, h5, h6 {
+        font-family: vars.$font-family;
+        font-weight: bold;
+        margin: vars.$padding-small 0;
+      }
+
+      blockquote {
+        margin: vars.$padding-medium 0;
+        padding: vars.$padding-small;
+        background: vars.$background-light;
+        border-left: 4px solid vars.$primary-color;
+        font-style: italic;
+      }
     }
   }
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
+// Responsive styling using breakpoints from variables
+@media (max-width: vars.$breakpoint-md) {
   .about-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .about-card {
-    max-width: vars.$mobile;
-  }
-
-  .about-image img{
-   display: none;
-  }
-
-  .about-text {
-    max-width: 100%!important;
-  }
-  .about-card-content {
-    flex-direction: column;
-    gap: vars.$padding-large;
-  }
-
-  h1 {
-    font-size: vars.$font-size-large;
-  }
-
-  div {
-    font-size: vars.$font-size-base;
-  }
-}
-
-@media (max-width: 480px) {
-  .about-card {
-    padding: vars.$padding-small;
-  }
-
-  h1 {
-    font-size: vars.$font-size-base;
-  }
-
-  div {
-    font-size: vars.$font-size-small;
+    padding: vars.$padding-medium;
+    
+    .about-content {
+      flex-direction: column;
+      text-align: center;
+      
+      .about-text {
+        text-align: center;
+      }
+    }
   }
 }

@@ -1,31 +1,31 @@
-import { Component, OnInit } from '@angular/core';
-import { DataService } from '../../core/services/data.service';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { DataService } from '../../core/services/data.service';
 
 @Component({
   selector: 'app-about',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule],
   templateUrl: './about.component.html',
-  styleUrls: ['./about.component.scss']
+  styleUrls: ['./about.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class AboutComponent implements OnInit {
   aboutText: string = '';
-  loading = true;
+  loading: boolean = true;
 
   constructor(private dataService: DataService) {}
 
   ngOnInit(): void {
-    this.loadContent();
+    this.loadAboutText();
   }
 
-  async loadContent(): Promise<void> {
+  async loadAboutText(): Promise<void> {
     try {
       this.aboutText = await this.dataService.getContent('about');
     } catch (error) {
-      console.error('Fehler beim Laden des Inhalts:', error);
-      this.aboutText = 'Fehler beim Laden des Inhalts.';
+      console.error('Error loading about content:', error);
+      this.aboutText = 'Error loading content.';
     } finally {
       this.loading = false;
     }
