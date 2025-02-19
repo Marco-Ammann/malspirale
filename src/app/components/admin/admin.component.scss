@@ -1,57 +1,68 @@
-@use 'sass:color';
 @use 'variables' as vars;
 @use 'mixins' as mix;
 
 .admin-layout {
   display: flex;
-  height: 100vh;
+  min-height: 100vh;
+  background-color: vars.$background-light;
 
   .admin-sidebar {
     width: 250px;
     background-color: vars.$primary-color;
     color: #fff;
     padding: vars.$padding-medium;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
     position: fixed;
-    height: 100%;
     left: 0;
     top: 0;
+    bottom: 0;
+    overflow-y: auto;
     transition: transform 0.3s ease;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
 
-    h2 {
-      margin-bottom: vars.$padding-medium;
-      font-size: 1.8rem;
+    // Auf mobilen Geräten ausblenden
+    @media (max-width: 768px) {
+      transform: translateX(-100%);
+      &.open {
+        transform: translateX(0);
+      }
+    }
+
+    .sidebar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      h2 {
+        margin: 0;
+      }
+
+      .menu-toggle {
+        background: none;
+        border: none;
+        font-size: 2rem;
+        color: #fff;
+        cursor: pointer;
+      }
     }
 
     nav {
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-
+      margin-top: vars.$padding-large;
       a {
+        display: block;
         text-decoration: none;
         color: #fff;
-        font-size: 1.2rem;
         padding: vars.$padding-small;
-        margin: vars.$padding-small 0;
+        margin-bottom: vars.$padding-small;
         border-radius: vars.$border-radius;
         transition: background-color 0.3s ease;
-
         &:hover, &.active {
           background-color: vars.$accent-color;
-          color: vars.$text-color;
         }
       }
     }
 
     .admin-logout {
       margin-top: auto;
-      padding-bottom: vars.$padding-medium;
-
+      text-align: center;
       button {
         @include mix.button-style(#ff4d4d, #fff);
         padding: vars.$padding-small vars.$padding-medium;
@@ -63,17 +74,32 @@
   }
 
   .admin-content {
-    flex-grow: 1;
-    padding: vars.$padding-large;
     margin-left: 250px;
-    overflow-y: auto;
+    padding: vars.$padding-large;
+    flex-grow: 1;
+    @media (max-width: 768px) {
+      margin-left: 0;
+    }
 
     .admin-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: vars.$padding-medium;
-
+      .menu-toggle {
+        display: none;
+        background: none;
+        border: none;
+        font-size: 2rem;
+        cursor: pointer;
+        @media (max-width: 768px) {
+          display: block;
+        }
+      }
+      h1 {
+        margin: 0;
+        font-size: vars.$font-size-xxlarge;
+      }
       .user-role {
         font-size: 1rem;
         color: vars.$secondary-color;
@@ -83,43 +109,23 @@
     .dashboard-stats {
       display: flex;
       gap: vars.$padding-medium;
-      justify-content: center;
       flex-wrap: wrap;
-
+      justify-content: center;
       .stat-card {
         @include mix.container-box;
         text-align: center;
         padding: vars.$padding-medium;
         width: 250px;
-        
         h3 {
           @include mix.text-style(vars.$primary-color, 1.5rem, bold);
           margin-bottom: vars.$padding-small;
         }
-
         p {
           font-size: 1.8rem;
           font-weight: bold;
           color: vars.$text-color;
         }
       }
-    }
-  }
-
-  .loading-text {
-    font-style: italic;
-    color: vars.$secondary-color;
-  }
-
-  /* Mobile Responsive Anpassungen */
-  @media (max-width: 768px) {
-    .admin-sidebar {
-      transform: translateX(-100%);
-      position: fixed;
-    }
-
-    .admin-content {
-      margin-left: 0;
     }
   }
 }

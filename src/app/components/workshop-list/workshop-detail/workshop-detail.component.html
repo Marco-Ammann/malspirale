@@ -1,34 +1,25 @@
 <div class="workshop-detail" *ngIf="workshop; else notFound">
   <div class="detail-wrapper">
-    <!-- Workshop-Bild -->
     <div class="workshop-image">
-      <img 
-        [src]="workshop.image || 'assets/images/default-workshop.jpg'" 
-        alt="Workshop Bild" 
-        (load)="imageLoaded = true" 
-        [ngClass]="{'loading': !imageLoaded}"
-      />
+      <img [src]="workshop.imageUrl || 'assets/images/default-workshop.jpg'" alt="Workshop Bild" (load)="imageLoaded = true" [ngClass]="{'loading': !imageLoaded}" />
       <div *ngIf="!imageLoaded" class="spinner"></div>
     </div>
-
-    <!-- Workshop-Informationen -->
     <div class="workshop-info">
       <h2>{{ workshop.title }}</h2>
-      <p class="location">📍 {{ workshop.location }}</p>
+      <p class="location" *ngIf="workshop.location">📍 {{ workshop.location }}</p>
       <p>{{ workshop.description }}</p>
-      <p>📅 {{ workshop.date | date:'dd.MM.yyyy' }}</p>
+      <p *ngIf="workshop.date">📅 {{ workshop.date | date:'dd.MM.yyyy' }}</p>
       <p *ngIf="workshop.startTime && workshop.endTime">⏰ {{ workshop.startTime }} - {{ workshop.endTime }}</p>
-      <p>💰 {{ workshop.price ? (workshop.price | currency:'CHF') : 'Kostenlos' }}</p>
+      <p *ngIf="workshop.price !== undefined">💰 {{ workshop.price ? (workshop.price | currency:'CHF') : 'Kostenlos' }}</p>
       <p *ngIf="workshop.maxParticipants">👥 Maximale Teilnehmer: {{ workshop.maxParticipants }}</p>
       <p *ngIf="workshop.availableSlots">📌 Verfügbare Plätze: {{ workshop.availableSlots }}</p>
-
       <div class="workshop-actions">
-        <button class="btn btn-primary" (click)="registerForWorkshop()">Jetzt anmelden</button>
+        <button *ngIf="workshop.type !== 'individuelleAnfrage'" class="btn btn-primary" (click)="registerForWorkshop()">Jetzt anmelden</button>
+        <button *ngIf="workshop.type === 'individuelleAnfrage'" class="btn btn-secondary" (click)="requestIndividualInquiry()">Jetzt Kontakt aufnehmen</button>
       </div>
     </div>
   </div>
 </div>
-
 <ng-template #notFound>
   <p class="error">⚠️ Workshop nicht gefunden.</p>
 </ng-template>

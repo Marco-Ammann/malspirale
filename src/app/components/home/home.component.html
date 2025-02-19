@@ -2,8 +2,7 @@
   <div class="hero-content">
     <h1>Entfalte deine Kreativität</h1>
     <p>
-      Erlebe inspirierende Workshops und entdecke deine kreative Seite mit
-      Farben und Formen.
+      Entdecken Sie inspirierende Workshops, unser regelmäßiges Malatelier und individuelle Anfragen für besondere Anlässe.
     </p>
     <button (click)="navigateTo('/workshops')" class="btn btn-cta">
       Jetzt entdecken!
@@ -19,10 +18,8 @@
     <div class="about-text">
       <h2>Über Isabel Kunz</h2>
       <p>
-        Mit Leidenschaft für Kunst und Farbenlehre inspiriere ich Menschen,
-        ihre kreative Ader zu entdecken. Meine Workshops sind eine wunderbare
-        Gelegenheit, neue Techniken zu erlernen und die eigene Kreativität
-        zu entfalten.
+        Mit Leidenschaft für Kunst und Farbenlehre inspiriere ich Menschen, ihre kreative Ader zu entdecken.
+        Ob feste Workshops, ein regelmäßiges Malatelier oder individuelle Anfragen – hier finden Sie das passende Angebot.
       </p>
       <button (click)="navigateTo('/about')" class="btn btn-cta-secondary">
         Mehr erfahren
@@ -33,51 +30,74 @@
 
 <section class="workshops">
   <div class="workshops-title">
-    <h2>Unsere Workshops</h2>
-    <p>Wähle deinen perfekten Workshop – für Anfänger und Fortgeschrittene.</p>
+    <h2>Unsere Angebote</h2>
+    <p>Wählen Sie aus Workshops, Malatelier und individuellen Anfragen – wir haben für jeden Anlass das Richtige.</p>
   </div>
 
-  <div class="workshops-grid">
-    <div
-      *ngFor="let workshop of workshops.slice(0,3)"
-      class="workshop-card"
-      aria-label="Workshop-card"
-      (click)="navigateTo('/workshop/' + workshop.id)"
-    >
-      <div class="workshop-image">
-        <img
-          [src]="workshop.image || 'assets/images/default-workshop.jpg'"
-          [alt]="workshop.title"
-          (load)="workshop.imageLoaded = true"
-          [ngClass]="{'loading': !workshop.imageLoaded}"
-        />
-        <div
-          *ngIf="!workshop.imageLoaded"
-          class="spinner"
-          aria-label="Lade-Indikator"
-        ></div>
-      </div>
-      <div class="workshop-info">
-        <h3>{{ workshop.title }}</h3>
-        <p class="short-description">{{ workshop.shortDescription }}</p>
+  <!-- Reguläre Workshops -->
+  <section *ngIf="regularWorkshops.length > 0">
+    <h3>Workshops</h3>
+    <div class="workshops-grid">
+      <div *ngFor="let workshop of regularWorkshops.slice(0,3)" class="workshop-card" (click)="navigateTo('/workshop/' + workshop.id)">
+        <div class="workshop-image">
+          <img [src]="workshop.imageUrl || 'assets/images/default-workshop.jpg'" [alt]="workshop.title" (load)="workshop.imageLoaded = true" [ngClass]="{'loading': !workshop.imageLoaded}" />
+          <div *ngIf="!workshop.imageLoaded" class="spinner"></div>
+        </div>
+        <div class="workshop-info">
+          <h3>{{ workshop.title }}</h3>
+          <p class="short-description">{{ workshop.shortDescription }}</p>
+        </div>
         <div class="workshop-actions">
-          <button
-            (click)="navigateTo('/workshop/' + workshop.id)"
-            class="btn btn-accent"
-            attr.aria-label="Mehr Informationen zu {{ workshop.title }}"
-          >
-            Mehr erfahren
-          </button>
+          <button class="btn btn-accent">Mehr erfahren</button>
         </div>
       </div>
     </div>
-  </div>
+    <button (click)="navigateTo('/workshops')" class="btn btn-cta-secondary">Alle Workshops anzeigen</button>
+  </section>
 
-  <div class="workshops-footer">
-    <button (click)="navigateTo('/workshops')" class="btn btn-cta-secondary">
-      Alle Workshops anzeigen
-    </button>
-  </div>
+  <!-- Malatelier -->
+  <section *ngIf="malateliers.length > 0">
+    <h3>Malatelier</h3>
+    <p>Unser Malatelier findet regelmäßig statt – entdecken Sie die kreative Atmosphäre.</p>
+    <div class="workshops-grid">
+      <div *ngFor="let workshop of malateliers.slice(0,1)" class="workshop-card" (click)="navigateTo('/workshop/' + workshop.id)">
+        <div class="workshop-image">
+          <img [src]="workshop.imageUrl || 'assets/images/default-workshop.jpg'" [alt]="workshop.title" (load)="workshop.imageLoaded = true" [ngClass]="{'loading': !workshop.imageLoaded}" />
+          <div *ngIf="!workshop.imageLoaded" class="spinner"></div>
+        </div>
+        <div class="workshop-info">
+          <h3>{{ workshop.title }}</h3>
+          <p class="short-description">{{ workshop.shortDescription }}</p>
+        </div>
+        <div class="workshop-actions">
+          <button class="btn btn-accent">Mehr erfahren</button>
+        </div>
+      </div>
+    </div>
+    <button (click)="navigateTo('/workshops')" class="btn btn-cta-secondary">Mehr erfahren</button>
+  </section>
+
+  <!-- Individuelle Anfragen -->
+  <section *ngIf="individuelleAnfragen.length > 0">
+    <h3>Individuelle Anfragen</h3>
+    <p>Für besondere Anlässe wie Hochzeiten, Teamevents, Geburtstage oder Trauerfeiern – kontaktieren Sie uns für ein maßgeschneidertes Angebot.</p>
+    <div class="workshops-grid">
+      <div *ngFor="let workshop of individuelleAnfragen.slice(0,1)" class="workshop-card" (click)="navigateTo('/contact')">
+        <div class="workshop-image">
+          <img [src]="workshop.imageUrl || 'assets/images/default-workshop.jpg'" [alt]="workshop.title" (load)="workshop.imageLoaded = true" [ngClass]="{'loading': !workshop.imageLoaded}" />
+          <div *ngIf="!workshop.imageLoaded" class="spinner"></div>
+        </div>
+        <div class="workshop-info">
+          <h3>{{ workshop.title }}</h3>
+          <p class="short-description">{{ workshop.shortDescription }}</p>
+        </div>
+        <div class="workshop-actions">
+          <button class="btn btn-accent">Kontakt aufnehmen</button>
+        </div>
+      </div>
+    </div>
+    <button (click)="navigateTo('/contact')" class="btn btn-cta-secondary">Kontakt aufnehmen</button>
+  </section>
 </section>
 
 <section class="gallery">
@@ -87,7 +107,5 @@
       <img [src]="artwork.src" [alt]="artwork.alt" (load)="artwork.imageLoaded = true" [ngClass]="{'loading': !artwork.imageLoaded}" />
     </div>
   </div>
-  <button (click)="navigateTo('/gallery')" class="btn btn-cta-secondary" aria-label="Zur Galerie">
-    Zur Galerie
-  </button>
+  <button (click)="navigateTo('/gallery')" class="btn btn-cta-secondary" aria-label="Zur Galerie">Zur Galerie</button>
 </section>

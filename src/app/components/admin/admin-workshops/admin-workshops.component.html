@@ -1,78 +1,97 @@
 <div class="admin-workshops">
-  <h2>Workshops verwalten</h2>
+  <h2>Angebote verwalten</h2>
+  
+  <!-- Bestehende Angebote -->
   <div class="workshops-grid">
     <div *ngFor="let workshop of workshops" class="workshop-card">
-      <img
-        [src]="workshop.imageUrl || 'assets/images/default-workshop.jpg'"
-        [alt]="workshop.title"
-      />
+      <img [src]="workshop.imageUrl || 'assets/images/default-workshop.jpg'" [alt]="workshop.title" />
       <div class="card-content">
         <h3>{{ workshop.title }}</h3>
         <p>{{ workshop.shortDescription }}</p>
         <div class="workshop-info">
-          <span><strong>Datum:</strong> {{ workshop.date | date:'dd.MM.yyyy' }}</span>
-          <span><strong>Ort:</strong> {{ workshop.location }}</span>
-          <span>
-            <strong>Preis:</strong>
-            {{ workshop.price ? (workshop.price | currency:'CHF') : 'Kostenlos' }}
+          <span *ngIf="workshop.location"><strong>Ort:</strong> {{ workshop.location }}</span>
+          <span *ngIf="workshop.date"><strong>Datum:</strong> {{ workshop.date | date:'dd.MM.yyyy' }}</span>
+          <span *ngIf="workshop.price !== undefined"><strong>Preis:</strong> {{ workshop.price ? (workshop.price | currency:'CHF') : 'Kostenlos' }}</span>
+          <span *ngIf="workshop.startTime && workshop.endTime"><strong>Uhrzeit:</strong> {{ workshop.startTime }} - {{ workshop.endTime }}</span>
+          <span *ngIf="workshop.maxParticipants"><strong>Max. Teilnehmer:</strong> {{ workshop.maxParticipants }}</span>
+          <span *ngIf="workshop.availableSlots"><strong>Verfügbare Plätze:</strong> {{ workshop.availableSlots }}</span>
+          <span *ngIf="workshop.frequency"><strong>Häufigkeit:</strong> {{ workshop.frequency }}</span>
+          <span *ngIf="workshop.contactEmail"><strong>E-Mail:</strong> {{ workshop.contactEmail }}</span>
+          <span><strong>Art:</strong>
+            <span *ngIf="workshop.type === 'workshop'">Workshop</span>
+            <span *ngIf="workshop.type === 'malatelier'">Malatelier</span>
+            <span *ngIf="workshop.type === 'individuelleAnfrage'">Individuelle Anfrage</span>
           </span>
         </div>
         <div class="card-actions">
           <button (click)="editWorkshop(workshop)">Bearbeiten</button>
-          <button (click)="deleteWorkshop(workshop.id)" class="btn-danger">
-            Löschen
-          </button>
+          <button (click)="deleteWorkshop(workshop.id)" class="btn-danger">Löschen</button>
         </div>
       </div>
     </div>
   </div>
 
-  <button (click)="createWorkshop()" class="new-workshop-btn">
-    Neuen Workshop hinzufügen
-  </button>
+  <button (click)="createWorkshop()" class="new-workshop-btn">Neuen Eintrag hinzufügen</button>
 
+  <!-- Formular zur Erstellung / Bearbeitung -->
   <div class="workshop-edit-form" *ngIf="selectedWorkshop">
-    <h3>
-      {{ selectedWorkshop.id ? 'Workshop bearbeiten' : 'Neuen Workshop erstellen' }}
-    </h3>
     <form (ngSubmit)="saveWorkshop()">
+      <!-- Typ-Auswahl -->
+      <label for="type">Art des Angebots</label>
+      <select id="type" [(ngModel)]="selectedWorkshop.type" name="type" required>
+        <option value="workshop">Workshop (feste Termine)</option>
+        <option value="malatelier">Malatelier (wiederkehrend)</option>
+        <option value="individuelleAnfrage">Individuelle Anfrage (für besondere Anlässe)</option>
+      </select>
+      
       <label for="title">Titel</label>
       <input id="title" [(ngModel)]="selectedWorkshop.title" name="title" required />
 
       <label for="shortDescription">Kurzbeschreibung</label>
-      <textarea
-        id="shortDescription"
-        [(ngModel)]="selectedWorkshop.shortDescription"
-        name="shortDescription"
-        required
-        rows="1"
-        style="overflow:hidden"
-        oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'"
-      ></textarea>
+      <textarea id="shortDescription" [(ngModel)]="selectedWorkshop.shortDescription" name="shortDescription" required rows="1" style="overflow: hidden" oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'"></textarea>
 
       <label for="description">Beschreibung</label>
-      <textarea
-        id="description"
-        [(ngModel)]="selectedWorkshop.description"
-        name="description"
-        required
-        rows="1"
-        style="overflow:hidden"
-        oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'"
-      ></textarea>
+      <textarea id="description" [(ngModel)]="selectedWorkshop.description" name="description" required rows="3" style="overflow: hidden" oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'"></textarea>
 
-      <label for="date">Datum</label>
-      <input id="date" type="date" [(ngModel)]="selectedWorkshop.date" name="date" required />
-
+      <!-- Gemeinsame Felder -->
       <label for="location">Ort</label>
       <input id="location" [(ngModel)]="selectedWorkshop.location" name="location" required />
 
-      <label for="price">Preis</label>
-      <input id="price" type="number" [(ngModel)]="selectedWorkshop.price" name="price" required />
+      <!-- Typ-spezifisch -->
+      <div *ngIf="selectedWorkshop.type === 'workshop'">
+        <label for="date">Datum</label>
+        <input id="date" type="date" [(ngModel)]="selectedWorkshop.date" name="date" required />
+        <label for="startTime">Startzeit</label>
+        <input id="startTime" type="time" [(ngModel)]="selectedWorkshop.startTime" name="startTime" />
+        <label for="endTime">Endzeit</label>
+        <input id="endTime" type="time" [(ngModel)]="selectedWorkshop.endTime" name="endTime" />
+        <label for="price">Preis</label>
+        <input id="price" type="number" [(ngModel)]="selectedWorkshop.price" name="price" required />
+        <label for="maxParticipants">Maximale Teilnehmer</label>
+        <input id="maxParticipants" type="number" [(ngModel)]="selectedWorkshop.maxParticipants" name="maxParticipants" />
+        <label for="availableSlots">Verfügbare Plätze</label>
+        <input id="availableSlots" type="number" [(ngModel)]="selectedWorkshop.availableSlots" name="availableSlots" />
+      </div>
+      
+      <div *ngIf="selectedWorkshop.type === 'malatelier'">
+        <label for="frequency">Häufigkeit</label>
+        <input id="frequency" type="text" [(ngModel)]="selectedWorkshop.frequency" name="frequency" placeholder="z.B. Jeden 1. Mittwoch im Monat" required />
+        <label for="maxParticipants">Maximale Teilnehmer</label>
+        <input id="maxParticipants" type="number" [(ngModel)]="selectedWorkshop.maxParticipants" name="maxParticipants" />
+        <label for="availableSlots">Verfügbare Plätze</label>
+        <input id="availableSlots" type="number" [(ngModel)]="selectedWorkshop.availableSlots" name="availableSlots" />
+        <label for="price">Preis (optional)</label>
+        <input id="price" type="number" [(ngModel)]="selectedWorkshop.price" name="price" />
+      </div>
+      
+      <div *ngIf="selectedWorkshop.type === 'individuelleAnfrage'">
+        <label for="contactEmail">Kontakt E-Mail</label>
+        <input id="contactEmail" type="email" [(ngModel)]="selectedWorkshop.contactEmail" name="contactEmail" required />
+      </div>
 
+      <!-- Bildfelder -->
       <label for="imageUrl">Bild-URL</label>
       <input id="imageUrl" [(ngModel)]="selectedWorkshop.imageUrl" name="imageUrl" />
-
       <label for="imageUpload">Bild hochladen</label>
       <input id="imageUpload" type="file" (change)="handleImageUpload($event)" />
 
@@ -80,6 +99,7 @@
         <button type="submit" class="btn-primary">Speichern</button>
         <button type="button" (click)="cancelEdit()" class="cancel-btn">Abbrechen</button>
       </div>
+      <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
     </form>
   </div>
 </div>

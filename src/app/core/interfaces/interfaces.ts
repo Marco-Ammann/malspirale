@@ -5,22 +5,29 @@ export interface State {
 }
 
 export interface Workshop {
-  id: string;
+  id?: string;
   title: string;
   shortDescription: string;
   description: string;
-  image?: string;
-  imageUrl?: string;
-  date: Date;
-  location: string;
-  // Optional properties used in other components
+  date?: string;           // z.B. "2025-06-15" – nur für reguläre Workshops
+  location?: string;
   price?: number;
-  maxParticipants?: number;
-  availableSlots?: number;
-  // You can add more optional fields (startTime, endTime) if needed:
+  imageUrl?: string;
   startTime?: string;
   endTime?: string;
+  maxParticipants?: number;
+  availableSlots?: number;
+  frequency?: string;      // Für Malatelier, z.B. "Jeden 1. Mittwoch im Monat"
+  contactEmail?: string;   // Für individuelle Anfragen
+  imageLoaded?: boolean;
+  type: 'workshop' | 'malatelier' | 'individuelleAnfrage';
 }
+
+
+
+
+
+
 
 export interface GalleryImage {
   id: string;

@@ -1,23 +1,22 @@
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { RouterModule } from '@angular/router';
 import { Workshop } from '../../core/interfaces/interfaces';
 import { DataService } from '../../core/services/data.service';
-
-interface WorkshopWithImage extends Workshop {
-  imageLoaded: boolean;
-}
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule]
 })
 export class HomeComponent implements OnInit {
-  workshops: WorkshopWithImage[] = [];
+  workshops: Workshop[] = [];
+  regularWorkshops: Workshop[] = [];
+  malateliers: Workshop[] = [];
+  individuelleAnfragen: Workshop[] = [];
   artworks = [
     { src: 'assets/images/art1.webp', alt: 'Kunstwerk 1', imageLoaded: false },
     { src: 'assets/images/art2.webp', alt: 'Kunstwerk 2', imageLoaded: false },
@@ -31,24 +30,17 @@ export class HomeComponent implements OnInit {
   }
 
   loadWorkshops(): void {
-    this.dataService.getAllWorkshops()
-      .then((workshops) => {
-        this.workshops = workshops.map((workshop) => ({
-          ...workshop,
-          imageLoaded: false,
-        }));
-      })
-      .catch((error) => {
+    this.dataService.getWorkshops().subscribe({
+      next: (workshops: Workshop[]) => {
+        this.workshops = workshops;
+        this.regularWorkshops = workshops.filter(w => w.type === 'workshop');
+        this.malateliers = workshops.filter(w => w.type === 'malatelier');
+        this.individuelleAnfragen = workshops.filter(w => w.type === 'individuelleAnfrage');
+      },
+      error: (error: any) => {
         console.error('Fehler beim Laden der Workshops:', error);
-      });
-  }
-
-  onImageLoad(index: number, type: 'workshop' | 'artwork'): void {
-    if (type === 'workshop') {
-      this.workshops[index].imageLoaded = true;
-    } else if (type === 'artwork') {
-      this.artworks[index].imageLoaded = true;
-    }
+      }
+    });
   }
 
   navigateTo(route: string): void {

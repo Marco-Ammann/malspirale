@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { DataService } from '../../../core/services/data.service';
+import { Component, OnInit, inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { Workshop } from '../../../core/interfaces/interfaces';
+import { DataService } from '../../../core/services/data.service';
+import { StorageService } from '../../../core/services/storage.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -12,62 +14,80 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./admin-workshops.component.scss']
 })
 export class AdminWorkshopsComponent implements OnInit {
+  private dataService = inject(DataService);
+  private router = inject(Router);
+  private storageService = inject(StorageService);
+
   workshops: Workshop[] = [];
   selectedWorkshop: Workshop | null = null;
-
-  constructor(private dataService: DataService) {}
+  errorMessage = '';
 
   ngOnInit(): void {
     this.loadWorkshops();
   }
 
-  async loadWorkshops(): Promise<void> {
-    try {
-      this.workshops = await this.dataService.getAllWorkshops();
-    } catch (error) {
-      console.error('Error loading workshops:', error);
-    }
+  loadWorkshops(): void {
+    this.dataService.getWorkshops().subscribe({
+      next: (data) => { this.workshops = data; },
+      error: (err) => { console.error('Fehler beim Laden der Angebote', err); }
+    });
+  }
+
+  createWorkshop(): void {
+    this.selectedWorkshop = {
+      title: '',
+      shortDescription: '',
+      description: '',
+      location: '',
+      date: '',
+      price: 0,
+      imageUrl: '',
+      startTime: '',
+      endTime: '',
+      maxParticipants: undefined,
+      availableSlots: undefined,
+      frequency: '',
+      contactEmail: '',
+      type: 'workshop'
+    };
   }
 
   editWorkshop(workshop: Workshop): void {
     this.selectedWorkshop = { ...workshop };
   }
 
-  createWorkshop(): void {
-    this.selectedWorkshop = {
-      id: '',
-      title: '',
-      shortDescription: '',
-      description: '',
-      imageUrl: '',
-      date: new Date(),
-      location: '',
-      price: 0
-    };
-  }
-
-  async saveWorkshop(): Promise<void> {
-    if (this.selectedWorkshop) {
-      try {
-        if (this.selectedWorkshop.id) {
-          await this.dataService.updateWorkshop(this.selectedWorkshop.id, this.selectedWorkshop);
-        } else {
-          await this.dataService.addWorkshop(this.selectedWorkshop);
-        }
-        this.loadWorkshops();
-        this.selectedWorkshop = null;
-      } catch (error) {
-        console.error('Error saving workshop:', error);
-      }
-    }
-  }
-
-  async deleteWorkshop(id: string): Promise<void> {
+  async deleteWorkshop(id?: string): Promise<void> {
+    if (!id) return;
     try {
       await this.dataService.deleteWorkshop(id);
       this.loadWorkshops();
     } catch (error) {
-      console.error('Error deleting workshop:', error);
+      console.error('Fehler beim Löschen des Angebots', error);
+    }
+  }
+
+  async saveWorkshop(): Promise<void> {
+    if (!this.selectedWorkshop) return;
+    try {
+      if (this.selectedWorkshop.type === 'workshop' && !this.selectedWorkshop.date) {
+        this.errorMessage = 'Bitte geben Sie ein Datum für den Workshop an.';
+        return;
+      }
+      if (this.selectedWorkshop.type === 'malatelier' && !this.selectedWorkshop.frequency) {
+        this.errorMessage = 'Bitte geben Sie an, wie oft das Malatelier stattfindet.';
+        return;
+      }
+      if (this.selectedWorkshop.id) {
+        await this.dataService.updateWorkshop(this.selectedWorkshop);
+      } else {
+        const newId = await this.dataService.saveWorkshop(this.selectedWorkshop);
+        this.selectedWorkshop.id = newId;
+      }
+      this.selectedWorkshop = null;
+      this.loadWorkshops();
+    } catch (error) {
+      console.error('Fehler beim Speichern des Angebots', error);
+      this.errorMessage = 'Fehler beim Speichern des Angebots.';
     }
   }
 
@@ -75,17 +95,16 @@ export class AdminWorkshopsComponent implements OnInit {
     this.selectedWorkshop = null;
   }
 
-  handleImageUpload(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files[0]) {
-      const file = input.files[0];
-      const reader = new FileReader();
-      reader.onload = () => {
+  handleImageUpload(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      this.storageService.uploadFile(file).then(url => {
         if (this.selectedWorkshop) {
-          this.selectedWorkshop.imageUrl = reader.result as string;
+          this.selectedWorkshop.imageUrl = url;
         }
-      };
-      reader.readAsDataURL(file);
+      }).catch(err => {
+        console.error('Fehler beim Bild-Upload', err);
+      });
     }
   }
 }

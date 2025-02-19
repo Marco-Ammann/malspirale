@@ -1,43 +1,76 @@
 <div class="workshop-container">
-  <!-- Suchfeld & Filter -->
   <div class="search-container">
-    <input
-      type="text"
-      [(ngModel)]="searchTerm"
-      (input)="filterWorkshops()"
-      placeholder="🔍 Workshop suchen..."
-      class="search-box"
-    />
+    <input type="text" [(ngModel)]="searchTerm" (input)="filterWorkshops()" placeholder="🔍 Workshop suchen..." class="search-box" />
   </div>
 
-  <!-- Ladeanzeige oder Fehler -->
   <div *ngIf="loading" class="loading">⏳ Workshops werden geladen...</div>
   <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
 
-  <!-- Workshop-Karten -->
-  <div class="workshop-list">
-    <div class="workshop-card" *ngFor="let workshop of filteredWorkshops" (click)="goToDetail(workshop)">
-      <div class="workshop-image">
-        <img 
-          [src]="workshop.image || 'assets/images/default-workshop.jpg'" 
-          alt="Workshop Bild" 
-          (load)="workshop.imageLoaded = true" 
-          [ngClass]="{'loading': !workshop.imageLoaded}"
-        />
-        <div *ngIf="!workshop.imageLoaded" class="spinner"></div>
-      </div>
-
-      <div class="workshop-info">
-        <h3>{{ workshop.title }}</h3>
-        <p class="location">📍 {{ workshop.location }}</p>
-        <p class="workshop-short-description">{{ workshop.shortDescription }}</p>
-        <p>📅 {{ workshop.date | date:'dd.MM.yyyy' }}</p>
-        <p>💰 {{ workshop.price ? (workshop.price | currency:'CHF') : 'Kostenlos' }}</p>
-      </div>
-
-      <div class="workshop-actions">
-        <button class="btn btn-primary" (click)="goToDetail(workshop)">Mehr erfahren</button>
+  <!-- Reguläre Workshops -->
+  <section *ngIf="regularWorkshops.length > 0">
+    <h2>Workshops</h2>
+    <div class="workshops-grid">
+      <div *ngFor="let workshop of regularWorkshops.slice(0,3)" class="workshop-card" (click)="goToDetail(workshop)">
+        <div class="workshop-image">
+          <img [src]="workshop.imageUrl || 'assets/images/default-workshop.jpg'" alt="Workshop Bild" (load)="workshop.imageLoaded = true" [ngClass]="{'loading': !workshop.imageLoaded}" />
+          <div *ngIf="!workshop.imageLoaded" class="spinner"></div>
+        </div>
+        <div class="workshop-info">
+          <h3>{{ workshop.title }}</h3>
+          <p class="location">📍 {{ workshop.location }}</p>
+          <p class="workshop-short-description">{{ workshop.shortDescription }}</p>
+          <p>📅 {{ workshop.date | date:'dd.MM.yyyy' }}</p>
+          <p>💰 {{ workshop.price ? (workshop.price | currency:'CHF') : 'Kostenlos' }}</p>
+        </div>
+        <div class="workshop-actions">
+          <button class="btn btn-primary">Mehr erfahren</button>
+        </div>
       </div>
     </div>
-  </div>
+    <button (click)="router.navigate(['/workshops'])" class="btn btn-cta-secondary">Alle Workshops anzeigen</button>
+  </section>
+
+  <!-- Malatelier -->
+  <section *ngIf="malateliers.length > 0">
+    <h2>Malatelier</h2>
+    <p>Unser monatlich wiederkehrendes Malatelier findet jeden 1. Mittwoch im Monat statt.</p>
+    <div class="workshops-grid">
+      <div *ngFor="let workshop of malateliers.slice(0,1)" class="workshop-card" (click)="goToDetail(workshop)">
+        <div class="workshop-image">
+          <img [src]="workshop.imageUrl || 'assets/images/default-workshop.jpg'" alt="Malatelier Bild" (load)="workshop.imageLoaded = true" [ngClass]="{'loading': !workshop.imageLoaded}" />
+          <div *ngIf="!workshop.imageLoaded" class="spinner"></div>
+        </div>
+        <div class="workshop-info">
+          <h3>{{ workshop.title }}</h3>
+          <p class="workshop-short-description">{{ workshop.shortDescription }}</p>
+        </div>
+        <div class="workshop-actions">
+          <button class="btn btn-primary">Mehr erfahren</button>
+        </div>
+      </div>
+    </div>
+    <button (click)="router.navigate(['/workshops'])" class="btn btn-cta-secondary">Mehr erfahren</button>
+  </section>
+
+  <!-- Individuelle Anfragen -->
+  <section *ngIf="individuelleAnfragen.length > 0">
+    <h2>Individuelle Anfragen</h2>
+    <p>Für besondere Anlässe wie Hochzeiten, Teamevents, Geburtstage oder Trauerfeiern – kontaktieren Sie uns für ein maßgeschneidertes Angebot.</p>
+    <div class="workshops-grid">
+      <div *ngFor="let workshop of individuelleAnfragen.slice(0,1)" class="workshop-card" (click)="goToDetail(workshop)">
+        <div class="workshop-image">
+          <img [src]="workshop.imageUrl || 'assets/images/default-workshop.jpg'" alt="Individuelle Anfrage Bild" (load)="workshop.imageLoaded = true" [ngClass]="{'loading': !workshop.imageLoaded}" />
+          <div *ngIf="!workshop.imageLoaded" class="spinner"></div>
+        </div>
+        <div class="workshop-info">
+          <h3>{{ workshop.title }}</h3>
+          <p class="workshop-short-description">{{ workshop.shortDescription }}</p>
+        </div>
+        <div class="workshop-actions">
+          <button class="btn btn-primary">Kontakt aufnehmen</button>
+        </div>
+      </div>
+    </div>
+    <button (click)="router.navigate(['/contact'])" class="btn btn-cta-secondary">Kontakt aufnehmen</button>
+  </section>
 </div>

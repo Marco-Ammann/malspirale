@@ -1,9 +1,9 @@
-import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { DataService } from '../../core/services/data.service';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, firstValueFrom } from 'rxjs';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-admin',
@@ -17,6 +17,7 @@ export class AdminComponent implements OnInit {
   workshopCount$ = new BehaviorSubject<number>(0);
   lastContentUpdate$ = new BehaviorSubject<Date | null>(null);
   userRole$ = new BehaviorSubject<string>('UNBEKANNT');
+  menuOpen = false;  // Für mobile Navigation
 
   constructor(
     private router: Router,
@@ -31,44 +32,37 @@ export class AdminComponent implements OnInit {
     this.loadUserRole();
   }
 
-  // Live-Update der Benutzeranzahl
   loadUserCount(): void {
-    this.authService.getUserCount().then((count) => {
+    this.authService.getUserCount().then(count => {
       this.userCount$.next(count);
     });
   }
 
-  getUserRole(): void {
-    this.authService.getUserRole().then((role) => {
-      console.log("Benutzerrolle:", role); // 🔥 DEBUGGING
-      this.userRole$.next(role ? role.toUpperCase() : 'UNBEKANNT');
-    });
-  }
-
-  // Live-Update der Workshops
   loadWorkshopCount(): void {
-    this.dataService.getAllWorkshops().then((workshops) => {
+    firstValueFrom(this.dataService.getWorkshops()).then(workshops => {
       this.workshopCount$.next(workshops.length);
+    }).catch(error => {
+      console.error('Fehler beim Laden der Workshops:', error);
     });
   }
 
-  // Letzte Inhaltsänderung abrufen
-  async loadLastContentUpdate(): Promise<void> {
-    // Implementiere später eine Firebase-Funktion für die letzte Inhaltsänderung
-
+  loadLastContentUpdate(): void {
+    // Hier kann eine Funktion ergänzt werden
   }
 
-  // Benutzerrolle abrufen
   loadUserRole(): void {
-    this.authService.getUserRole().then((role) => {
+    this.authService.getUserRole().then(role => {
       this.userRole$.next(role ? role.toUpperCase() : 'UNBEKANNT');
     });
   }
 
-  // Benutzer abmelden
   logout(): void {
     this.authService.logout().then(() => {
       this.router.navigate(['/login']);
     });
+  }
+
+  toggleMenu(): void {
+    this.menuOpen = !this.menuOpen;
   }
 }
