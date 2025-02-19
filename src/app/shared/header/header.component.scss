@@ -8,14 +8,27 @@
   border-radius: vars.$border-radius;
 }
 
+:host {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+
 .app-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
-  background: vars.$primary-color;
+  background: rgba(vars.$primary-color, 0.5);
+  backdrop-filter: blur(10px);
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   height: vars.$header-height;
+  transition: background 0.3s ease-in-out;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+
 
   .brand h1 {
     margin: 0;
@@ -59,11 +72,13 @@
         display: none;
         position: absolute;
         top: 100%;
-        left: 0;
+        right: 0;
         background: vars.$background-color;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        padding: 0.5rem 0;
+        padding: 0.5rem 0.5rem;
         border-radius: vars.$border-radius;
+        z-index: 999;
+        width: max-content;
 
         a {
           display: block;

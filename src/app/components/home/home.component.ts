@@ -46,4 +46,19 @@ export class HomeComponent implements OnInit {
   navigateTo(route: string): void {
     this.router.navigate([route]);
   }
+
+
+  navigateWithDelay(route: string) {
+    const button = document.querySelector('.spiritual-button') as HTMLButtonElement;
+    
+    if (button) {
+      button.style.transform = 'scale(0.9)'; // Visuelles Feedback
+      setTimeout(() => {
+        button.style.transform = 'scale(1)'; // Zurück zur normalen Größe
+        this.navigateTo(route);
+      }, 600); // 200ms Verzögerung
+    } else {
+      this.navigateTo(route);
+    }
+  }
 }

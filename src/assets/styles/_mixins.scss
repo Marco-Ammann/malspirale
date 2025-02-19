@@ -33,7 +33,7 @@
   border-radius: vars.$border-radius;
   padding: vars.$padding-medium;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.3s ease-in-out;
 
   &:hover {
     background-color: color.scale($bg-color, $lightness: 30%);
