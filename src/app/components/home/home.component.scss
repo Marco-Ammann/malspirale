@@ -14,46 +14,126 @@ section {
   padding: vars.$container-padding-large;
   background-color: vars.$background-light;
 }
+.typing-text {
+  display: inline-block;
+  font-size: vars.$font-size-xxxlarge;
+  font-weight: vars.$font-weight-bolder;
+  margin-bottom: vars.$padding-small;
+  letter-spacing: vars.$letter-spacing-large;
+  line-height: vars.$line-height;
+  white-space: nowrap;
+  overflow: hidden;
+  text-wrap: auto;
+}
 
-// ** HERO SECTION **
+.cursor {
+  display: inline-block;
+  background-color: vars.$text-color;
+  width: 2px;
+  height: 1em;
+  animation: blink 0.8s infinite;
+  margin-left: 4px;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+// ** HERO SECTION MIT PARALLAX **
 .hero {
-  @include mix.flex-center;
-  background: url("../../../assets/images/hero10.webp") center/cover no-repeat;
+  position: relative;
   text-align: center;
   min-height: 100vh;
-  border-radius: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .hero-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 120%;
+    background: url("../../../assets/images/hero10.webp") center/cover no-repeat;
+    will-change: transform;
+  }
 
   .hero-content {
+    position: relative;
     max-width: vars.$container-max-width-lg;
     background: rgba(255, 255, 255, 0.6);
     padding: vars.$padding-large;
     border-radius: vars.$border-radius-large;
     box-shadow: vars.$shadow;
     height: min-content;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInUp 1.2s ease-out forwards;
+  }
 
-    h1 {
-      font-size: vars.$font-size-xxxlarge;
-      font-weight: vars.$font-weight-bolder;
-      margin-bottom: vars.$padding-small;
-      letter-spacing: vars.$letter-spacing-large;
-      line-height: vars.$line-height;
-    }
+  h1 {
+    font-size: vars.$font-size-xxxlarge;
+    font-weight: vars.$font-weight-bolder;
+    margin-bottom: vars.$padding-small;
+    letter-spacing: vars.$letter-spacing-large;
+    line-height: vars.$line-height;
+  }
 
-    p {
-      font-size: vars.$font-size-large;
-      margin-bottom: vars.$padding-medium;
-      line-height: 1.4;
-    }
+  p {
+    font-size: vars.$font-size-large;
+    margin-bottom: vars.$padding-medium;
+    line-height: 1.4;
+  }
 
-    button {
-      margin-top: vars.$padding-medium;
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
-    }
+  button {
+    margin-top: vars.$padding-medium;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+// ** FADE-IN ANIMATIONEN **
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
+.fade-in {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeInUp 1s ease-out forwards;
+}
+
+// ** PARALLAX-EFFEKT **
+@media (prefers-reduced-motion: no-preference) {
+  .parallax {
+    transform: translateY(var(--parallax-scroll, 0px));
+    transition: none!important;
+  }
+}
+
+@media (max-width: vars.$tablet) {
+  .hero {
+    min-height: 80vh;
+  }
+}
+
+@media (max-width: vars.$mobile) {
+  .hero {
+    min-height: 60vh;
+  }
+
+  h1 {
+    font-size: vars.$font-size-xlarge;
+  }
+}
 // ** ABOUT SECTION **
 .about {
   @include mix.flex-center;

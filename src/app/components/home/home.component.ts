@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, HostListener, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Workshop } from '../../core/interfaces/interfaces';
@@ -22,12 +22,34 @@ export class HomeComponent implements OnInit {
     { src: 'assets/images/art2.webp', alt: 'Kunstwerk 2', imageLoaded: false },
     { src: 'assets/images/art3.webp', alt: 'Kunstwerk 3', imageLoaded: false },
   ];
-
+  private typingText = "Entfalte deine Kreativität";
+  private typingSpeed = 120; // Geschwindigkeit in ms
+  
   constructor(private dataService: DataService, private router: Router) {}
 
   ngOnInit(): void {
     this.loadWorkshops();
+    this.updateParallaxEffect();
   }
+
+  ngAfterViewInit(): void {
+    this.startTypingEffect();
+  }
+  private startTypingEffect(): void {
+    const typedTextElement = document.getElementById("typed-text");
+    if (!typedTextElement) return;
+
+    let index = 0;
+    const interval = setInterval(() => {
+      if (index < this.typingText.length) {
+        typedTextElement.textContent += this.typingText.charAt(index);
+        index++;
+      } else {
+        clearInterval(interval);
+      }
+    }, this.typingSpeed);
+  }
+
 
   loadWorkshops(): void {
     this.dataService.getWorkshops().subscribe({
@@ -47,18 +69,18 @@ export class HomeComponent implements OnInit {
     this.router.navigate([route]);
   }
 
+  // ** PARALLAX LOGIK **
+  @HostListener('window:scroll', [])
+  onWindowScroll(): void {
+    this.updateParallaxEffect();
+  }
 
-  navigateWithDelay(route: string) {
-    const button = document.querySelector('.spiritual-button') as HTMLButtonElement;
-    
-    if (button) {
-      button.style.transform = 'scale(0.9)'; // Visuelles Feedback
-      setTimeout(() => {
-        button.style.transform = 'scale(1)'; // Zurück zur normalen Größe
-        this.navigateTo(route);
-      }, 600); // 200ms Verzögerung
-    } else {
-      this.navigateTo(route);
+  private updateParallaxEffect(): void {
+    const scrolled = window.scrollY;
+    const parallaxElement = document.querySelector('.hero-background') as HTMLElement;
+
+    if (parallaxElement) {
+      parallaxElement.style.transform = `translateY(${scrolled * 0.3}px)`;
     }
   }
 }
