@@ -9,8 +9,8 @@
 }
 
 section {
-  border-radius: vars.$border-radius-large;
   box-shadow: vars.$box-shadow;
+  border-radius: vars.$border-radius-large;
   padding: vars.$container-padding-large;
   background-color: vars.$background-light;
 }
@@ -19,8 +19,9 @@ section {
 .hero {
   @include mix.flex-center;
   background: url("../../../assets/images/hero10.webp") center/cover no-repeat;
-  height: 85vh;
   text-align: center;
+  min-height: calc(100vh - vars.$header-height);
+  margin-top: -1px;
 
   .hero-content {
     max-width: vars.$container-max-width-lg;
@@ -100,6 +101,20 @@ section {
 }
 
 // ** WORKSHOPS SECTION **
+.workshops-section, .malateliers-section, .individuelleAnfragen-section {
+  text-align: center;
+  background: vars.$background-light;
+  border-radius: vars.$border-radius-large;
+  box-shadow: vars.$shadow;
+  padding: vars.$padding-large;
+  margin: vars.$container-gap-large auto;
+
+  h3{
+    font-size: vars.$font-size-xlarge;
+    margin-bottom: vars.$padding-small;
+  }
+}
+
 .workshops {
   text-align: center;
   background: vars.$accent-color-light;

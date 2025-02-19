@@ -1,21 +1,37 @@
-@use "../styles.scss" as *;
-@use "variables" as vars;
-@use "mixins" as mix;
+@use 'variables' as vars;
 
-.app-content {
-  padding: 2rem;
-  min-height: calc(100vh - (vars.$header-height + vars.$footer-height));
-  background-color: vars.$background-color;
-}
-// ** RESPONSIVE DESIGN **
-@media (max-width: vars.$tablet) {
+.app-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: vars.$background-color;
+
   .app-content {
-    padding: 1rem;
+    flex: 1;
+    padding: vars.$padding-large;
+    position: relative;
+
+    .loading-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(255, 255, 255, 0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: vars.$font-size-large;
+      z-index: 1000;
+    }
   }
 }
 
-@media (max-width: vars.$mobile) {
-  .app-content {
-    padding: 0.5rem;
-  }
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+:host {
+  animation: fadeIn 0.5s ease-out;
 }

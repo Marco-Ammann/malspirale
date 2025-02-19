@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Workshop } from '../interfaces/interfaces';
-import { getFirestore, collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc, setDoc } from 'firebase/firestore';
+import { getFirestore, collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc, setDoc, query as firebaseQuerry, CollectionReference, DocumentData, limit, orderBy } from 'firebase/firestore';
 import { from, Observable } from 'rxjs';
-
 @Injectable({
   providedIn: 'root'
 })
@@ -82,3 +81,7 @@ export class DataService {
     }
   }
 }
+function query(contentCollection: CollectionReference<DocumentData, DocumentData>, arg1: any, arg2: any): import("@firebase/firestore").Query<unknown, import("@firebase/firestore").DocumentData> {
+  throw new Error('Function not implemented.');
+}
+

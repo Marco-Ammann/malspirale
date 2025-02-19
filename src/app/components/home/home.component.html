@@ -30,12 +30,12 @@
 
 <section class="workshops">
   <div class="workshops-title">
-    <h2>Unsere Angebote</h2>
-    <p>Wählen Sie aus Workshops, Malatelier und individuellen Anfragen – wir haben für jeden Anlass das Richtige.</p>
+    <h2>Meine Angebote</h2>
+    <p>Wählen Sie aus Workshops, Malatelier und individuellen Anfragen – ich habe für jeden Anlass das Richtige.</p>
   </div>
 
   <!-- Reguläre Workshops -->
-  <section *ngIf="regularWorkshops.length > 0">
+  <section class="workshops-section" *ngIf="regularWorkshops.length > 0">
     <h3>Workshops</h3>
     <div class="workshops-grid">
       <div *ngFor="let workshop of regularWorkshops.slice(0,3)" class="workshop-card" (click)="navigateTo('/workshop/' + workshop.id)">
@@ -56,7 +56,7 @@
   </section>
 
   <!-- Malatelier -->
-  <section *ngIf="malateliers.length > 0">
+  <section class="malateliers-section" *ngIf="malateliers.length > 0">
     <h3>Malatelier</h3>
     <p>Unser Malatelier findet regelmäßig statt – entdecken Sie die kreative Atmosphäre.</p>
     <div class="workshops-grid">
@@ -78,7 +78,7 @@
   </section>
 
   <!-- Individuelle Anfragen -->
-  <section *ngIf="individuelleAnfragen.length > 0">
+  <section class="individuelleAnfragen-section" *ngIf="individuelleAnfragen.length > 0">
     <h3>Individuelle Anfragen</h3>
     <p>Für besondere Anlässe wie Hochzeiten, Teamevents, Geburtstage oder Trauerfeiern – kontaktieren Sie uns für ein maßgeschneidertes Angebot.</p>
     <div class="workshops-grid">

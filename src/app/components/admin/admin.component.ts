@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
 import { DataService } from '../../core/services/data.service';
-import { BehaviorSubject, firstValueFrom } from 'rxjs';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-admin',
@@ -12,42 +12,41 @@ import { CommonModule } from '@angular/common';
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.scss']
 })
-export class AdminComponent implements OnInit {
+export class AdminComponent implements OnInit, OnDestroy {
   userCount$ = new BehaviorSubject<number>(0);
   workshopCount$ = new BehaviorSubject<number>(0);
   lastContentUpdate$ = new BehaviorSubject<Date | null>(null);
   userRole$ = new BehaviorSubject<string>('UNBEKANNT');
-  menuOpen = false;  // Für mobile Navigation
+  menuOpen = false;
+  private subscriptions = new Subscription();
 
   constructor(
-    private router: Router,
     private authService: AuthService,
-    private dataService: DataService
+    private dataService: DataService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
     this.loadUserCount();
     this.loadWorkshopCount();
-    this.loadLastContentUpdate();
     this.loadUserRole();
+    // Placeholder for content update, assuming there's a method in DataService
+
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
   loadUserCount(): void {
-    this.authService.getUserCount().then(count => {
-      this.userCount$.next(count);
-    });
+    this.authService.getUserCount().then(count => this.userCount$.next(count));
   }
+
 
   loadWorkshopCount(): void {
-    firstValueFrom(this.dataService.getWorkshops()).then(workshops => {
+    this.dataService.getWorkshops().subscribe(workshops => {
       this.workshopCount$.next(workshops.length);
-    }).catch(error => {
-      console.error('Fehler beim Laden der Workshops:', error);
     });
-  }
-
-  loadLastContentUpdate(): void {
-    // Hier kann eine Funktion ergänzt werden
   }
 
   loadUserRole(): void {

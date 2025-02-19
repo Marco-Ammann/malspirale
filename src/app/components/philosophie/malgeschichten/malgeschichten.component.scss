@@ -1,32 +1,58 @@
-@use 'sass:color';
-@use 'variables' as vars;
-@use 'mixins' as mix;
+@use 'variables' as *;
+@use 'mixins';
 
 .malgeschichten-page {
-  text-align: center;
-  padding: vars.$padding-large;
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background-color: $background-light;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 
   h2 {
-    font-size: vars.$font-size-large;
-    color: vars.$text-color;
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 2rem;
+    color: $primary-color;
   }
 
   .story {
-    background: white;
-    padding: vars.$padding-medium;
-    border-radius: vars.$border-radius;
-    box-shadow: vars.$shadow;
-    margin-bottom: vars.$padding-medium;
+    margin-bottom: 1.5rem;
+    padding: 1rem 1.5rem;
+    background-color: #fff;
+    border-left: 4px solid $accent-color;
+    border-radius: 4px;
 
     h3 {
-      font-size: vars.$font-size-base;
-      color: vars.$primary-color;
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+      color: $primary-color;
     }
 
     p {
-      font-size: vars.$font-size-base;
-      color: vars.$text-color;
+      font-size: 1rem;
       line-height: 1.6;
+      color: #333;
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .malgeschichten-page {
+    padding: 1rem;
+
+    h2 {
+      font-size: 1.8rem;
+    }
+
+    .story {
+      h3 {
+        font-size: 1.3rem;
+      }
+      
+      p {
+        font-size: 0.95rem;
+      }
     }
   }
 }

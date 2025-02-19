@@ -1,53 +1,41 @@
 <div class="admin-layout">
-  <!-- Sidebar -->
   <aside class="admin-sidebar" [class.open]="menuOpen">
     <div class="sidebar-header">
       <h2>Admin</h2>
       <button class="menu-toggle" (click)="toggleMenu()">☰</button>
     </div>
     <nav>
-      <a routerLink="/admin" routerLinkActive="active" exact>Dashboard</a>
+      <a routerLink="/admin" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Dashboard</a>
       <a routerLink="/admin/users" routerLinkActive="active">Benutzerverwaltung</a>
       <a routerLink="/admin/workshops" routerLinkActive="active">Angebote</a>
       <a routerLink="/admin/content" routerLinkActive="active">Content</a>
       <a routerLink="/admin/gallery" routerLinkActive="active">Galerie</a>
       <a routerLink="/admin/reports" routerLinkActive="active">Berichte</a>
     </nav>
-    <div class="admin-logout">
-      <button (click)="logout()">Abmelden</button>
-    </div>
+    <button class="logout-btn" (click)="logout()">Abmelden</button>
   </aside>
 
-  <!-- Hauptinhalt -->
   <main class="admin-content">
     <header class="admin-header">
-      <button class="menu-toggle" (click)="toggleMenu()">☰</button>
-      <h1>Dashboard</h1>
+      <button class="menu-toggle" (click)="toggleMenu()" [hidden]="menuOpen">☰</button>
+      <h1>Admin Dashboard</h1>
       <p class="user-role">Eingeloggt als: {{ userRole$ | async }}</p>
     </header>
     <section class="dashboard-stats">
       <div class="stat-card">
         <h3>Registrierte Benutzer</h3>
-        <p *ngIf="(userCount$ | async) !== null; else loading">{{ userCount$ | async }}</p>
+        <p>{{ userCount$ | async }}</p>
       </div>
       <div class="stat-card">
         <h3>Verfügbare Angebote</h3>
-        <p *ngIf="(workshopCount$ | async) !== null; else loading">{{ workshopCount$ | async }}</p>
+        <p>{{ workshopCount$ | async }}</p>
       </div>
       <div class="stat-card">
         <h3>Letzte Änderung</h3>
-        <p *ngIf="(lastContentUpdate$ | async) !== null; else noUpdates">
-          {{ lastContentUpdate$ | async | date:'short' }}
-        </p>
+        <p *ngIf="(lastContentUpdate$ | async) as date">{{ date | date:'short' }}</p>
+        <p *ngIf="!(lastContentUpdate$ | async)">Keine Änderungen</p>
       </div>
     </section>
     <router-outlet></router-outlet>
   </main>
 </div>
-
-<ng-template #loading>
-  <p class="loading-text">Lädt...</p>
-</ng-template>
-<ng-template #noUpdates>
-  <p class="loading-text">Keine Änderungen</p>
-</ng-template>
