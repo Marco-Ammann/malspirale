@@ -26,7 +26,6 @@ export class HomeComponent implements OnInit {
     { src: 'assets/images/art3.webp', alt: 'Kunstwerk 3', imageLoaded: false },
   ];  
   constructor(private dataService: DataService, private router: Router) {}
-
   ngOnInit(): void {
     this.loadWorkshops();
     this.updateParallaxEffect();
@@ -42,10 +41,15 @@ export class HomeComponent implements OnInit {
     AOS.refresh();
         // Typed.js initialisieren
         const options = {
-          strings: ['Entfalte deine Kreativität', 'Lass dich inspirieren', 'Kunst erleben!'],
+          strings: ['Entfalte deine Kreativität', 'Lass dich inspirieren', 'Kunst erleben'],
+          smartBackspace: true,
           typeSpeed: 50,
           backSpeed: 30,
-          loop: false
+          loop: true,
+          backDelay: 1500,
+          showCursor: true,
+          cursorChar: "!",
+          autoInsertCss: true,
         };
         new Typed('#typed-text', options);
   }

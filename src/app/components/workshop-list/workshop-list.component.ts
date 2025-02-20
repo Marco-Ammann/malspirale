@@ -52,10 +52,7 @@ export class WorkshopListComponent implements OnInit {
   }
 
   goToDetail(workshop: Workshop): void {
-    if (workshop.type === 'individuelleAnfrage') {
-      this.router.navigate(['/contact']);
-    } else {
+
       this.router.navigate(['/workshop', workshop.id]);
-    }
   }
 }

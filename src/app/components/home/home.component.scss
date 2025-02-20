@@ -149,16 +149,42 @@ section {
     justify-content: center;
   }
 
-  .about-image {
-    flex: 1;
-    max-width: 450px;
+.about-image {
+  flex: 1;
+  max-width: 400px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-    img {
-      width: 100%;
-      border-radius: vars.$border-radius-large;
-      box-shadow: vars.$shadow;
+  img {
+    width: 100%;
+    max-width: 350px;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover {
+      transform: scale(1.05);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
     }
   }
+
+  &::after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 0.6) 100%);
+    z-index: -1;
+  }
+}
+
+  
 
   .about-text {
     flex: 1;
@@ -228,7 +254,7 @@ section {
   }
 
   .workshop-card {
-    background: rgba(255, 255, 255, 0.2); /* Leicht transparent */
+    background: rgba(255, 255, 255, 0.3); /* Leicht transparent */
     backdrop-filter: blur(8px);
     border: 2px solid vars.$background-dark;
     border-radius: vars.$border-radius-large;
@@ -244,8 +270,8 @@ section {
     cursor: pointer;
 
     &:hover {
-      transform: perspective(1000px) rotateX(3deg) rotateY(3deg) scale(1.03);
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      transform: perspective(1000px) rotateX(3deg) rotateY(3deg) scale(1.06);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
     }
 
     .workshop-image {
@@ -375,7 +401,6 @@ section {
   }
 }
 
-// Basis-Stile für alle Buttons
 .btn {
   padding: vars.$padding-medium vars.$padding-large;
   font-size: vars.$font-size-base;
@@ -385,7 +410,7 @@ section {
   cursor: pointer;
   text-transform: uppercase;
   letter-spacing: vars.$letter-spacing;
-  transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+  transition: all 0.3s ease;
   display: inline-block;
   text-align: center;
 
@@ -393,53 +418,89 @@ section {
     transform: translateY(-2px);
     box-shadow: vars.$hover-shadow;
   }
-
+  
   &:active {
     transform: translateY(0);
   }
 }
 
-// Primärer Button – nutzt deinen sanften Primärton und weiße Schrift
 .btn-primary {
   background-color: vars.$primary-color;
   color: vars.$text-color-light;
 
   &:hover {
-    background-color: color.scale(vars.$primary-color, $lightness: -10%);
+    background-color: color.scale(vars.$primary-color, $lightness: -5%);
   }
 }
 
-// Sekundärer Button – mit dem sekundären Farbton und dunkler Schrift
 .btn-secondary {
-  background-color: vars.$secondary-color;
-  color: vars.$text-color;
+  background-color: transparent;
+  border: 2px solid vars.$secondary-color;
+  color: vars.$secondary-color;
 
   &:hover {
-    background-color: color.scale(vars.$secondary-color, $lightness: -10%);
+    background-color: vars.$secondary-color;
+    color: vars.$text-color-light;
   }
 }
 
-// Akzent-Button – dezent in Rosa, passend zu deinem Akzent-Farbton
 .btn-accent {
   background-color: vars.$accent-color;
   color: vars.$text-color;
 
   &:hover {
-    background-color: color.scale(vars.$accent-color, $lightness: -10%);
+    background-color: color.scale(vars.$accent-color, $lightness: -5%);
   }
 }
 
-// Call-to-Action Button – ein dezenter Farbverlauf von Primär zu Tertiär
 .btn-cta {
   background: linear-gradient(45deg, vars.$primary-color, vars.$tertiary-color);
   color: vars.$text-color-light;
+  padding: 12px 24px;
+  font-size: vars.$font-size-large;
+  font-weight: bold;
+  text-transform: uppercase;
+  border-radius: 50px;
+  display: inline-block;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 
   &:hover {
-    background: linear-gradient(45deg, color.scale(vars.$primary-color, $lightness: -10%), color.scale(vars.$tertiary-color, $lightness: -10%));
+    transform: scale(1.1);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  }
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: -100%;
+    left: -100%;
+    width: 300%;
+    height: 300%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.6) 10%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  &:hover::before {
+    opacity: 1;
+    animation: glow-animation 0.6s ease-out;
   }
 }
 
-// Sekundärer Call-to-Action Button – transparent mit primärer Umrandung
+@keyframes glow-animation {
+  0% {
+    transform: translate(-50%, -50%) scale(0.8);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.5);
+    opacity: 0;
+  }
+}
+
 .btn-cta-secondary {
   background-color: transparent;
   border: 2px solid vars.$primary-color;
@@ -450,6 +511,7 @@ section {
     color: vars.$text-color-light;
   }
 }
+
 
 // ** RESPONSIVE DESIGN **
 @media (max-width: vars.$tablet) {
