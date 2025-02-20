@@ -19,6 +19,7 @@ export class HeaderComponent implements OnDestroy {
   userDropdownOpen = false;
   isLoggedIn = false;
   isAdmin = false;
+  isScrolled = false;
 
   private unsubscribe$ = new Subject<void>();
 
@@ -78,5 +79,10 @@ export class HeaderComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+  }
+
+  @HostListener('window:scroll', [])
+  onWindowScroll() {
+    this.isScrolled = window.pageYOffset > 50;
   }
 }

@@ -1,20 +1,20 @@
 <section class="hero">
-  <div class="hero-background"></div>
-  <div class="hero-content">
+  <div class="hero-background" data-aos="fade"></div>
+  <div class="hero-content" data-aos="fade-up">
     <div class="typing-text">
       <span id="typed-text"></span>
       <span class="cursor"></span>
     </div>
-    <p class="fade-in">
+    <p class="fade-in" data-aos="fade-up" data-aos-delay="200">
       In meinen Workshops und Malangeboten kannst du Farben intuitiv erleben und deine eigene künstlerische Sprache finden.
     </p>
-    <button (click)="navigateTo('/workshops')" class="btn btn-cta fade-in">
+    <button (click)="navigateTo('/workshops')" class="btn btn-cta fade-in" data-aos="fade-up" data-aos-delay="400">
       Jetzt entdecken!
     </button>
   </div>
 </section>
 
-<section class="about">
+<section class="about" data-aos="fade-up">
   <div class="about-content">
     <div class="about-image">
       <img src="assets/images/isabel.webp" alt="Isabel Kunz - Künstlerin" />
@@ -32,7 +32,7 @@
   </div>
 </section>
 
-<section class="workshops">
+<section class="workshops" data-aos="fade-up" data-aos-delay="400">
   <div class="workshops-title">
     <h2>Meine Angebote</h2>
     <p>Wählen Sie aus Workshops, Malatelier und individuellen Anfragen – ich habe für jeden Anlass das Richtige.</p>
@@ -107,7 +107,7 @@
   </div>
 </section>
 
-<section class="gallery">
+<section class="gallery" data-aos="fade-in" data-aos-delay="400">
   <h2>Galerie</h2>
   <div class="gallery-grid">
     <div *ngFor="let artwork of artworks.slice(0,4)" class="gallery-item">

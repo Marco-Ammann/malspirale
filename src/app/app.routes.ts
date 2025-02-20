@@ -64,11 +64,6 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./components/philosophie/resonance-colors/resonance-colors.component').then((m) => m.ResonanceColorsComponent),
       },
-      {
-        path: 'malgeschichten',
-        loadComponent: () =>
-          import('./components/philosophie/malgeschichten/malgeschichten.component').then((m) => m.MalgeschichtenComponent),
-      },
     ],
   },
 

@@ -1,6 +1,6 @@
 @use "variables" as vars;
 @use "mixins" as mix;
-
+@use "sass:color";
 //ng deep
 :host {
   display: flex;
@@ -26,18 +26,14 @@ section {
   text-wrap: auto;
 }
 
-.cursor {
-  display: inline-block;
-  background-color: vars.$text-color;
-  width: 2px;
-  height: 1em;
-  animation: blink 0.8s infinite;
-  margin-left: 4px;
-}
-
 @keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
 }
 // ** HERO SECTION MIT PARALLAX **
 .hero {
@@ -48,15 +44,20 @@ section {
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-top: calc(vars.$header-height * -1);
 
   .hero-background {
+    background-image: url("../../../assets/images/hero10.webp"); /* Passe den Pfad an */
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed; /* Klassischer Parallax-Effekt */
+    height: 100vh;
+    width: 100%;
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 120%;
-    background: url("../../../assets/images/hero10.webp") center/cover no-repeat;
-    will-change: transform;
+    z-index: 0;
+    transition: none;
   }
 
   .hero-content {
@@ -115,7 +116,7 @@ section {
 @media (prefers-reduced-motion: no-preference) {
   .parallax {
     transform: translateY(var(--parallax-scroll, 0px));
-    transition: none!important;
+    transition: none !important;
   }
 }
 
@@ -182,7 +183,9 @@ section {
 }
 
 // ** WORKSHOPS SECTION **
-.workshops-section, .malateliers-section, .individuelleAnfragen-section {
+.workshops-section,
+.malateliers-section,
+.individuelleAnfragen-section {
   text-align: center;
   background: vars.$background-light;
   border-radius: vars.$border-radius-large;
@@ -190,7 +193,7 @@ section {
   padding: vars.$padding-large;
   margin: vars.$container-gap-large auto;
 
-  h3{
+  h3 {
     font-size: vars.$font-size-xlarge;
     margin-bottom: vars.$padding-small;
   }
@@ -225,12 +228,15 @@ section {
   }
 
   .workshop-card {
-    background: vars.$background-light;
-    border: 2px solid transparent;
+    background: rgba(255, 255, 255, 0.2); /* Leicht transparent */
+    backdrop-filter: blur(8px);
+    border: 2px solid vars.$background-dark;
     border-radius: vars.$border-radius-large;
-    box-shadow: vars.$shadow;
     overflow: hidden;
-    transition: 0.3s ease-in-out;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    padding: 1rem;
+    transform-style: preserve-3d;
+
     display: flex;
     flex-direction: column;
     max-width: 320px;
@@ -238,8 +244,8 @@ section {
     cursor: pointer;
 
     &:hover {
-      box-shadow: vars.$hover-shadow;
-      border: 2px solid vars.$accent-color;
+      transform: perspective(1000px) rotateX(3deg) rotateY(3deg) scale(1.03);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
     }
 
     .workshop-image {
@@ -311,9 +317,7 @@ section {
     display: flex;
     justify-content: center;
     align-items: center;
-
   }
-
 }
 
 // ** GALLERY SECTION **
@@ -371,57 +375,81 @@ section {
   }
 }
 
-
-// ** BUTTONS **
+// Basis-Stile für alle Buttons
 .btn {
-  @include mix.flex-center;
-  font-size: vars.$font-size-medium;
-  font-weight: bold;
-  padding: vars.$padding-medium;
+  padding: vars.$padding-medium vars.$padding-large;
+  font-size: vars.$font-size-base;
+  font-weight: vars.$font-weight-bold;
+  border: none;
   border-radius: vars.$border-radius;
-  box-shadow: vars.$shadow;
   cursor: pointer;
-  transition: 0.3s ease-in-out all;
-
-
+  text-transform: uppercase;
+  letter-spacing: vars.$letter-spacing;
+  transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+  display: inline-block;
+  text-align: center;
 
   &:hover {
-    transform: scale(1.05);
+    transform: translateY(-2px);
+    box-shadow: vars.$hover-shadow;
+  }
+
+  &:active {
+    transform: translateY(0);
   }
 }
 
+// Primärer Button – nutzt deinen sanften Primärton und weiße Schrift
 .btn-primary {
-  @include mix.button-style(vars.$primary-color, #fff);
-}
-
-.btn-secondary {
-  @include mix.button-style(vars.$secondary-color, vars.$text-color);
-}
-
-.btn-accent {
-  @include mix.button-style(transparent, vars.$text-color);
-  border: 1px solid vars.$accent-color;
+  background-color: vars.$primary-color;
+  color: vars.$text-color-light;
 
   &:hover {
-    background: vars.$accent-color-light;
+    background-color: color.scale(vars.$primary-color, $lightness: -10%);
   }
 }
 
-.btn-cta {
-  @include mix.button-style(vars.$tertiary-color, vars.$text-color);
-  margin-top: vars.$padding-large;
+// Sekundärer Button – mit dem sekundären Farbton und dunkler Schrift
+.btn-secondary {
+  background-color: vars.$secondary-color;
   color: vars.$text-color;
-  animation: wobble infinite  1s  forwards ;
+
+  &:hover {
+    background-color: color.scale(vars.$secondary-color, $lightness: -10%);
+  }
 }
 
+// Akzent-Button – dezent in Rosa, passend zu deinem Akzent-Farbton
+.btn-accent {
+  background-color: vars.$accent-color;
+  color: vars.$text-color;
 
-.btn-cta-secondary {
-  @include mix.button-style(vars.$primary-color, vars.$text-color);
-  margin-top: vars.$padding-large;
+  &:hover {
+    background-color: color.scale(vars.$accent-color, $lightness: -10%);
+  }
+}
+
+// Call-to-Action Button – ein dezenter Farbverlauf von Primär zu Tertiär
+.btn-cta {
+  background: linear-gradient(45deg, vars.$primary-color, vars.$tertiary-color);
   color: vars.$text-color-light;
-  transition: 0.3s ease-in-out all;
+
+  &:hover {
+    background: linear-gradient(45deg, color.scale(vars.$primary-color, $lightness: -10%), color.scale(vars.$tertiary-color, $lightness: -10%));
+  }
 }
 
+// Sekundärer Call-to-Action Button – transparent mit primärer Umrandung
+.btn-cta-secondary {
+  background-color: transparent;
+  border: 2px solid vars.$primary-color;
+  color: vars.$primary-color;
+
+  &:hover {
+    background-color: vars.$primary-color;
+    color: vars.$text-color-light;
+  }
+}
 
 // ** RESPONSIVE DESIGN **
 @media (max-width: vars.$tablet) {

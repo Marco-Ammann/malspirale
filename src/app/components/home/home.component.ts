@@ -4,6 +4,9 @@ import { Router } from '@angular/router';
 import { Workshop } from '../../core/interfaces/interfaces';
 import { DataService } from '../../core/services/data.service';
 import { RouterModule } from '@angular/router';
+import * as AOS from 'aos';
+import 'aos/dist/aos.css';
+import Typed from 'typed.js';
 
 @Component({
   selector: 'app-home',
@@ -21,34 +24,34 @@ export class HomeComponent implements OnInit {
     { src: 'assets/images/art1.webp', alt: 'Kunstwerk 1', imageLoaded: false },
     { src: 'assets/images/art2.webp', alt: 'Kunstwerk 2', imageLoaded: false },
     { src: 'assets/images/art3.webp', alt: 'Kunstwerk 3', imageLoaded: false },
-  ];
-  private typingText = "Entfalte deine Kreativität";
-  private typingSpeed = 120; // Geschwindigkeit in ms
-  
+  ];  
   constructor(private dataService: DataService, private router: Router) {}
 
   ngOnInit(): void {
     this.loadWorkshops();
     this.updateParallaxEffect();
+
+    AOS.init({
+      duration: 800,         // Dauer der Animation in ms
+      easing: 'ease-in-out',  // Animationskurve
+      once: false              // Animation nur einmal pro Element
+    });
   }
 
   ngAfterViewInit(): void {
-    this.startTypingEffect();
+    AOS.refresh();
+        // Typed.js initialisieren
+        const options = {
+          strings: ['Entfalte deine Kreativität', 'Lass dich inspirieren', 'Kunst erleben!'],
+          typeSpeed: 50,
+          backSpeed: 30,
+          loop: false
+        };
+        new Typed('#typed-text', options);
   }
-  private startTypingEffect(): void {
-    const typedTextElement = document.getElementById("typed-text");
-    if (!typedTextElement) return;
 
-    let index = 0;
-    const interval = setInterval(() => {
-      if (index < this.typingText.length) {
-        typedTextElement.textContent += this.typingText.charAt(index);
-        index++;
-      } else {
-        clearInterval(interval);
-      }
-    }, this.typingSpeed);
-  }
+
+
 
 
   loadWorkshops(): void {

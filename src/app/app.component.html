@@ -2,7 +2,9 @@
   <app-header></app-header>
   <main class="app-content">
     <div *ngIf="loading" class="loading-overlay">Lade ...</div>
-    <router-outlet *ngIf="!loading"></router-outlet>
+    <div *ngIf="!loading" [@routeAnimations]="o.isActivated ? o.activatedRoute : ''">
+      <router-outlet #o="outlet"></router-outlet>
+    </div>
   </main>
   <app-footer></app-footer>
 </div>

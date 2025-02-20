@@ -19,8 +19,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
-  background: rgba(vars.$primary-color, 0.5);
-  backdrop-filter: blur(10px);
+  background: rgba(vars.$primary-color, 1);
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   height: vars.$header-height;
   transition: background 0.3s ease-in-out;
@@ -29,7 +28,10 @@
   left: 0;
   right: 0;
 
-
+  &.scrolled {
+    background: rgba(vars.$primary-color, 0.7);
+    backdrop-filter: blur(8px);
+  }
   .brand h1 {
     margin: 0;
     font-size: 1.8rem;

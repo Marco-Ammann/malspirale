@@ -9,6 +9,7 @@
   .app-content {
     flex: 1;
     position: relative;
+    margin-top: vars.$header-height;
 
     .loading-overlay {
       position: absolute;
