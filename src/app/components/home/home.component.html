@@ -2,18 +2,27 @@
   <div class="hero-background" data-aos="fade"></div>
   <div class="hero-content" data-aos="fade-up">
     <div class="typing-text">
+      <!-- Dieses Element enthält den dynamisch getippten Text -->
       <span id="typed-text"></span>
+      <!-- Versteckter Container für SEO: Suchmaschinen sehen den vollständigen Text -->
+      <div id="typed-strings" style="display: none;">
+        <p>Entfalte deine Kreativität</p>
+        <p>Lass dich inspirieren</p>
+        <p>Kunst erleben!</p>
+      </div>
+      <noscript>Entfalte deine Kreativität</noscript>
       <span class="cursor"></span>
     </div>
-    <p class="fade-in" data-aos="fade-up" data-aos-delay="200">
+    <p class="fade-in hero-subtitle" data-aos="fade-up" data-aos-delay="200">
       In meinen Workshops und Malangeboten kannst du Farben intuitiv erleben und deine eigene künstlerische Sprache finden.
     </p>
-    <button (click)="navigateTo('/workshops')" class="btn btn-cta fade-in" data-aos="fade-up" data-aos-delay="400">
+    <button (click)="navigateTo('/workshops')" class="btn btn-cta fade-in" data-aos="fade-up">
       Jetzt entdecken!
     </button>
   </div>
 </section>
 
+<!-- Der restliche HTML-Code bleibt unverändert -->
 <section class="about" data-aos="fade-up">
   <div class="about-content">
     <div class="about-image">
@@ -32,7 +41,7 @@
   </div>
 </section>
 
-<section class="workshops" data-aos="fade-up" data-aos-delay="400">
+<section class="workshops" >
   <div class="workshops-title">
     <h2>Meine Angebote</h2>
     <p>Wählen Sie aus Workshops, Malatelier und individuellen Anfragen – ich habe für jeden Anlass das Richtige.</p>
@@ -43,7 +52,7 @@
     <section class="workshops-section" *ngIf="regularWorkshops.length > 0">
       <h3>Workshops</h3>
       <div class="workshops-grid">
-        <div *ngFor="let workshop of regularWorkshops.slice(0,3)" class="workshop-card" (click)="navigateTo('/workshop/' + workshop.id)">
+        <div data-aos="fade-up" data-aos-delay="400" *ngFor="let workshop of regularWorkshops.slice(0,3)" class="workshop-card" (click)="navigateTo('/workshop/' + workshop.id)">
           <div class="workshop-image">
             <img [src]="workshop.imageUrl || 'assets/images/default-workshop.jpg'" [alt]="workshop.title" (load)="workshop.imageLoaded = true" [ngClass]="{'loading': !workshop.imageLoaded}" />
             <div *ngIf="!workshop.imageLoaded" class="spinner"></div>
@@ -65,7 +74,7 @@
       <h3>Malatelier</h3>
       <p>Unser Malatelier findet regelmäßig statt – entdecken Sie die kreative Atmosphäre.</p>
       <div class="workshops-grid">
-        <div *ngFor="let workshop of malateliers.slice(0,1)" class="workshop-card" (click)="navigateTo('/workshop/' + workshop.id)">
+        <div data-aos="fade-up" data-aos-delay="400" *ngFor="let workshop of malateliers.slice(0,1)" class="workshop-card" (click)="navigateTo('/workshop/' + workshop.id)">
           <div class="workshop-image">
             <img [src]="workshop.imageUrl || 'assets/images/default-workshop.jpg'" [alt]="workshop.title" (load)="workshop.imageLoaded = true" [ngClass]="{'loading': !workshop.imageLoaded}" />
             <div *ngIf="!workshop.imageLoaded" class="spinner"></div>
@@ -79,7 +88,7 @@
           </div>
         </div>
       </div>
-      <button (click)="navigateTo('/workshops')" class="btn btn-cta-secondary">Mehr erfahren</button>
+      <button (click)="navigateTo('/workshops')" class="btn btn-cta-secondary">Alle Workshops anzeigen</button>
     </section>
   
     <!-- Individuelle Anfragen -->
@@ -87,7 +96,7 @@
       <h3>Individuelle Anfragen</h3>
       <p>Für besondere Anlässe wie Hochzeiten, Teamevents, Geburtstage oder Trauerfeiern – kontaktieren Sie uns für ein maßgeschneidertes Angebot.</p>
       <div class="workshops-grid">
-        <div *ngFor="let workshop of individuelleAnfragen.slice(0,1)" class="workshop-card" (click)="navigateTo('/contact')">
+        <div data-aos="fade-up" data-aos-delay="400" *ngFor="let workshop of individuelleAnfragen.slice(0,1)" class="workshop-card" (click)="navigateTo('/workshop/' + workshop.id)">
           <div class="workshop-image">
             <img [src]="workshop.imageUrl || 'assets/images/default-workshop.jpg'" [alt]="workshop.title" (load)="workshop.imageLoaded = true" [ngClass]="{'loading': !workshop.imageLoaded}" />
             <div *ngIf="!workshop.imageLoaded" class="spinner"></div>
@@ -97,20 +106,19 @@
             <p class="short-description">{{ workshop.shortDescription }}</p>
           </div>
           <div class="workshop-actions">
-            <button class="btn btn-accent">Kontakt aufnehmen</button>
+            <button class="btn btn-accent">Mehr erfahren</button>
           </div>
         </div>
       </div>
       <button (click)="navigateTo('/contact')" class="btn btn-cta-secondary">Kontakt aufnehmen</button>
     </section>
-
   </div>
 </section>
 
-<section class="gallery" data-aos="fade-in" data-aos-delay="400">
+<section class="gallery">
   <h2>Galerie</h2>
   <div class="gallery-grid">
-    <div *ngFor="let artwork of artworks.slice(0,4)" class="gallery-item">
+    <div data-aos="fade-in" data-aos-delay="400" *ngFor="let artwork of artworks.slice(0,4)" class="gallery-item">
       <img [src]="artwork.src" [alt]="artwork.alt" (load)="artwork.imageLoaded = true" [ngClass]="{'loading': !artwork.imageLoaded}" />
     </div>
   </div>

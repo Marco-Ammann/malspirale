@@ -31,32 +31,33 @@ export class HomeComponent implements OnInit {
     this.updateParallaxEffect();
 
     AOS.init({
-      duration: 800,         // Dauer der Animation in ms
-      easing: 'ease-in-out',  // Animationskurve
-      once: false              // Animation nur einmal pro Element
+      duration: 800,
+      easing: 'ease-in-out',
+      once: false
     });
   }
 
   ngAfterViewInit(): void {
-    AOS.refresh();
-        // Typed.js initialisieren
-        const options = {
-          strings: ['Entfalte deine Kreativität', 'Lass dich inspirieren', 'Kunst erleben'],
-          smartBackspace: true,
-          typeSpeed: 50,
-          backSpeed: 30,
-          loop: true,
-          backDelay: 1500,
-          showCursor: true,
-          cursorChar: "!",
-          autoInsertCss: true,
-        };
-        new Typed('#typed-text', options);
+    if (window.innerWidth >= 900) {
+      const options = {
+        stringsElement: '#typed-strings',
+        typeSpeed: 60,
+        backSpeed: 30,
+        backDelay: 900,
+        smartBackspace: true,
+        loop: false,
+        showCursor: true,
+        autoInsertCss: true,
+      };
+      new Typed('#typed-text', options);
+    } else {
+      // Auf kleineren Bildschirmen setzen wir statisch einen kürzeren Text
+      const typedElem = document.getElementById('typed-text');
+      if (typedElem) {
+        typedElem.innerText = 'Kreativität entfalten';
+      }
+    }
   }
-
-
-
-
 
   loadWorkshops(): void {
     this.dataService.getWorkshops().subscribe({

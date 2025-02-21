@@ -1,7 +1,61 @@
+// =====================================================
+// Imports & Global Settings
+// =====================================================
 @use "variables" as vars;
 @use "mixins" as mix;
 @use "sass:color";
-//ng deep
+
+// =====================================================
+// Keyframes & Animationen
+// =====================================================
+@keyframes wobble {
+  0%, 100% { transform: translateX(0) rotate(0deg); }
+  15%, 45%, 75% { transform: translateX(-5px) rotate(2deg); }
+  30%, 60% { transform: translateX(5px) rotate(-2deg); }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(60px);
+  }
+  50% {
+    opacity: 0.4;
+    transform: translateY(15px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes glow-animation {
+  0% {
+    transform: translate(-50%, -50%) scale(0.8);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.5);
+    opacity: 0;
+  }
+}
+
+.fade-in {
+  opacity: 0;
+  animation: fadeInUp 1.2s ease-out forwards;
+  animation-delay: 200;
+}
+
+// Hinweis: Die spin-Animation wird innerhalb der .workshop-image definiert.
+
+// =====================================================
+// Basis-Stile
+// =====================================================
 :host {
   display: flex;
   flex-direction: column;
@@ -14,6 +68,9 @@ section {
   padding: vars.$container-padding-large;
   background-color: vars.$background-light;
 }
+// =====================================================
+// Typografie & Getippter Text
+// =====================================================
 .typing-text {
   display: inline-block;
   font-size: vars.$font-size-xxxlarge;
@@ -24,18 +81,13 @@ section {
   white-space: nowrap;
   overflow: hidden;
   text-wrap: auto;
+  text-transform: uppercase;
+
 }
 
-@keyframes blink {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0;
-  }
-}
-// ** HERO SECTION MIT PARALLAX **
+// =====================================================
+// Hero-Bereich
+// =====================================================
 .hero {
   position: relative;
   text-align: center;
@@ -47,10 +99,10 @@ section {
   margin-top: calc(vars.$header-height * -1);
 
   .hero-background {
-    background-image: url("../../../assets/images/hero10.webp"); /* Passe den Pfad an */
+    background-image: url("../../../assets/images/hero10.webp"); // Pfad ggf. anpassen
     background-size: cover;
     background-position: center;
-    background-attachment: fixed; /* Klassischer Parallax-Effekt */
+    background-attachment: fixed;
     height: 100vh;
     width: 100%;
     position: absolute;
@@ -71,6 +123,24 @@ section {
     opacity: 0;
     transform: translateY(30px);
     animation: fadeInUp 1.2s ease-out forwards;
+
+    .hero-subtitle {
+      font-size: vars.$font-size-large;
+      margin-bottom: vars.$padding-small;
+      color: vars.$text-light;
+      line-height: 1.4;
+      font-weight: 600;
+    }
+
+    @media (max-width: vars.$tablet) {
+      padding: vars.$padding-medium vars.$padding-small;
+      font-size: vars.$font-size-large;
+    }
+
+    @media (max-width: vars.$mobile) {
+      padding: vars.$padding-small;
+      font-size: vars.$font-size-base;
+    }
   }
 
   h1 {
@@ -94,48 +164,9 @@ section {
     margin-right: auto;
   }
 }
-// ** FADE-IN ANIMATIONEN **
-@keyframes fadeInUp {
-  0% {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.fade-in {
-  opacity: 0;
-  transform: translateY(30px);
-  animation: fadeInUp 1s ease-out forwards;
-}
-
-// ** PARALLAX-EFFEKT **
-@media (prefers-reduced-motion: no-preference) {
-  .parallax {
-    transform: translateY(var(--parallax-scroll, 0px));
-    transition: none !important;
-  }
-}
-
-@media (max-width: vars.$tablet) {
-  .hero {
-    min-height: 80vh;
-  }
-}
-
-@media (max-width: vars.$mobile) {
-  .hero {
-    min-height: 60vh;
-  }
-
-  h1 {
-    font-size: vars.$font-size-xlarge;
-  }
-}
-// ** ABOUT SECTION **
+// =====================================================
+// About-Bereich
+// =====================================================
 .about {
   @include mix.flex-center;
   flex-wrap: wrap;
@@ -149,42 +180,40 @@ section {
     justify-content: center;
   }
 
-.about-image {
-  flex: 1;
-  max-width: 400px;
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  .about-image {
+    flex: 1;
+    max-width: 400px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
-  img {
-    width: 100%;
-    max-width: 350px;
-    aspect-ratio: 1 / 1;
-    border-radius: 50%;
-    object-fit: cover;
-    object-position: center;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    img {
+      width: 100%;
+      max-width: 350px;
+      aspect-ratio: 1 / 1;
+      border-radius: 50%;
+      object-fit: cover;
+      object-position: center;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      
+      &:hover {
+        transform: scale(1.05);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+      }
+    }
 
-    &:hover {
-      transform: scale(1.05);
-      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+    &::after {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 0.6) 100%);
+      z-index: -1;
     }
   }
-
-  &::after {
-    content: "";
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 0.6) 100%);
-    z-index: -1;
-  }
-}
-
-  
 
   .about-text {
     flex: 1;
@@ -208,7 +237,9 @@ section {
   }
 }
 
-// ** WORKSHOPS SECTION **
+// =====================================================
+// Workshops- & Angebote-Bereich
+// =====================================================
 .workshops-section,
 .malateliers-section,
 .individuelleAnfragen-section {
@@ -254,7 +285,7 @@ section {
   }
 
   .workshop-card {
-    background: rgba(255, 255, 255, 0.3); /* Leicht transparent */
+    background: rgba(255, 255, 255, 0.3);
     backdrop-filter: blur(8px);
     border: 2px solid vars.$background-dark;
     border-radius: vars.$border-radius-large;
@@ -262,7 +293,6 @@ section {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     padding: 1rem;
     transform-style: preserve-3d;
-
     display: flex;
     flex-direction: column;
     max-width: 320px;
@@ -276,7 +306,7 @@ section {
 
     .workshop-image {
       position: relative;
-
+      
       img {
         width: 100%;
         height: 180px;
@@ -285,11 +315,9 @@ section {
         opacity: 1;
         transition: opacity 0.3s ease-in-out;
 
-        &.loading {
-          opacity: 0;
-        }
+        &.loading { opacity: 0; }
       }
-
+      
       .spinner {
         position: absolute;
         top: 50%;
@@ -304,12 +332,8 @@ section {
       }
 
       @keyframes spin {
-        0% {
-          transform: rotate(0deg);
-        }
-        100% {
-          transform: rotate(360deg);
-        }
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
       }
     }
 
@@ -346,7 +370,9 @@ section {
   }
 }
 
-// ** GALLERY SECTION **
+// =====================================================
+// Galerie-Bereich
+// =====================================================
 .gallery {
   text-align: center;
   padding: vars.$padding-large 0;
@@ -387,9 +413,7 @@ section {
       border-radius: vars.$border-radius-large;
       transition: opacity 0.3s ease-in-out;
 
-      &.loading {
-        opacity: 0;
-      }
+      &.loading { opacity: 0; }
     }
   }
 
@@ -401,220 +425,118 @@ section {
   }
 }
 
+// =====================================================
+// Button-Stile
+// =====================================================
 .btn {
-  padding: vars.$padding-medium vars.$padding-large;
-  font-size: vars.$font-size-base;
+  font-family: 'Arial', sans-serif;
+  font-size: 16px;
+  padding: 16px 24px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.btn-cta {
+  position: relative;
+  display: inline-block;
+  font-size: vars.$font-size-large;
   font-weight: vars.$font-weight-bold;
+  text-transform: uppercase;
+  padding: 12px 24px;
+  background: linear-gradient(90deg, vars.$primary-color, vars.$tertiary-color);
+  color: vars.$text-color-light;
   border: none;
   border-radius: vars.$border-radius;
-  cursor: pointer;
-  text-transform: uppercase;
-  letter-spacing: vars.$letter-spacing;
-  transition: all 0.3s ease;
-  display: inline-block;
-  text-align: center;
+  overflow: hidden;
+  transition: all 0.3s ease-in-out;
+  box-shadow: vars.$box-shadow;
 
   &:hover {
-    transform: translateY(-2px);
+    background: linear-gradient(90deg, vars.$tertiary-color, vars.$primary-color);
+    transform: scale(1.05);
     box-shadow: vars.$hover-shadow;
   }
-  
-  &:active {
-    transform: translateY(0);
-  }
-}
 
-.btn-primary {
-  background-color: vars.$primary-color;
-  color: vars.$text-color-light;
-
-  &:hover {
-    background-color: color.scale(vars.$primary-color, $lightness: -5%);
-  }
-}
-
-.btn-secondary {
-  background-color: transparent;
-  border: 2px solid vars.$secondary-color;
-  color: vars.$secondary-color;
-
-  &:hover {
-    background-color: vars.$secondary-color;
-    color: vars.$text-color-light;
-  }
-}
-
-.btn-accent {
-  background-color: vars.$accent-color;
-  color: vars.$text-color;
-
-  &:hover {
-    background-color: color.scale(vars.$accent-color, $lightness: -5%);
-  }
-}
-
-.btn-cta {
-  background: linear-gradient(45deg, vars.$primary-color, vars.$tertiary-color);
-  color: vars.$text-color-light;
-  padding: 12px 24px;
-  font-size: vars.$font-size-large;
-  font-weight: bold;
-  text-transform: uppercase;
-  border-radius: 50px;
-  display: inline-block;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-
-  &:hover {
-    transform: scale(1.1);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-  }
-
-  &::before {
+  &:before {
     content: "";
     position: absolute;
-    top: -100%;
+    top: 0;
     left: -100%;
-    width: 300%;
-    height: 300%;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.6) 10%, transparent 60%);
-    opacity: 0;
-    transition: opacity 0.4s ease;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.2);
+    transition: left 0.5s ease-in-out;
   }
 
-  &:hover::before {
-    opacity: 1;
-    animation: glow-animation 0.6s ease-out;
+  &:hover:before {
+    left: 100%;
   }
 }
 
-@keyframes glow-animation {
-  0% {
-    transform: translate(-50%, -50%) scale(0.8);
-    opacity: 1;
-  }
-  100% {
-    transform: translate(-50%, -50%) scale(1.5);
-    opacity: 0;
-  }
-}
-
+// Effekt für die sekundären Buttons
 .btn-cta-secondary {
+  display: inline-block;
+  font-size: vars.$font-size-medium;
+  font-weight: vars.$font-weight-normal;
+  padding: 10px 20px;
+  color: vars.$text-color;
   background-color: transparent;
   border: 2px solid vars.$primary-color;
-  color: vars.$primary-color;
+  border-radius: vars.$border-radius;
+  transition: all 0.3s ease-in-out;
+  box-shadow: none;
 
   &:hover {
     background-color: vars.$primary-color;
     color: vars.$text-color-light;
+    box-shadow: vars.$box-shadow;
   }
 }
 
 
-// ** RESPONSIVE DESIGN **
+/* =====================================================
+// Responsive Anpassungen (bleiben unverändert)
+// ===================================================== */
+
 @media (max-width: vars.$tablet) {
-  //ng deep
-  :host {
-    display: flex;
-    flex-direction: column;
-    gap: vars.$container-gap;
-  }
-
-  section {
-    padding: vars.$container-padding;
-  }
-
+  :host { gap: vars.$container-gap; }
+  section { padding: vars.$container-padding; }
+  
   .hero {
-    height: max-content;
-
-    .hero-content {
+    min-height: 90vh;
+    .hero-content { 
       max-width: 100%;
-
-      h1 {
-        font-size: vars.$font-size-xlarge;
-      }
+      h1 { font-size: vars.$font-size-xlarge; }
     }
   }
-
-  .about .about-content {
-    flex-direction: column;
-    text-align: center;
-
-    .about-text,
-    .about-image {
-      max-width: 90%;
+  
+  .about {
+    .about-content {
+      flex-direction: column;
+      text-align: center;
+      .about-text, .about-image { max-width: 90%; }
     }
   }
-
-  .workshop-card {
-    max-width: 280px;
-  }
-
-  .workshops-grid {
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  }
-
-  .gallery-grid {
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    max-width: 800px;
-  }
-
-  .gallery-item {
-    max-width: 200px;
-    height: 250px;
-  }
+  
+  .workshop-card { max-width: 280px; }
+  .workshops-grid { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+  .gallery-grid { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); max-width: 800px; }
+  .gallery-item { max-width: 200px; height: 250px; }
 }
 
 @media (max-width: vars.$mobile-large) {
-  .workshop-card {
-    max-width: 280px;
-  }
-
-  .workshop-info {
-    padding: vars.$padding-small;
-  }
-
-  .workshop-actions {
-    padding: 0 vars.$padding-small vars.$padding-small;
-  }
-
-  .gallery-item {
-    width: 150px;
-    height: 150px;
-  }
-
-  .workshop-grid {
-    grid-template-columns: repeat(auto-fit, minmax(100%, 1fr));
-  }
-
-  .gallery-grid {
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  }
-
-  .gallery-item {
-    max-width: 180px;
-    height: 220px;
-  }
+  .workshop-card { max-width: 280px; }
+  .workshop-info { padding: vars.$padding-small; }
+  .workshop-actions { padding: 0 vars.$padding-small vars.$padding-small; }
+  .gallery-item { width: 150px; height: 150px; max-width: 180px; height: 220px; }
+  .workshop-grid { grid-template-columns: repeat(auto-fit, minmax(100%, 1fr)); }
+  .gallery-grid { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
 }
 
 @media (max-width: vars.$mobile) {
-  h1 {
-    font-size: vars.$font-size-base;
-  }
-
-  .btn {
-    font-size: vars.$font-size-small;
-    padding: vars.$padding-small;
-  }
-
-  .gallery-grid {
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  }
-
-  .gallery-item {
-    max-width: 140px;
-    height: 180px;
-  }
+  h1 { font-size: vars.$font-size-base; }
+  .btn { font-size: vars.$font-size-small; padding: vars.$padding-small; }
+  .gallery-grid { grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); }
+  .gallery-item { max-width: 140px; height: 180px; }
 }
