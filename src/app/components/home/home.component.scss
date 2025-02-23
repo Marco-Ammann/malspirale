@@ -5,20 +5,9 @@
 @use "mixins" as mix;
 @use "sass:color";
 
-// =====================================================
+// -----------------------------------------------------
 // Keyframes & Animationen
-// =====================================================
-@keyframes wobble {
-  0%, 100% { transform: translateX(0) rotate(0deg); }
-  15%, 45%, 75% { transform: translateX(-5px) rotate(2deg); }
-  30%, 60% { transform: translateX(5px) rotate(-2deg); }
-}
-
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
-}
-
+// -----------------------------------------------------
 @keyframes fadeInUp {
   0% {
     opacity: 0;
@@ -34,28 +23,15 @@
   }
 }
 
-@keyframes glow-animation {
-  0% {
-    transform: translate(-50%, -50%) scale(0.8);
-    opacity: 1;
-  }
-  100% {
-    transform: translate(-50%, -50%) scale(1.5);
-    opacity: 0;
-  }
-}
-
 .fade-in {
   opacity: 0;
   animation: fadeInUp 1.2s ease-out forwards;
-  animation-delay: 200;
+  animation-delay: 200ms;
 }
 
-// Hinweis: Die spin-Animation wird innerhalb der .workshop-image definiert.
-
-// =====================================================
-// Basis-Stile
-// =====================================================
+// -----------------------------------------------------
+// Basis-Stile für den Host & Sections
+// -----------------------------------------------------
 :host {
   display: flex;
   flex-direction: column;
@@ -65,12 +41,13 @@
 section {
   box-shadow: vars.$box-shadow;
   border-radius: vars.$border-radius-large;
-  padding: vars.$container-padding-large;
+  padding: vars.$container-padding-xlarge vars.$container-padding-large;
   background-color: vars.$background-light;
 }
-// =====================================================
-// Typografie & Getippter Text
-// =====================================================
+
+// -----------------------------------------------------
+// Typografie & dynamischer Text
+// -----------------------------------------------------
 .typing-text {
   display: inline-block;
   font-size: vars.$font-size-xxxlarge;
@@ -80,18 +57,16 @@ section {
   line-height: vars.$line-height;
   white-space: nowrap;
   overflow: hidden;
-  text-wrap: auto;
   text-transform: uppercase;
-
 }
 
-// =====================================================
+// -----------------------------------------------------
 // Hero-Bereich
-// =====================================================
+// -----------------------------------------------------
 .hero {
   position: relative;
   text-align: center;
-  min-height: 100vh;
+  min-height: 98vh;
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -99,11 +74,11 @@ section {
   margin-top: calc(vars.$header-height * -1);
 
   .hero-background {
-    background-image: url("../../../assets/images/hero10.webp"); // Pfad ggf. anpassen
+    background-image: url("../../../assets/images/hero10.webp"); // ggf. anpassen
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
-    height: 100vh;
+    height: 100%;
     width: 100%;
     position: absolute;
     top: 0;
@@ -115,7 +90,6 @@ section {
   .hero-content {
     position: relative;
     max-width: vars.$container-max-width-lg;
-    background: rgba(255, 255, 255, 0.6);
     padding: vars.$padding-large;
     border-radius: vars.$border-radius-large;
     box-shadow: vars.$shadow;
@@ -123,11 +97,13 @@ section {
     opacity: 0;
     transform: translateY(30px);
     animation: fadeInUp 1.2s ease-out forwards;
+    backdrop-filter: blur(4px);
+    background-color: rgba(255, 255, 255, 0.5);
 
     .hero-subtitle {
       font-size: vars.$font-size-large;
       margin-bottom: vars.$padding-small;
-      color: vars.$text-light;
+      color: vars.$text-color-light;
       line-height: 1.4;
       font-weight: 600;
     }
@@ -136,9 +112,7 @@ section {
       padding: vars.$padding-medium vars.$padding-small;
       font-size: vars.$font-size-large;
     }
-
     @media (max-width: vars.$mobile) {
-      padding: vars.$padding-small;
       font-size: vars.$font-size-base;
     }
   }
@@ -164,9 +138,10 @@ section {
     margin-right: auto;
   }
 }
-// =====================================================
+
+// -----------------------------------------------------
 // About-Bereich
-// =====================================================
+// -----------------------------------------------------
 .about {
   @include mix.flex-center;
   flex-wrap: wrap;
@@ -191,13 +166,12 @@ section {
     img {
       width: 100%;
       max-width: 350px;
-      aspect-ratio: 1 / 1;
+      aspect-ratio: 1/1;
       border-radius: 50%;
       object-fit: cover;
       object-position: center;
       box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
-      
       &:hover {
         transform: scale(1.05);
         box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
@@ -237,16 +211,17 @@ section {
   }
 }
 
-// =====================================================
-// Workshops- & Angebote-Bereich
-// =====================================================
+
+// -----------------------------------------------------
+// Workshops & Angebote (inkl. Karten)
+// -----------------------------------------------------
 .workshops-section,
 .malateliers-section,
 .individuelleAnfragen-section {
   text-align: center;
-  background: vars.$background-light;
+  background-color: vars.$background-light;
   border-radius: vars.$border-radius-large;
-  box-shadow: vars.$shadow;
+  box-shadow: vars.$box-shadow-deep;
   padding: vars.$padding-large;
   margin: vars.$container-gap-large auto;
 
@@ -258,19 +233,19 @@ section {
 
 .workshops {
   text-align: center;
-  background: vars.$accent-color-light;
 
   .workshops-title {
     margin-bottom: vars.$padding-medium;
+    display: inline-block;
+    padding-bottom: vars.$padding-small;
 
     h2 {
       font-size: vars.$font-size-xxlarge;
       margin-bottom: vars.$padding-small;
     }
-
     p {
       font-size: vars.$font-size-base;
-      color: vars.$text-light;
+      color: vars.$text-color-light;
       line-height: 1.4;
     }
   }
@@ -306,7 +281,6 @@ section {
 
     .workshop-image {
       position: relative;
-      
       img {
         width: 100%;
         height: 180px;
@@ -314,10 +288,10 @@ section {
         border-radius: vars.$border-radius;
         opacity: 1;
         transition: opacity 0.3s ease-in-out;
-
-        &.loading { opacity: 0; }
+        &.loading {
+          opacity: 0;
+        }
       }
-      
       .spinner {
         position: absolute;
         top: 50%;
@@ -330,7 +304,6 @@ section {
         height: 40px;
         animation: spin 1s linear infinite;
       }
-
       @keyframes spin {
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
@@ -341,9 +314,8 @@ section {
       padding: vars.$padding-medium;
       text-align: left;
       flex-grow: 1;
-
       .short-description {
-        color: vars.$text-light;
+        color: vars.$text-color-light;
         margin-bottom: vars.$padding-small;
         line-height: 1.4;
       }
@@ -354,7 +326,6 @@ section {
       padding: 0 vars.$padding-medium vars.$padding-medium;
       display: flex;
       justify-content: center;
-
       button {
         margin-top: vars.$padding-large;
       }
@@ -370,18 +341,16 @@ section {
   }
 }
 
-// =====================================================
+// -----------------------------------------------------
 // Galerie-Bereich
-// =====================================================
+// -----------------------------------------------------
 .gallery {
   text-align: center;
   padding: vars.$padding-large 0;
-
   h2 {
     font-size: vars.$font-size-xxlarge;
     margin-bottom: vars.$padding-small;
   }
-
   .gallery-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -390,33 +359,30 @@ section {
     margin: 0 auto;
     justify-items: center;
   }
-
   .gallery-item {
     position: relative;
     overflow: hidden;
     border-radius: vars.$border-radius-large;
     box-shadow: vars.$shadow;
-    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
     width: 100%;
     max-width: 280px;
     height: 320px;
-
     &:hover {
       transform: scale(1.05);
       box-shadow: vars.$hover-shadow;
     }
-
     img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       border-radius: vars.$border-radius-large;
-      transition: opacity 0.3s ease-in-out;
-
-      &.loading { opacity: 0; }
+      transition: opacity 0.3s ease;
+      &.loading {
+        opacity: 0;
+      }
     }
   }
-
   button {
     margin-top: vars.$padding-medium;
     display: block;
@@ -425,18 +391,20 @@ section {
   }
 }
 
-// =====================================================
-// Button-Stile
-// =====================================================
+
+// -----------------------------------------------------
+// Button-Stile (CTA und Sekundär)
+// -----------------------------------------------------
 .btn {
-  font-family: 'Arial', sans-serif;
-  font-size: 16px;
+  font-family: vars.$font-family;
+  font-size: vars.$font-size-base;
   padding: 16px 24px;
   border: none;
   border-radius: 8px;
   cursor: pointer;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
+
 .btn-cta {
   position: relative;
   display: inline-block;
@@ -451,13 +419,11 @@ section {
   overflow: hidden;
   transition: all 0.3s ease-in-out;
   box-shadow: vars.$box-shadow;
-
   &:hover {
     background: linear-gradient(90deg, vars.$tertiary-color, vars.$primary-color);
     transform: scale(1.05);
     box-shadow: vars.$hover-shadow;
   }
-
   &:before {
     content: "";
     position: absolute;
@@ -468,13 +434,11 @@ section {
     background: rgba(255, 255, 255, 0.2);
     transition: left 0.5s ease-in-out;
   }
-
   &:hover:before {
     left: 100%;
   }
 }
 
-// Effekt für die sekundären Buttons
 .btn-cta-secondary {
   display: inline-block;
   font-size: vars.$font-size-medium;
@@ -486,7 +450,6 @@ section {
   border-radius: vars.$border-radius;
   transition: all 0.3s ease-in-out;
   box-shadow: none;
-
   &:hover {
     background-color: vars.$primary-color;
     color: vars.$text-color-light;
@@ -494,49 +457,100 @@ section {
   }
 }
 
-
 /* =====================================================
 // Responsive Anpassungen (bleiben unverändert)
 // ===================================================== */
 
 @media (max-width: vars.$tablet) {
-  :host { gap: vars.$container-gap; }
-  section { padding: vars.$container-padding; }
-  
+  :host {
+    gap: vars.$container-gap;
+  }
+  section {
+    padding: vars.$container-padding;
+  }
+
   .hero {
     min-height: 90vh;
-    .hero-content { 
+    .hero-content {
       max-width: 100%;
-      h1 { font-size: vars.$font-size-xlarge; }
+      h1 {
+        font-size: vars.$font-size-xlarge;
+      }
     }
   }
-  
+
   .about {
     .about-content {
       flex-direction: column;
       text-align: center;
-      .about-text, .about-image { max-width: 90%; }
+      .about-text,
+      .about-image {
+        max-width: 90%;
+      }
     }
   }
-  
-  .workshop-card { max-width: 280px; }
-  .workshops-grid { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
-  .gallery-grid { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); max-width: 800px; }
-  .gallery-item { max-width: 200px; height: 250px; }
+
+  .workshop-card {
+    max-width: 280px;
+  }
+  .workshops-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+  .gallery-grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    max-width: 800px;
+  }
+  .gallery-item {
+    max-width: 200px;
+    height: 250px;
+  }
 }
 
 @media (max-width: vars.$mobile-large) {
-  .workshop-card { max-width: 280px; }
-  .workshop-info { padding: vars.$padding-small; }
-  .workshop-actions { padding: 0 vars.$padding-small vars.$padding-small; }
-  .gallery-item { width: 150px; height: 150px; max-width: 180px; height: 220px; }
-  .workshop-grid { grid-template-columns: repeat(auto-fit, minmax(100%, 1fr)); }
-  .gallery-grid { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+  .hero {
+    padding: 0;
+    width: 100%;
+  }
+  .hero-content {
+    padding: vars.$padding-medium;
+    border-radius: 0 !important;
+  }
+  .workshop-card {
+    max-width: 280px;
+  }
+  .workshop-info {
+    padding: vars.$padding-small;
+  }
+  .workshop-actions {
+    padding: 0 vars.$padding-small vars.$padding-small;
+  }
+  .gallery-item {
+    width: 150px;
+    height: 150px;
+    max-width: 180px;
+    height: 220px;
+  }
+  .workshop-grid {
+    grid-template-columns: repeat(auto-fit, minmax(100%, 1fr));
+  }
+  .gallery-grid {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  }
 }
 
 @media (max-width: vars.$mobile) {
-  h1 { font-size: vars.$font-size-base; }
-  .btn { font-size: vars.$font-size-small; padding: vars.$padding-small; }
-  .gallery-grid { grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); }
-  .gallery-item { max-width: 140px; height: 180px; }
+  h1 {
+    font-size: vars.$font-size-base;
+  }
+  .btn {
+    font-size: vars.$font-size-medium;
+    padding: vars.$padding-medium;
+  }
+  .gallery-grid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  }
+  .gallery-item {
+    max-width: 140px;
+    height: 180px;
+  }
 }

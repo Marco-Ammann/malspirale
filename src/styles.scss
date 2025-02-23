@@ -12,54 +12,20 @@
 }
 
 body {
-  font-family: vars.$font-family, sans-serif;
   background-color: vars.$background-color;
   color: vars.$text-color;
-  line-height: 1.6;
-  font-size: 16px;
-}
-
-/* Button-Stile */
-.btn {
-  display: inline-block;
-  text-align: center;
-  text-decoration: none;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.3s ease;
   font-family: vars.$font-family;
+  margin: 0;
+  padding: 0;
 }
 
-.btn-primary {
-  background-color: vars.$primary-color;
-  color: #fff;
+
+a {
+  color: vars.$link-color;
+  text-decoration: none;
+  transition: color 0.3s ease-in-out;
 
   &:hover {
-    background-color: color.adjust(vars.$primary-color, $lightness: 10%);
-    transform: scale(1.05);
+    color: vars.$accent-color-dark;
   }
-}
-
-.btn-secondary {
-  background-color: vars.$secondary-color;
-  color: #fff;
-
-  &:hover {
-    background-color: color.adjust(vars.$secondary-color, $lightness: 10%);
-    transform: scale(1.05);
-  }
-}
-.about-container img {
-  max-width: 100%;   // Bild passt sich dem Container an
-  height: auto;      // Höhe bleibt proportional
-  display: block;    // Kein Inline-Element
-  margin: 1rem auto;
-  border-radius: 8px;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.about-container .about-card .about-card-content .about-text div p {
-  max-width: 100%;
-  
 }

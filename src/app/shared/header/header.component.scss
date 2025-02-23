@@ -2,12 +2,6 @@
 @use 'variables' as vars;
 @use 'mixins' as mixins;
 
-.active {
-  background-color: vars.$accent-color;
-  padding: 0.5rem 1rem;
-  border-radius: vars.$border-radius;
-}
-
 :host {
   position: sticky;
   top: 0;
@@ -15,91 +9,95 @@
 }
 
 .app-header {
+  position: absolute;
+  height: vars.$header-height;
+  background-color: vars.$primary-color-dark;
+  padding: vars.$padding-medium;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem;
-  background: rgba(vars.$primary-color, 1);
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  height: vars.$header-height;
+  box-shadow: vars.$box-shadow;
   transition: background 0.3s ease-in-out;
-  position: absolute;
   top: 0;
   left: 0;
   right: 0;
 
+  // Bei Scroll-Effekt: leicht transparent mit Blur
   &.scrolled {
     background: rgba(vars.$primary-color, 0.7);
-    backdrop-filter: blur(8px);
+    backdrop-filter: blur(7px);
   }
+
   .brand h1 {
     margin: 0;
-    font-size: 1.8rem;
-    font-weight: bold;
-    color: vars.$text-color-light;
+    color: vars.$background-color;
+    font-size: vars.$font-size-large;
+    font-weight: vars.$font-weight-bold;
+    letter-spacing: vars.$letter-spacing-large;
   }
 
   .desktop-nav {
     display: flex;
     gap: 1.5rem;
     align-items: center;
+    padding: vars.$padding-small;
+    color: vars.$background-color;
+    font-weight: vars.$font-weight-bold;
 
-    a, .dropdown-toggle {
+    a {
+      color: vars.$background-color;
       text-decoration: none;
-      font-size: 1rem;
-      color: vars.$text-color-light;
       transition: color 0.3s ease;
-      cursor: pointer;
+      &:hover {
+        color: vars.$accent-color;
+      }
+      &.active {
+        border-bottom: 2px solid vars.$accent-color;
+      }
+    }
+  }
 
+  .dropdown {
+    position: relative;
+
+    .dropdown-toggle {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: vars.$background-color;
+      font-weight: vars.$font-weight-bold;
+      transition: color 0.3s ease;
       &:hover {
         color: vars.$accent-color;
       }
     }
 
-    .active {
-      color: vars.$text-color;
-      transition: ease-in-out 0.3s;
-      background-color: vars.$background-color;
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background: vars.$background-color;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: vars.$padding-small;
+      border-radius: vars.$border-radius;
+      z-index: 999;
+      width: max-content;
 
-      &:hover {
-        background-color: vars.$accent-color;
+      a {
+        display: block;
+        padding: vars.$padding-small vars.$padding-medium;
         color: vars.$text-color;
-      }
-    }
-
-    .dropdown {
-      position: relative;
-
-      .dropdown-menu {
-        display: none;
-        position: absolute;
-        top: 100%;
-        right: 0;
-        background: vars.$background-color;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        padding: 0.5rem 0.5rem;
+        transition: background 0.3s ease, color 0.3s ease;
         border-radius: vars.$border-radius;
-        z-index: 999;
-        width: max-content;
-
-        a {
-          display: block;
-          padding: 0.5rem 1rem;
+        &:hover {
+          background-color: vars.$tertiary-color;
           color: vars.$text-color;
-          transition: 0.3s ease-in-out;
-          cursor: pointer;
-          border-radius: vars.$border-radius;
-
-          &:hover {
-            color: vars.$text-color;
-            background-color: vars.$tertiary-color;
-          }
         }
       }
-
-      &.open .dropdown-menu {
-        display: block;
-      }
+    }
+    &.open .dropdown-menu {
+      display: block;
     }
   }
 
@@ -130,89 +128,73 @@
     .desktop-nav {
       display: none;
     }
-
     .menu-toggle {
       display: block;
     }
-
     .mobile-nav {
       display: none;
       flex-direction: column;
-      gap: 1rem;
+      gap: vars.$padding-small;
       background: vars.$background-color;
-      padding: 1rem;
+      padding: vars.$padding-medium;
       position: absolute;
       top: vars.$header-height;
       left: 0;
       right: 0;
-      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       border-radius: vars.$border-radius;
       text-align: center;
-
       &.open {
         display: flex;
-        flex-direction: column;
         justify-content: center;
         align-items: center;
         z-index: 100;
       }
-
       a {
         text-decoration: none;
         display: block;
-        padding: 0.5rem 1rem;
+        padding: vars.$padding-small vars.$padding-medium;
         color: vars.$text-color;
-        transition: 0.3s ease-in-out;
-        cursor: pointer;
+        transition: background 0.3s ease, color 0.3s ease;
         border-radius: vars.$border-radius;
-
         &:hover {
-          color: vars.$text-color;
           background-color: vars.$tertiary-color;
+          color: vars.$text-color;
         }
       }
-
       .dropdown {
         position: static;
         display: block;
-        cursor: pointer;
-        padding: 0.5rem 1rem;
+        padding: vars.$padding-small vars.$padding-medium;
         border-radius: vars.$border-radius;
-
         &:hover {
           background-color: vars.$accent-color;
         }
-
         .dropdown-menu {
           display: none;
           position: static;
           background: none;
           box-shadow: none;
-
           a {
-            padding: 0.5rem 1rem;
+            padding: vars.$padding-small vars.$padding-medium;
             color: vars.$text-color;
-            transition: 0.3s ease-in-out;
-            cursor: pointer;
+            transition: background 0.3s ease, color 0.3s ease;
             border-radius: vars.$border-radius;
-
             &:hover {
-              color: vars.$text-color;
               background-color: vars.$tertiary-color;
+              color: vars.$text-color;
             }
           }
         }
-
         &.open .dropdown-menu {
           display: block;
         }
-
         .user-menu {
           display: flex;
           justify-content: center;
           align-items: center;
-          gap: 1rem;
-          padding: 1rem;
+          gap: vars.$padding-small;
+          padding: vars.$padding-medium;
         }
         .user-icon {
           width: 32px;

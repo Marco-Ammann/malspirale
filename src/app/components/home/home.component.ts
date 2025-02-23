@@ -88,7 +88,7 @@ export class HomeComponent implements OnInit {
     const parallaxElement = document.querySelector('.hero-background') as HTMLElement;
 
     if (parallaxElement) {
-      parallaxElement.style.transform = `translateY(${scrolled * 0.3}px)`;
+      parallaxElement.style.transform = `translateY(${scrolled * 0.4}px)`;
     }
   }
 }

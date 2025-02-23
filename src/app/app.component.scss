@@ -1,3 +1,5 @@
+@use 'sass:color';
+@use 'sass:math';
 @use 'variables' as vars;
 
 .app-wrapper {
@@ -5,7 +7,7 @@
   flex-direction: column;
   min-height: 100vh;
   background: vars.$background-color;
-
+  
   .app-content {
     flex: 1;
     position: relative;
@@ -22,7 +24,6 @@
       justify-content: center;
       align-items: center;
       font-size: vars.$font-size-large;
-      z-index: 1000;
     }
   }
 }
