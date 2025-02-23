@@ -1,73 +1,73 @@
 @use 'sass:color';
 @use 'variables' as vars;
-@use 'mixins' as mix;
 
-.contact-page {
-  max-width: 600px;
-  margin: 3rem auto;
+.contact-container {
+  max-width: 800px;
+  margin: 80px auto 40px; /* ausreichend Abstand zum Header */
   padding: vars.$padding-large;
-  background-color: vars.$background-color;
-  border-radius: vars.$border-radius-large;
-  box-shadow: vars.$shadow;
-  text-align: center;
+  background-color: rgba(255, 255, 255, 0.95);
+  border-radius: vars.$border-radius;
+  box-shadow: vars.$box-shadow;
+  text-align: left;
 
-  h2 {
-    font-size: vars.$font-size-xlarge;
-    margin-bottom: vars.$padding-medium;
-    color: vars.$text-color;
+  .contact-header {
+    text-align: center;
+    margin-bottom: vars.$padding-large;
+
+    h2 {
+      font-size: vars.$font-size-xxlarge;
+      margin-bottom: vars.$padding-small;
+    }
+
+    p {
+      font-size: vars.$font-size-large;
+      margin-bottom: vars.$padding-medium;
+      color: vars.$text-color;
+    }
   }
 
-  form {
+  .contact-form {
     display: flex;
     flex-direction: column;
     gap: vars.$padding-medium;
-    text-align: left;
 
     .form-group {
       display: flex;
       flex-direction: column;
-
       label {
         font-size: vars.$font-size-base;
         margin-bottom: vars.$padding-small;
         color: vars.$text-color;
-        font-weight: bold;
       }
-
       input,
       textarea {
         width: 100%;
         padding: vars.$padding-small;
-        border: 1px solid vars.$secondary-color;
-        border-radius: vars.$border-radius;
+        border: 1px solid vars.$background-dark;
+        border-radius: vars.$border-radius-small;
         font-size: vars.$font-size-base;
-        transition: border-color 0.3s ease;
-
+        transition: border 0.3s ease, box-shadow 0.3s ease;
         &:focus {
-          border-color: color.adjust(vars.$secondary-color, $lightness: -10%);
           outline: none;
-          box-shadow: vars.$hover-shadow;
+          border-color: vars.$primary-color;
+          box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
         }
       }
-
       textarea {
-        resize: vertical;
         min-height: 120px;
+        resize: vertical;
       }
     }
-
-    .btn-primary {
-      @include mix.button-style(vars.$primary-color, #fff);
-      font-size: vars.$font-size-large;
-      padding: vars.$padding-medium;
-      width: 100%;
+    
+    button {
+      align-self: center;
     }
   }
-}
 
-/* 📱 Responsive Anpassungen */
-@media (max-width: vars.$tablet) {
-  .contact-page {
-    padding: vars.$padding-medium;
+  .test-info {
+    margin-top: vars.$padding-large;
+    text-align: center;
+    font-size: vars.$font-size-small;
+    color: vars.$text-color;
   }
 }

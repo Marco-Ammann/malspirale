@@ -1,0 +1,51 @@
+@use 'sass:color';
+@use 'variables' as vars;
+
+.gallery {
+  text-align: center;
+  padding: vars.$padding-large 0;
+  background-color: transparent;
+  
+  h2 {
+    font-size: vars.$font-size-xxlarge;
+    margin-bottom: vars.$padding-small;
+  }
+  
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: vars.$padding-small;
+    max-width: 1000px;
+    margin: 0 auto;
+    justify-items: center;
+  }
+  
+  .gallery-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: vars.$border-radius;
+    box-shadow: vars.$shadow;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    width: 100%;
+    max-width: 280px;
+    height: 320px;
+    &:hover {
+      transform: scale(1.05);
+      box-shadow: vars.$hover-shadow;
+    }
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: vars.$border-radius;
+      transition: opacity 0.3s ease;
+    }
+  }
+  
+  button {
+    margin-top: vars.$padding-medium;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}

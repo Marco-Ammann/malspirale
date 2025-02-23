@@ -2,6 +2,8 @@
 @use 'sass:math';
 
 
+
+
 // 🎨 Farbpalette (Pastell, modern, ruhig)
 $primary-color: #A6C8B7; // Minzgrün
 $primary-color-light: color.scale($primary-color, $lightness: 40%);
@@ -27,6 +29,7 @@ $color-quaternary-light: color.scale($color-quaternary, $lightness: 50%);
 $text-color: #4A4A4A; // Dunkles Graublau für Lesbarkeit
 $text-color-light: color.scale($text-color, $lightness: 20%);
 $text-dark: color.scale($text-color, $lightness: -10%);
+$text-color-white: #F7F4F1; // Weiß für dunkle Hintergründe
 
 // Links & Interaktionen
 $link-color: #306D7C; // Dunkelpetrol für elegante Kontraste
@@ -39,6 +42,7 @@ $info-color: #6D99C5; // Beruhigendes Blau für Informationen
 $background-color: #F7F4F1; // Sandbeige, angenehm für die Augen
 $background-light: color.scale($background-color, $lightness: 20%);
 $background-dark: color.scale($background-color, $lightness: -5%);
+$background-whiter: color.scale($background-color, $lightness: 60%);
 $hover-color: color.scale($primary-color, $lightness: -10%);
 
 // 🅰 Schriften & Abstände
@@ -58,9 +62,6 @@ $font-weight-bolder: 900;
 
 $line-height: 1.6;
 
-$background-color: #F7F4F1;
-$background-light: color.scale($background-color, $lightness: 30%);
-$background-dark: color.scale($background-color, $lightness: -5%);
 $hover-color: color.scale($primary-color, $lightness: -5%);
 
 // 🔲 Abstände
@@ -101,8 +102,6 @@ $container-gap-large: 32px;
 
 $container-width: 700px;
 
-$header-height: 60px;
-$footer-height: 60px;
 
 // 🖼 Schatten & Effekte
 $box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);

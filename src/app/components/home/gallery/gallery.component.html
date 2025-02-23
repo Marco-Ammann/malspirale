@@ -1,1 +1,10 @@
-<p>gallery works!</p>
+<section class="gallery" data-aos="fade-in">
+    <h2>Galerie</h2>
+    <div class="gallery-grid">
+      <div data-aos="fade-in" data-aos-delay="400" *ngFor="let artwork of artworks" class="gallery-item">
+        <img [src]="artwork.src" [alt]="artwork.alt" (load)="artwork.imageLoaded = true" [ngClass]="{'loading': !artwork.imageLoaded}" />
+      </div>
+    </div>
+    <button (click)="navigateToGallery()" class="brk-btn" aria-label="Zur Galerie">Zur Galerie</button>
+  </section>
+  

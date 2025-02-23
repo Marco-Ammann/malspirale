@@ -1,18 +1,23 @@
 @use 'sass:color';
 @use 'sass:math';
 @use 'variables' as vars;
+@use 'mixins' as mix;
 
+
+/* Globaler App-Container */
 .app-wrapper {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background: vars.$background-color;
+  /* Einheitlicher Hintergrund – hier nutzen wir vars.$background-color (z. B. Sandbeige) */
+  background-color: vars.$background-color;
   
   .app-content {
     flex: 1;
     position: relative;
-    margin-top: vars.$header-height;
-
+    /* Sicherstellen, dass der Content den gleichen Hintergrund hat */
+    background-color: vars.$background-color;
+    
     .loading-overlay {
       position: absolute;
       top: 0;
@@ -28,6 +33,8 @@
   }
 }
 
+
+/* Einfache FadeIn-Animation */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -35,4 +42,66 @@
 
 :host {
   animation: fadeIn 1.0s ease-out;
+}
+
+
+.cursor {
+  width: 20px;
+  height: 20px;
+  border: 1px solid white;
+  border-radius: 50%;
+  position: absolute;
+  transition-duration: 200ms;
+  transition-timing-function: ease-out;
+  animation: cursorAnim .5s infinite alternate;
+  pointer-events: none;
+}
+
+.cursor::after {
+  content: "";
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  border: 8px solid gray;
+  border-radius: 50%;
+  opacity: .5;
+  top: -8px;
+  left: -8px;
+  animation: cursorAnim2 .5s infinite alternate;
+}
+
+@keyframes cursorAnim {
+  from {
+      transform: scale(1);
+  }
+  to {
+      transform: scale(.7);
+  }
+}
+
+@keyframes cursorAnim2 {
+  from {
+      transform: scale(1);
+  }
+  to {
+      transform: scale(.4);
+  }
+}
+
+@keyframes cursorAnim3 {
+  0% {
+      transform: scale(1);
+  }
+  50% {
+      transform: scale(3);
+  }
+  100% {
+      transform: scale(1);
+      opacity: 0;
+  }
+}
+
+.expand {
+  animation: cursorAnim3 .5s forwards;
+  border: 1px solid red;
 }

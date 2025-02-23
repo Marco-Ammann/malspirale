@@ -6,13 +6,14 @@
   position: sticky;
   top: 0;
   z-index: 999;
+  height: vars.$header-height;
 }
 
 .app-header {
-  position: absolute;
-  height: vars.$header-height;
-  background-color: vars.$primary-color-dark;
   padding: vars.$padding-medium;
+  position: absolute;
+  height: 100%;
+  background-color: vars.$primary-color-dark;
   display: flex;
   justify-content: space-between;
   align-items: center;

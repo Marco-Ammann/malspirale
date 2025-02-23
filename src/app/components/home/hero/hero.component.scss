@@ -1,0 +1,58 @@
+@use 'sass:color';
+@use 'variables' as vars;
+@use 'mixins' as mix;
+
+.hero {
+  position: relative;
+  text-align: center;
+  min-height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: calc(vars.$header-height * -1);
+
+  .hero-background {
+    background-image: url("../../../../assets/images/hero10.webp");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+  }
+
+  .hero-content {
+    position: relative;
+    max-width: vars.$container-max-width-lg;
+    padding: vars.$padding-large;
+    border-radius: vars.$border-radius-large;
+    box-shadow: vars.$shadow;
+    backdrop-filter: blur(4px);
+    background-color: rgba(255, 255, 255, 0.5);
+    z-index: 1;
+  }
+
+  .typing-text {
+    font-size: vars.$font-size-xxxlarge;
+    font-weight: vars.$font-weight-bolder;
+    margin-bottom: vars.$padding-small;
+    letter-spacing: vars.$letter-spacing-large;
+    text-transform: uppercase;
+
+    @media (max-width: vars.$tablet) {
+      font-size: vars.$font-size-xxlarge;
+    }
+  }
+
+  .hero-subtitle {
+    font-size: vars.$font-size-large;
+    margin-bottom: vars.$padding-medium;
+    color: vars.$text-color-light;
+    line-height: 1.4;
+    font-weight: 600;
+  }
+}

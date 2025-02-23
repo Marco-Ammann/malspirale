@@ -24,7 +24,7 @@ export class GalleryComponent implements OnInit {
   artworks_default: Artwork[] = [];
 
   constructor() {
-    for (let i = 1; i <= 12; i++) {
+    for (let i = 1; i <= 21; i++) {
       this.artworks_default.push({
         id: i.toString(),
         src: `assets/images/art${i}.webp`,
@@ -32,7 +32,7 @@ export class GalleryComponent implements OnInit {
         title: `Bild ${i}`,
       });
     }
-  }
+}
 
   private db = getFirestore(firebaseApp);
 

@@ -1,7 +1,12 @@
-<div class="contact-page">
-  <h2>Kontakt</h2>
-  
-  <form #contactForm="ngForm" (ngSubmit)="onSubmit(contactForm)">
+<div class="contact-container">
+  <div class="contact-header">
+    <h2>Kontakt</h2>
+    <p>
+      Hallo, ich bin Isabel. Ich freue mich sehr, von dir zu hören – egal ob du Fragen zu meinen Workshops hast,
+      ein kreatives Gespräch suchst oder einfach nur testest, ob alles funktioniert. Schreib mir deine Nachricht!
+    </p>
+  </div>
+  <form #contactForm="ngForm" (ngSubmit)="onSubmit(contactForm)" class="contact-form">
     <div class="form-group">
       <label for="name">Name *</label>
       <input
@@ -10,7 +15,6 @@
         name="name"
         [(ngModel)]="contact.name"
         required
-        aria-required="true"
         placeholder="Dein Name"
       />
     </div>
@@ -23,7 +27,6 @@
         name="email"
         [(ngModel)]="contact.email"
         required
-        aria-required="true"
         placeholder="Deine E-Mail-Adresse"
       />
     </div>
@@ -46,13 +49,15 @@
         name="message"
         [(ngModel)]="contact.message"
         required
-        aria-required="true"
         placeholder="Deine Nachricht"
       ></textarea>
     </div>
 
-    <button type="submit" class="btn-primary" [disabled]="!contactForm.form.valid">
+    <button type="submit" class="btn btn-cta" [disabled]="!contactForm.form.valid">
       Nachricht senden
     </button>
   </form>
+  <div class="test-info">
+    <p>Hinweis: Dies ist ein Test-Formular. Bitte sende keine persönlichen Daten.</p>
+  </div>
 </div>

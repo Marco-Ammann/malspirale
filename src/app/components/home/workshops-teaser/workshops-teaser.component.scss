@@ -1,0 +1,69 @@
+@use 'sass:color';
+@use 'variables' as vars;
+@use 'mixins' as mix;
+
+h2 {
+  font-size: vars.$font-size-xxlarge;
+  margin-bottom: vars.$padding-medium;
+  text-align: left;
+}
+
+h3 {
+  font-size: vars.$font-size-xlarge;
+  margin-bottom: vars.$padding-extra-small;
+  text-align: left;
+}
+
+p {
+  font-size: vars.$font-size-base;
+  line-height: vars.$line-height;
+  margin-bottom: vars.$padding-small;
+  text-align: left;
+}
+
+.link-to {
+  cursor: pointer;
+  text-decoration: underline;
+
+  &:hover {
+    color: color.adjust(vars.$primary-color, $lightness: 10%);
+  }
+}
+
+.workshops-teaser {
+  text-align: center;
+  background-color: vars.$background-whiter;
+  border-radius: vars.$border-radius;
+  box-shadow: vars.$box-shadow-deep;
+  padding: vars.$padding-large;
+  margin: vars.$container-gap-large auto;
+
+  .workshops-teaser-content {
+    max-width: 800px;
+    margin: vars.$padding-extra-large auto;
+
+    .workshops-teaser-extra {
+      margin: vars.$padding-medium 0;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: vars.$padding-small;
+      text-align: left;
+
+      img {
+        max-width: 100%;
+        border-radius: vars.$border-radius;
+        box-shadow: vars.$box-shadow;
+      }
+    }
+
+    .ask-for-workshop-div {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      gap: vars.$padding-medium;
+      margin-top: vars.$padding-extra-large;
+    }
+  }
+}
