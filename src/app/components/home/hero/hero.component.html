@@ -1,22 +1,18 @@
 <section class="hero">
-    <div class="hero-background" data-aos="fade"></div>
-    <div class="hero-content" data-aos="fade-up">
-      <div class="typing-text">
-        <span id="typed-text"></span>
-        <div id="typed-strings" style="display: none;">
-          <p>Entfalte deine Kreativität</p>
-          <p>Lass dich inspirieren</p>
-          <p>Kunst erleben!</p>
-        </div>
-        <noscript>Entfalte deine Kreativität</noscript>
-      </div>
-
-      <p class="hero-subtitle fade-in" data-aos="fade-up" data-aos-delay="200">
-        In meinen Workshops und Malangeboten kannst du Farben intuitiv erleben und deine eigene künstlerische Sprache finden.
+  <div class="hero-left" data-aos="fade-right">
+    <div class="hero-content">
+      <h1 class="hero-title">Erwecke deine Kreativität</h1>
+      <p class="hero-subtitle">
+        Entdecke neue Horizonte in meinen Workshops – intuitives Malen, das Körper und Seele berührt.
       </p>
-      <button (click)="navigateToWorkshops()" class="btn-cta" data-aos="fade-up">
-        Jetzt entdecken!
+      <button (click)="navigateToWorkshops()" class="btn-cta">
+        Workshop entdecken
       </button>
     </div>
-  </section>
-  
+  </div>
+
+  <div class="hero-right" data-aos="fade-left">
+    <!-- Hintergrundbild in der SCSS via .hero-right -->
+    <!-- Optional: Ein Overlay oder weiteres Design-Element -->
+  </div>
+</section>

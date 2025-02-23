@@ -47,6 +47,7 @@ $hover-color: color.scale($primary-color, $lightness: -10%);
 
 // 🅰 Schriften & Abstände
 $font-family: 'Arial', sans-serif;
+$font-family-heading: 'Playfair Display', serif;
 $font-size-small: 14px;
 $font-size-base: 16px;
 $font-size-medium: 18px;
@@ -54,6 +55,10 @@ $font-size-large: 20px;
 $font-size-xlarge: 24px;
 $font-size-xxlarge: 32px;
 $font-size-xxxlarge: 40px;
+$hero-title-size: 3.5rem;
+$hero-title-size-large: 7rem;
+$hero-subtitle-size-large: 2rem;
+$hero-subtitle-size: 1.5rem;
 
 $font-weight-light: 300;
 $font-weight-normal: 400;
@@ -124,3 +129,5 @@ $breakpoint-sm: 576px;
 $breakpoint-md: 768px;
 $breakpoint-lg: 992px;
 $breakpoint-xl: 1200px;
+
+$white: #fff;
