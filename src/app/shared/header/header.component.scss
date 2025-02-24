@@ -6,25 +6,28 @@
   position: sticky;
   top: 0;
   z-index: 999;
-  height: vars.$header-height;
 }
 
-.app-header {
-  padding: vars.$padding-medium;
-  position: absolute;
-  height: 100%;
-  background-color: vars.$primary-color-dark;
+span {
+  color: vars.$text-color;
+  font-size: vars.$font-size-large;
+}
+
+/* Header Container */
+.header-inner {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: vars.$padding-medium;
+  background-color: vars.$primary-color-dark;
+  height: vars.$header-height;
   box-shadow: vars.$box-shadow;
   transition: background 0.3s ease-in-out;
-  top: 0;
-  left: 0;
-  right: 0;
+  position: relative;
+}
 
-  // Bei Scroll-Effekt: leicht transparent mit Blur
-  &.scrolled {
+.app-header {
+  &.scrolled .header-inner {
     background: rgba(vars.$primary-color, 0.7);
     backdrop-filter: blur(7px);
   }
@@ -41,9 +44,8 @@
     display: flex;
     gap: 1.5rem;
     align-items: center;
-    padding: vars.$padding-small;
-    color: vars.$background-color;
     font-weight: vars.$font-weight-bold;
+    position: relative;
 
     a {
       color: vars.$background-color;
@@ -56,49 +58,47 @@
         border-bottom: 2px solid vars.$accent-color;
       }
     }
-  }
 
-  .dropdown {
-    position: relative;
-
-    .dropdown-toggle {
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: vars.$background-color;
-      font-weight: vars.$font-weight-bold;
-      transition: color 0.3s ease;
-      &:hover {
-        color: vars.$accent-color;
-      }
-    }
-
-    .dropdown-menu {
-      display: none;
-      position: absolute;
-      top: 100%;
-      right: 0;
-      background: vars.$background-color;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      padding: vars.$padding-small;
-      border-radius: vars.$border-radius;
-      z-index: 999;
-      width: max-content;
-
-      a {
-        display: block;
-        padding: vars.$padding-small vars.$padding-medium;
-        color: vars.$text-color;
-        transition: background 0.3s ease, color 0.3s ease;
-        border-radius: vars.$border-radius;
-        &:hover {
-          background-color: vars.$tertiary-color;
-          color: vars.$text-color;
+    .dropdown {
+      position: relative;
+      .dropdown-toggle {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        color: vars.$background-color;
+        font-size: vars.$font-size-base;
+        .material-icons {
+          margin-left: 0.3rem;
+          font-size: 1em;
         }
       }
-    }
-    &.open .dropdown-menu {
-      display: block;
+      .dropdown-menu {
+        position: absolute;
+        top: 120%;
+        left: 0;
+        transform: translateX(-50%);
+        z-index: 10;
+        background: vars.$background-color;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: vars.$padding-small;
+        border-radius: vars.$border-radius;
+        border-top-right-radius: 0;
+        width: max-content;
+        display: none;
+        a {
+          display: block;
+          padding: vars.$padding-small vars.$padding-medium;
+          color: vars.$text-color;
+          transition: background 0.3s ease, color 0.3s ease;
+          border-radius: vars.$border-radius;
+          &:hover {
+            background-color: vars.$tertiary-color;
+          }
+        }
+      }
+      &.open .dropdown-menu {
+        display: block;
+      }
     }
   }
 
@@ -107,15 +107,99 @@
     background: none;
     border: none;
     cursor: pointer;
-
     .menu-icon {
       width: 32px;
       height: 32px;
     }
   }
 
-  .mobile-nav {
-    display: none;
+  /* Mobile Navigation Overlay als Vollbild-Overlay */
+  .mobile-nav-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: vars.$background-color;
+    transform: scaleY(0);
+    transform-origin: top center;
+    transition: transform 0.6s ease;
+    z-index: 998;
+    display: flex;
+    flex-direction: column;
+    padding: vars.$padding-large;
+  }
+  .mobile-nav-overlay.open {
+    transform: scaleY(1);
+  }
+  /* Close-Button im Overlay */
+  .close-button {
+    align-self: flex-end;
+    background: none;
+    border: none;
+    padding: vars.$padding-small;
+    cursor: pointer;
+    .material-icons {
+      font-size: vars.$font-size-xlarge;
+      color: vars.$text-color;
+    }
+  }
+  .mobile-nav-content {
+    display: flex;
+    flex-direction: column;
+    gap: vars.$padding-medium;
+    text-align: center;
+    margin-top: vars.$padding-medium;
+    a {
+      color: vars.$text-color;
+      text-decoration: none;
+      font-size: vars.$font-size-large;
+      transition: color 0.3s ease;
+      &:hover {
+        color: vars.$accent-color;
+      }
+    }
+    .dropdown {
+      position: relative;
+      .dropdown-toggle {
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: vars.$font-size-large;
+        color: vars.$text-color;
+        .material-icons {
+          margin-left: 0.3rem;
+          font-size: 1em;
+        }
+      }
+      .dropdown-menu {
+        position: absolute;
+        top: 120%;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 10;
+        background: vars.$background-color;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: vars.$padding-small;
+        border-radius: vars.$border-radius;
+        width: max-content;
+        display: none;
+        a {
+          display: block;
+          padding: vars.$padding-small vars.$padding-medium;
+          color: vars.$text-color;
+          transition: background 0.3s ease, color 0.3s ease;
+          border-radius: vars.$border-radius;
+          &:hover {
+            background-color: vars.$tertiary-color;
+          }
+        }
+      }
+      &.open .dropdown-menu {
+        display: block;
+      }
+    }
   }
 
   .user-menu {
@@ -131,78 +215,6 @@
     }
     .menu-toggle {
       display: block;
-    }
-    .mobile-nav {
-      display: none;
-      flex-direction: column;
-      gap: vars.$padding-small;
-      background: vars.$background-color;
-      padding: vars.$padding-medium;
-      position: absolute;
-      top: vars.$header-height;
-      left: 0;
-      right: 0;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      border-radius: vars.$border-radius;
-      text-align: center;
-      &.open {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 100;
-      }
-      a {
-        text-decoration: none;
-        display: block;
-        padding: vars.$padding-small vars.$padding-medium;
-        color: vars.$text-color;
-        transition: background 0.3s ease, color 0.3s ease;
-        border-radius: vars.$border-radius;
-        &:hover {
-          background-color: vars.$tertiary-color;
-          color: vars.$text-color;
-        }
-      }
-      .dropdown {
-        position: static;
-        display: block;
-        padding: vars.$padding-small vars.$padding-medium;
-        border-radius: vars.$border-radius;
-        &:hover {
-          background-color: vars.$accent-color;
-        }
-        .dropdown-menu {
-          display: none;
-          position: static;
-          background: none;
-          box-shadow: none;
-          a {
-            padding: vars.$padding-small vars.$padding-medium;
-            color: vars.$text-color;
-            transition: background 0.3s ease, color 0.3s ease;
-            border-radius: vars.$border-radius;
-            &:hover {
-              background-color: vars.$tertiary-color;
-              color: vars.$text-color;
-            }
-          }
-        }
-        &.open .dropdown-menu {
-          display: block;
-        }
-        .user-menu {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          gap: vars.$padding-small;
-          padding: vars.$padding-medium;
-        }
-        .user-icon {
-          width: 32px;
-          height: 32px;
-          filter: invert(0.7);
-        }
-      }
     }
   }
 }

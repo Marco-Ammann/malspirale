@@ -1,6 +1,11 @@
 @use "variables" as vars;
 @use "mixins" as mixins;
 
+:host {
+  box-shadow: vars.$box-shadow;
+  margin-top: -2px;
+}
+
 .hero {
   // Passt die Höhe an den Header an
   height: calc(100vh - vars.$header-height);

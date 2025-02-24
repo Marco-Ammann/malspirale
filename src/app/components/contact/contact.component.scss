@@ -71,3 +71,68 @@
     color: vars.$text-color;
   }
 }
+.alert {
+  padding: 1em;
+  margin-top: 1em;
+  border-radius: 4px;
+  &.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+  }
+  &.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+  }
+}
+
+.message {
+  margin-top: 1em;
+  padding: 1em;
+  border-radius: 4px;
+
+
+}
+
+
+.btn {
+  display: inline-block;
+  text-align: center;
+  padding: vars.$padding-small vars.$padding-medium;
+  font-family: vars.$font-family;
+  font-size: vars.$font-size-base;
+  border: none;
+  border-radius: vars.$border-radius;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+.btn-cta {
+  @extend .btn !optional; // Für globale Button-Styles, sonst optional
+  background: linear-gradient(
+    45deg,
+    vars.$primary-color,
+    vars.$accent-color
+  );
+  color: vars.$background-color;
+  font-size: vars.$font-size-large;
+  padding: vars.$padding-medium vars.$padding-large;
+  border-radius: vars.$border-radius;
+  text-transform: uppercase;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+  }
+
+  &:disabled {
+    background: #ccc;
+    color: #666;
+    cursor: not-allowed;
+
+    &:hover {
+      transform: none;
+      box-shadow: none;
+    }
+  }
+}

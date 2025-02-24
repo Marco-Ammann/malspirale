@@ -2,11 +2,16 @@
   <div class="contact-header">
     <h2>Kontakt</h2>
     <p>
-      Hallo, ich bin Isabel. Ich freue mich sehr, von dir zu hören – egal ob du Fragen zu meinen Workshops hast,
-      ein kreatives Gespräch suchst oder einfach nur testest, ob alles funktioniert. Schreib mir deine Nachricht!
+      Hallo, ich bin Isabel. Ich freue mich sehr, von dir zu hören – egal ob du
+      Fragen zu meinen Workshops hast, ein kreatives Gespräch suchst oder
+      einfach nur testest, ob alles funktioniert. Schreib mir deine Nachricht!
     </p>
   </div>
-  <form #contactForm="ngForm" (ngSubmit)="onSubmit(contactForm)" class="contact-form">
+  <form
+    #contactForm="ngForm"
+    (ngSubmit)="onSubmit(contactForm)"
+    class="contact-form"
+  >
     <div class="form-group">
       <label for="name">Name *</label>
       <input
@@ -53,11 +58,25 @@
       ></textarea>
     </div>
 
-    <button type="submit" class="btn btn-cta" [disabled]="!contactForm.form.valid">
+    <button
+      type="submit"
+      class="btn-cta"
+      [disabled]="!contactForm.form.valid"
+    >
       Nachricht senden
     </button>
   </form>
-  <div class="test-info">
-    <p>Hinweis: Dies ist ein Test-Formular. Bitte sende keine persönlichen Daten.</p>
+
+   <!-- Feedback-Nachrichten -->
+   <div *ngIf="successMessage" class="alert alert-success">
+    {{ successMessage }}
   </div>
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+  <!-- <div class="test-info">
+    <p>
+      Hinweis: Dies ist ein Test-Formular. Bitte sende keine persönlichen Daten.
+    </p>
+  </div> -->
 </div>

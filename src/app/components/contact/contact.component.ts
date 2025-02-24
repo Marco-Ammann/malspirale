@@ -1,7 +1,11 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
-import { HttpClient, HttpErrorResponse, HttpClientModule } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpClientModule,
+} from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -19,38 +23,30 @@ export class ContactComponent {
     message: '',
   };
 
-  private sendMailUrl = 'https://malspirale.ch/api/sendmail.php';
+  successMessage: string = '';
+  errorMessage: string = '';
 
   constructor(private http: HttpClient) {}
 
   onSubmit(form: NgForm) {
     if (form.valid) {
-      this.sendContactForm(this.contact).subscribe({
-        next: (response) => {
-          if (response.success) {
-            alert(response.message);
-            form.resetForm();
-          } else {
-            alert(`Fehler: ${response.error}`);
-          }
-        },
-        error: (error: HttpErrorResponse) => {
-          console.error('Es gab einen Fehler beim Senden der Nachricht:', error);
-          alert('Es gab ein Problem beim Senden deiner Nachricht. Bitte versuche es später erneut.');
-        },
-      });
-    } else {
-      alert('Bitte fülle alle Pflichtfelder korrekt aus.');
+      this.http
+        .post('https://malspirale.ch/sendmail.php', this.contact, {
+          responseType: 'text',
+        })
+        .subscribe({
+          next: (res) => {
+            this.successMessage =
+              'Nachricht wurde erfolgreich gesendet! Wir werden uns so schnell wie möglich bei dir melden.';
+            this.errorMessage = '';
+            form.reset();
+          },
+          error: (err) => {
+            this.errorMessage =
+              'Fehler beim Senden der Nachricht. Bitte versuche es später erneut.';
+            this.successMessage = '';
+          },
+        });
     }
-  }
-
-  sendContactForm(contactData: any): Observable<any> {
-    const formData = new FormData();
-    formData.append('name', contactData.name);
-    formData.append('email', contactData.email);
-    formData.append('phone', contactData.phone);
-    formData.append('message', contactData.message);
-
-    return this.http.post<any>(this.sendMailUrl, formData);
   }
 }
