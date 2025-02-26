@@ -15,27 +15,21 @@ export class HeroComponent implements AfterViewInit {
   constructor(private router: Router) {}
 
   ngAfterViewInit(): void {
-    // if (window.innerWidth >= 900) {
-    //   const options = {
-    //     stringsElement: '#typed-strings',
-    //     typeSpeed: 60,
-    //     backSpeed: 30,
-    //     backDelay: 900,
-    //     loop: false,
-    //     showCursor: true,
-    //   };
-    //   new Typed('#typed-text', options);
-    // } else {
-    //   const typedElem = document.getElementById('typed-text');
-    //   if (typedElem) {
-    //     typedElem.innerText = 'Kreativität entfalten';
-    //   }
-    // }
+    this.updateParallax();
   }
 
   @HostListener('window:scroll', ['$event'])
   onScroll(event: any): void {
-    this.scrollPosition = window.pageYOffset;
+    this.scrollPosition = window.scrollY;
+    this.updateParallax();
+  }
+
+  updateParallax(): void {
+    const heroBackground = document.querySelector('.hero-background') as HTMLElement;
+    if (heroBackground) {
+      const offset = this.scrollPosition * 0.4; // Adjust the multiplier for desired effect
+      heroBackground.style.backgroundPositionY = `-${offset}px`;
+    }
   }
 
   navigateToWorkshops(): void {
