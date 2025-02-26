@@ -20,7 +20,11 @@ export class HeaderComponent implements OnDestroy {
   isLoggedIn = false;
   isAdmin = false;
   isScrolled = false;
-
+  closeMobileMenu(): void {
+    this.mobileMenuOpen = false;
+    this.closeDropdowns();
+  }
+  
   private unsubscribe$ = new Subject<void>();
 
   constructor(private authService: AuthService, private stateService: StateService) {
@@ -35,6 +39,13 @@ export class HeaderComponent implements OnDestroy {
       .subscribe(role => {
         this.isAdmin = role === 'admin';
       });
+  }
+
+  @HostListener('document:click', ['$event'])
+  onClickOutside(event: Event): void {
+    if (!(event.target as HTMLElement).closest('.dropdown, .menu-toggle')) {
+      this.closeDropdowns();
+    }
   }
 
   toggleMobileMenu(): void {
@@ -64,12 +75,7 @@ export class HeaderComponent implements OnDestroy {
     });
   }
 
-  @HostListener('document:click', ['$event'])
-  onClickOutside(event: Event): void {
-    if (!(event.target as HTMLElement).closest('.dropdown, .menu-toggle')) {
-      this.closeDropdowns();
-    }
-  }
+
 
   private closeDropdowns(): void {
     this.philosophyDropdownOpen = false;

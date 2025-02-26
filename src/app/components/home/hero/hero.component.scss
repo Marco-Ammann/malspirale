@@ -1,159 +1,168 @@
+@use "sass:color";
 @use "variables" as vars;
-@use "mixins" as mixins;
 
-:host {
-  box-shadow: vars.$box-shadow;
-  margin-top: -2px;
+// Animierter Farbverlauf für Button
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 .hero {
-  // Passt die Höhe an den Header an
-  height: calc(100vh - vars.$header-height);
-  display: flex;
-  flex-wrap: wrap; // Für responsive Verhalten
-  overflow: hidden;
-  background: linear-gradient(
-      135deg,
-      vars.$primary-color 0%,
-      vars.$color-quaternary 25%,
-      vars.$background-whiter 50%
-    );
   position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: vars.$padding-extra-large;
+  overflow: hidden;
+  margin-top: vars.$header-height * -1;
 
-  // Linke Spalte (Text)
-  .hero-left {
-    display: flex;
-    align-items: center;
-    flex: 1 1 50%;
-    background: transparent;
-    padding: vars.$padding-extra-large;
-    position: relative;
+  // 1) Hintergrundbild (Spirale, etc.)
+  .hero-background {
+    position: absolute;
+    inset: 0; // ersetzt top/left/right/bottom: 0
     z-index: 1;
+    background: url("/assets/images/hero10.webp") no-repeat fixed center;
+    background-size: cover;
+    filter: brightness(0.9);
+  }
+
+  // 2) Glas-Effekt links mit schrägem Schnitt
+  .hero-glass {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 35%;
+    height: 100%;
+    background: transparentize(vars.$background-whiter, 0.9);
+    backdrop-filter: blur(12px);
+    clip-path: polygon(0 0, 100% 0, 80% 100%, 0 100%);
+    z-index: 2;
+  }
+
+  // 3) Text-Ebene (immer im Vordergrund)
+  .hero-content {
+    position: relative;
+    z-index: 3;
+    max-width: 600px;
+    margin-left: vars.$padding-large;
+    color: vars.$text-color;
+
+    .hero-title {
+      font-family: vars.$font-family-heading;
+      // Deutlich größer für mehr Wirkung
+      font-size: clamp(3rem, 7vw, 5.5rem);
+      line-height: 1.1;
+      margin-bottom: vars.$padding-medium;
+      // Kräftigerer Gradient-Text
+      background: linear-gradient(
+        45deg,
+        vars.$accent-color-light,
+        vars.$link-color
+      );
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .hero-subtitle {
+      font-size: clamp(1.25rem, 3vw, 2rem);
+      line-height: 1.4;
+      margin-bottom: vars.$padding-large;
+      // Leichter Textschatten für bessere Lesbarkeit
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-cta {
+      padding: vars.$padding-medium vars.$padding-large;
+      font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+      font-weight: vars.$font-weight-bold;
+      border: none;
+      border-radius: vars.$border-radius;
+      cursor: pointer;
+      color: vars.$background-color;
+      // Kräftigerer Farbverlauf für den Button
+      background: linear-gradient(
+        270deg,
+        color.scale(vars.$primary-color, $lightness: -10%),
+        color.scale(vars.$secondary-color, $lightness: -10%),
+        color.scale(vars.$accent-color, $lightness: -10%),
+        color.scale(vars.$color-quaternary, $lightness: -10%)
+      );
+      background-size: 400% 400%;
+      animation: gradientShift 8s ease-in-out infinite;
+      box-shadow: vars.$box-shadow;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+      &:hover,
+      &:focus {
+        transform: translateY(-3px);
+        box-shadow: vars.$hover-shadow;
+      }
+      &:active {
+        transform: translateY(0);
+        box-shadow: none;
+      }
+    }
+  }
+}
+
+// --------------------------
+//       Responsiveness
+// --------------------------
+
+@media (max-width: vars.$breakpoint-lg) {
+  .hero {
+    padding: vars.$padding-large;
+
+    .hero-glass {
+      width: 65%;
+      clip-path: polygon(0 0, 100% 0, 90% 100%, 0 100%);
+    }
 
     .hero-content {
-      max-width: 600px;
-      text-align: left;
-      padding: vars.$padding-large;
-      z-index: 1;
+      margin-left: vars.$padding-medium;
+      max-width: 500px;
 
       .hero-title {
-        font-family: vars.$font-family-heading;
-        font-size: vars.$hero-title-size-large; // z.B. 3.5rem
-        color: vars.$accent-color-dark;
-        margin-bottom: vars.$padding-medium;
-        line-height: 1.2;
+        font-size: clamp(2.5rem, 6vw, 4rem);
       }
-
       .hero-subtitle {
-        font-size: vars.$hero-subtitle-size-large; // oder vars.$hero-subtitle-size
-        color: vars.$text-color;
-        margin-bottom: vars.$padding-large;
-        line-height: vars.$line-height-large;
-      }
-      .btn {
-        display: inline-block;
-        text-align: center;
-        padding: vars.$padding-small vars.$padding-medium;
-        font-family: vars.$font-family;
-        font-size: vars.$font-size-base;
-        border: none;
-        border-radius: vars.$border-radius;
-        cursor: pointer;
-        transition: background 0.3s ease, transform 0.3s ease,
-          box-shadow 0.3s ease;
-      }
-      .btn-cta {
-        @extend .btn !optional; // Für globale Button-Styles, sonst optional
-        background: linear-gradient(
-          45deg,
-          vars.$primary-color,
-          vars.$accent-color
-        );
-        color: vars.$background-color;
-        font-size: vars.$font-size-large;
-        padding: vars.$padding-medium vars.$padding-large;
-        border-radius: vars.$border-radius;
-        text-transform: uppercase;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-
-        &:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
-        }
+        font-size: clamp(1.1rem, 3vw, 1.75rem);
       }
     }
   }
+}
 
-  // Rechte Spalte (Bild mit diagonalem Clip-Path)
-  .hero-right {
-    flex: 1 1 50%;
-    position: absolute;
-    height: calc(100vh - vars.$header-height);
-    width: 65%;
-    top: 0;
-    right: 0;
-    background: url("/assets/images/hero10.webp") no-repeat center center/cover;
-    // Optional: Abdunkeln
-    filter: brightness(0.9);
-    clip-path: polygon(20% 0%, 100% 0%, 100% 100%, 0% 100%);
-    // Erzeugt eine dynamische schräge Kante
-    // Passe die Werte der polygon-Punkte an, um mehr/weniger Schräge zu bekommen
-  }
-
-  // Responsive Anpassungen
-  @media (max-width: 1200px) {
-    .hero {
-      text-align: center;
-    }
-    .hero-left {      
-      justify-content: center;
-      align-items: center;
-    }
-    .hero-left .hero-content {
-      background: vars.$background-color;
-      border-radius: vars.$border-radius;
-      opacity: 0.7;
-      backdrop-filter: blur(10px);
-      width: 100%;
-      text-align: center;
-
-      .hero-title {
-        font-size: vars.$hero-title-size;
-      }
-  
-      .hero-subtitle {
-        font-size: vars.$hero-subtitle-size;
-      }
-    }
-
-    .hero-right {
-      width: 100%;
-      clip-path: none;
-      background: url("/assets/images/hero10.webp") no-repeat fixed center/cover;
-    }
-  }
-
-  @media (max-width: vars.$tablet) {
+@media (max-width: vars.$breakpoint-md) {
+  .hero {
     flex-direction: column;
+    justify-content: center;
+    padding: vars.$padding-medium;
 
-    .hero-left .hero-content {
+    .hero-glass {
+      width: 100%;
+      clip-path: none; // Auf Smartphone die Schräge wegnehmen, um nichts zu „zerschneiden“
+    }
+
+    .hero-content {
+      margin-left: 0;
+      max-width: 90%;
       text-align: center;
-      padding: vars.$padding-medium;
-      background-color: vars.$background-color;
-      border-radius: vars.$border-radius;
-    }
-    .hero-right {
-      position: absolute;
-      width: 100%;
-      z-index: 0;
-      clip-path: none;
-    }
-  }
 
-  @media (max-width: vars.$mobile) {
-    .hero-left {
-      width: 100%;
-      padding: vars.$padding-small;
+      .hero-title {
+        font-size: clamp(2rem, 8vw, 3rem);
+      }
+      .hero-subtitle {
+        font-size: clamp(1rem, 5vw, 1.5rem);
+      }
     }
   }
 }

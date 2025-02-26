@@ -27,7 +27,7 @@
       <!-- User Menu -->
       <div class="dropdown user-menu" [class.open]="userDropdownOpen">
         <span class="dropdown-toggle" (click)="toggleDropdown('user')">
-          <img src="assets/icons/user.svg" alt="User" class="user-icon" />
+          <span class="material-icons user-icon">account_circle</span>
           <span class="material-icons">expand_more</span>
         </span>
         <div class="dropdown-menu">
@@ -40,48 +40,48 @@
 
     <!-- Mobile Menu Toggle -->
     <button class="menu-toggle" (click)="toggleMobileMenu()">
-      <img src="assets/icons/menu.svg" alt="Menu" class="menu-icon" />
+      <span class="material-icons menu-icon">menu</span>
     </button>
   </div>
 
-  <!-- Mobile Navigation Overlay -->
-  <nav class="mobile-nav-overlay" [class.open]="mobileMenuOpen">
-    <!-- Close Button -->
-    <button class="close-button" (click)="toggleMobileMenu()">
-      <span class="material-icons close">close</span>
-    </button>
-    <div class="mobile-nav-content">
-      <a routerLink="/home" routerLinkActive="active" (click)="closeAllMenus()">Home</a>
-      <a routerLink="/gallery" routerLinkActive="active" (click)="closeAllMenus()">Galerie</a>
-      <a routerLink="/workshops" routerLinkActive="active" (click)="closeAllMenus()">Workshops</a>
-      <a routerLink="/contact" routerLinkActive="active" (click)="closeAllMenus()">Kontakt</a>
-      <a routerLink="/about" routerLinkActive="active" (click)="closeAllMenus()">Über mich</a>
-      
-      <!-- Mobile Dropdown for Philosophy -->
-      <div class="dropdown" [class.open]="philosophyDropdownOpen">
-        <span class="dropdown-toggle" (click)="toggleDropdown('philosophy')">
-          Philosophie <span class="material-icons">expand_more</span>
-        </span>
-        <div class="dropdown-menu">
-          <a routerLink="/philosophie/farben" routerLinkActive="active" (click)="closeAllMenus()">Farben</a>
-          <a routerLink="/philosophie/geschichten" routerLinkActive="active" (click)="closeAllMenus()">Geschichten</a>
-          <a routerLink="/philosophie/resonance-farben" routerLinkActive="active" (click)="closeAllMenus()">Resonance Colors</a>
+  <!-- Backdrop-Overlay inkl. Off-Canvas Mobile Navigation -->
+  <div class="mobile-nav-backdrop" [class.open]="mobileMenuOpen" (click)="closeMobileMenu()">
+    <nav class="mobile-nav-overlay" [class.open]="mobileMenuOpen" (click)="$event.stopPropagation()">
+      <!-- Close Button -->
+      <span class="material-icons close" (click)="toggleMobileMenu()">close</span>
+      <div class="mobile-nav-content">
+        <a routerLink="/home" routerLinkActive="active" (click)="closeAllMenus()">Home</a>
+        <a routerLink="/gallery" routerLinkActive="active" (click)="closeAllMenus()">Galerie</a>
+        <a routerLink="/workshops" routerLinkActive="active" (click)="closeAllMenus()">Workshops</a>
+        <a routerLink="/contact" routerLinkActive="active" (click)="closeAllMenus()">Kontakt</a>
+        <a routerLink="/about" routerLinkActive="active" (click)="closeAllMenus()">Über mich</a>
+        
+        <!-- Mobile Dropdown for Philosophy -->
+        <div class="dropdown" [class.open]="philosophyDropdownOpen">
+          <span class="dropdown-toggle" (click)="toggleDropdown('philosophy')">
+            Philosophie <span class="material-icons">expand_more</span>
+          </span>
+          <div class="dropdown-menu">
+            <a routerLink="/philosophie/farben" routerLinkActive="active" (click)="closeAllMenus()">Farben</a>
+            <a routerLink="/philosophie/geschichten" routerLinkActive="active" (click)="closeAllMenus()">Geschichten</a>
+            <a routerLink="/philosophie/resonance-farben" routerLinkActive="active" (click)="closeAllMenus()">Resonance Colors</a>
+          </div>
+        </div>
+        
+        <!-- Mobile User Menu -->
+        <div class="dropdown user-menu" [class.open]="userDropdownOpen" (click)="toggleDropdown('user')">
+          <span class="dropdown-toggle">
+            <span *ngIf="isLoggedIn; else loggedOut">Logout</span>
+            <ng-template #loggedOut>Login</ng-template>
+            <span class="material-icons">expand_more</span>
+          </span>
+          <div class="dropdown-menu">
+            <a *ngIf="!isLoggedIn" routerLink="/login" routerLinkActive="active" (click)="closeAllMenus()">Login</a>
+            <a *ngIf="isLoggedIn && isAdmin" routerLink="/admin">Admin</a>
+            <a *ngIf="isLoggedIn" (click)="logout()">Logout</a>
+          </div>
         </div>
       </div>
-
-      <!-- Mobile User Menu -->
-      <div class="dropdown user-menu" [class.open]="userDropdownOpen" (click)="toggleDropdown('user')">
-        <span class="dropdown-toggle">
-          <span *ngIf="isLoggedIn; else loggedOut">Logout</span>
-          <ng-template #loggedOut>Login</ng-template>
-          <span class="material-icons">expand_more</span>
-        </span>
-        <div class="dropdown-menu">
-          <a *ngIf="!isLoggedIn" routerLink="/login" routerLinkActive="active" (click)="closeAllMenus()">Login</a>
-          <a *ngIf="isLoggedIn && isAdmin" routerLink="/admin">Admin</a>
-          <a *ngIf="isLoggedIn" (click)="logout()">Logout</a>
-        </div>
-      </div>
-    </div>
-  </nav>
+    </nav>
+  </div>
 </header>

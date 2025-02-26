@@ -1,9 +1,6 @@
 @use 'sass:color';
 @use 'sass:math';
 
-
-
-
 // 🎨 Farbpalette (Pastell, modern, ruhig)
 $primary-color: #A6C8B7; // Minzgrün
 $primary-color-light: color.scale($primary-color, $lightness: 40%);
@@ -24,6 +21,11 @@ $tertiary-color-darker: color.scale($tertiary-color, $lightness: -20%);
 
 $color-quaternary: #C5D7D1; // Weiches Graugrün für dezente Akzente
 $color-quaternary-light: color.scale($color-quaternary, $lightness: 50%);
+
+// Neue Farben
+$highlight-color: #FFB6C1; // Sanftes Rosa für Highlights
+$background-gradient-start: #F7F4F1; // Sandbeige
+$background-gradient-end: #E0E0E0; // Helles Grau
 
 // Textfarben
 $text-color: #4A4A4A; // Dunkles Graublau für Lesbarkeit
@@ -76,7 +78,6 @@ $padding-medium: 16px;
 $padding-large: 24px;
 $padding-extra-large: 32px;
 
-
 $word-spacing: 1px;
 $word-spacing-large: 2px;
 
@@ -106,7 +107,6 @@ $container-gap: 16px;
 $container-gap-large: 32px;
 
 $container-width: 700px;
-
 
 // 🖼 Schatten & Effekte
 $box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);

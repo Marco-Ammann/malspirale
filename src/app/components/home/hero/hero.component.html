@@ -1,18 +1,19 @@
 <section class="hero">
-  <div class="hero-left" data-aos="fade-right">
-    <div class="hero-content">
-      <h1 class="hero-title">Erwecke deine Kreativität</h1>
-      <p class="hero-subtitle">
-        Entdecke neue Horizonte in meinen Workshops – intuitives Malen, das Körper und Seele berührt.
-      </p>
-      <button (click)="navigateToWorkshops()" class="btn-cta">
-        Workshop entdecken
-      </button>
-    </div>
-  </div>
+  <!-- 1) Hintergrund-Ebene -->
+  <div class="hero-background"></div>
 
-  <div class="hero-right" data-aos="fade-left">
-    <!-- Hintergrundbild in der SCSS via .hero-right -->
-    <!-- Optional: Ein Overlay oder weiteres Design-Element -->
+  <!-- 2) Glas-Effekt links -->
+  <div class="hero-glass"></div>
+
+  <!-- 3) Vordergrund-Content -->
+  <div class="hero-content" data-aos="fade-up">
+    <h1 class="hero-title">Erwecke deine Kreativität</h1>
+    <p class="hero-subtitle">
+      Tauche ein in inspirierende Workshops und entdecke die Kunst des intuitiven Malens, 
+      die Körper und Seele berührt.
+    </p>
+    <button (click)="navigateToWorkshops()" class="btn-cta">
+      JETZT ENTDECKEN
+    </button>
   </div>
 </section>
