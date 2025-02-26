@@ -1,37 +1,55 @@
 <div class="admin-gallery-container">
     <h1>Galerie verwalten</h1>
-
+  
     <form [formGroup]="galleryForm" (ngSubmit)="addArtwork()" class="gallery-form">
-        <label for="title">Titel:</label>
-        <input type="text" id="title" formControlName="title" required />
-
-        <label for="alt">Bildbeschreibung:</label>
-        <input type="text" id="alt" formControlName="alt" required />
-
-        <label for="filename">Dateiname:</label>
-        <input type="text" id="filename" formControlName="filename" placeholder="Neuer Dateiname (ohne .jpg)" required />
-
-        <label for="imageInput">Bild hochladen:</label>
-        <input type="file" id="imageInput" (change)="onFileSelected($event)" />
-
-        <!-- Bild-Vorschau -->
-        <div *ngIf="selectedImagePreview" class="image-preview">
-            <img [src]="selectedImagePreview" alt="Bildvorschau" />
+      <div class="form-row">
+        <div class="form-group half">
+          <label for="title">Titel:</label>
+          <input type="text" id="title" formControlName="title" required />
         </div>
-
-        <button type="submit" [disabled]="loading || galleryForm.invalid">
-            {{ editingArtwork ? "Bild aktualisieren" : "Bild hinzufügen" }}
+        <div class="form-group half">
+          <label for="alt">Bildbeschreibung:</label>
+          <input type="text" id="alt" formControlName="alt" required />
+        </div>
+      </div>
+  
+      <div class="form-row">
+        <div class="form-group half">
+          <label for="filename">Dateiname:</label>
+          <input type="text" id="filename" formControlName="filename" placeholder="Neuer Dateiname (ohne .jpg)" required />
+        </div>
+        <div class="form-group half file-upload-group">
+          <label for="imageInput" class="file-input-btn">Bild hochladen</label>
+          <input type="file" id="imageInput" (change)="onFileSelected($event)" class="file-input" />
+        </div>
+      </div>
+  
+      <!-- Bild-Vorschau -->
+      <div *ngIf="selectedImagePreview" class="image-preview">
+        <img [src]="selectedImagePreview" alt="Bildvorschau" />
+      </div>
+  
+      <div class="form-buttons">
+        <button type="submit" [disabled]="loading || galleryForm.invalid" class="btn-primary">
+          {{ editingArtwork ? "Bild aktualisieren" : "Bild hinzufügen" }}
         </button>
-        <button type="button" (click)="cancelEdit()" *ngIf="editingArtwork">Abbrechen</button>
+        <button type="button" (click)="cancelEdit()" *ngIf="editingArtwork" class="cancel-btn">
+          Abbrechen
+        </button>
+      </div>
+      <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
     </form>
-
+  
     <h2>Galeriebilder</h2>
     <div class="gallery-grid">
-        <div *ngFor="let artwork of artworks" class="gallery-item">
-            <img [src]="artwork.src || 'assets/images/placeholder.jpg'" [alt]="artwork.alt" />
-            <p>{{ artwork.title }}</p>
-            <button (click)="editArtwork(artwork)">🖊 Bearbeiten</button>
-            <button (click)="deleteArtwork(artwork)">🗑 Löschen</button>
+      <div *ngFor="let artwork of artworks" class="gallery-item">
+        <img [src]="artwork.src || 'assets/images/placeholder.jpg'" [alt]="artwork.alt" />
+        <p>{{ artwork.title }}</p>
+        <div class="item-actions">
+          <button (click)="editArtwork(artwork)" class="btn-primary">🖊 Bearbeiten</button>
+          <button (click)="deleteArtwork(artwork)" class="btn-danger">🗑 Löschen</button>
         </div>
+      </div>
     </div>
-</div>
+  </div>
+  

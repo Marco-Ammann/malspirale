@@ -28,7 +28,7 @@ export class GalleryComponent implements OnInit {
       this.artworks_default.push({
         id: i.toString(),
         src: `assets/images/art${i}.webp`,
-        alt: `Bild ${i}`,
+        alt: `Beschreibung ${i}`,
         title: `Bild ${i}`,
       });
     }

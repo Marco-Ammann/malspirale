@@ -3,136 +3,124 @@
 
 .contact-container {
   max-width: 800px;
-  margin: 80px auto 40px; /* ausreichend Abstand zum Header */
+  margin: 0 auto;
   padding: vars.$padding-large;
-  background-color: rgba(255, 255, 255, 0.95);
-  border-radius: vars.$border-radius;
-  box-shadow: vars.$box-shadow;
-  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: vars.$padding-large;
+}
 
-  .contact-header {
-    text-align: center;
-    margin-bottom: vars.$padding-large;
-
-    h2 {
-      font-size: vars.$font-size-xxlarge;
-      margin-bottom: vars.$padding-small;
-    }
-
-    p {
-      font-size: vars.$font-size-large;
-      margin-bottom: vars.$padding-medium;
-      color: vars.$text-color;
-    }
+.contact-header {
+  text-align: center;
+  h2 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    color: vars.$accent-color-dark;
+    margin-bottom: vars.$padding-medium;
   }
-
-  .contact-form {
-    display: flex;
-    flex-direction: column;
-    gap: vars.$padding-medium;
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      label {
-        font-size: vars.$font-size-base;
-        margin-bottom: vars.$padding-small;
-        color: vars.$text-color;
-      }
-      input,
-      textarea {
-        width: 100%;
-        padding: vars.$padding-small;
-        border: 1px solid vars.$background-dark;
-        border-radius: vars.$border-radius-small;
-        font-size: vars.$font-size-base;
-        transition: border 0.3s ease, box-shadow 0.3s ease;
-        &:focus {
-          outline: none;
-          border-color: vars.$primary-color;
-          box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-        }
-      }
-      textarea {
-        min-height: 120px;
-        resize: vertical;
-      }
-    }
-    
-    button {
-      align-self: center;
-    }
-  }
-
-  .test-info {
-    margin-top: vars.$padding-large;
-    text-align: center;
-    font-size: vars.$font-size-small;
+  p {
+    font-size: clamp(1rem, 2.5vw, 1.5rem);
     color: vars.$text-color;
   }
 }
-.alert {
-  padding: 1em;
-  margin-top: 1em;
-  border-radius: 4px;
-  &.alert-success {
-    background-color: #d4edda;
-    color: #155724;
-  }
-  &.alert-danger {
-    background-color: #f8d7da;
-    color: #721c24;
-  }
-}
 
-.message {
-  margin-top: 1em;
-  padding: 1em;
-  border-radius: 4px;
-
-
-}
-
-
-.btn {
-  display: inline-block;
-  text-align: center;
-  padding: vars.$padding-small vars.$padding-medium;
-  font-family: vars.$font-family;
-  font-size: vars.$font-size-base;
-  border: none;
+.contact-form {
+  background: transparentize(vars.$background-color, 0.7);
+  backdrop-filter: blur(8px);
+  padding: vars.$padding-large;
   border-radius: vars.$border-radius;
-  cursor: pointer;
-  transition: background 0.3s ease, transform 0.3s ease,
-    box-shadow 0.3s ease;
-}
-.btn-cta {
-  @extend .btn !optional; // Für globale Button-Styles, sonst optional
-  background: linear-gradient(
-    45deg,
-    vars.$primary-color,
-    vars.$accent-color
-  );
-  color: vars.$background-color;
-  font-size: vars.$font-size-large;
-  padding: vars.$padding-medium vars.$padding-large;
-  border-radius: vars.$border-radius;
-  text-transform: uppercase;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+  box-shadow: vars.$box-shadow;
+  display: flex;
+  flex-direction: column;
+  gap: vars.$padding-medium;
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    
+    label {
+      font-weight: vars.$font-weight-bold;
+      margin-bottom: vars.$padding-small;
+      color: vars.$accent-color;
+    }
+    
+    input, textarea {
+      padding: vars.$padding-small;
+      border: 1px solid transparentize(vars.$text-color, 0.7);
+      border-radius: vars.$border-radius;
+      background: transparentize(vars.$background-color, 0.9);
+      color: vars.$text-color;
+      font-size: vars.$font-size-base;
+      transition: border-color 0.2s ease;
+    }
+    
+    input:focus, textarea:focus {
+      border-color: vars.$accent-color;
+      outline: none;
+    }
+    
+    textarea {
+      min-height: 120px;
+    }
+    
+    .error-message {
+      color: #F44336;
+      font-size: 0.9rem;
+      margin-top: vars.$padding-small;
+    }
   }
+  
+  .btn-cta {
+    padding: vars.$padding-medium vars.$padding-large;
+    font-size: clamp(1rem, 2.5vw, 1.25rem);
+    font-weight: vars.$font-weight-bold;
+    border: none;
+    border-radius: vars.$border-radius;
+    cursor: pointer;
+    color: vars.$background-color;
+    background: linear-gradient(
+      270deg,
+      color.scale(vars.$primary-color, $lightness: -10%),
+      color.scale(vars.$secondary-color, $lightness: -10%),
+      color.scale(vars.$accent-color, $lightness: -10%),
+      color.scale(vars.$color-quaternary, $lightness: -10%)
+    );
+    background-size: 400% 400%;
+    animation: gradientShift 8s ease-in-out infinite;
+    box-shadow: vars.$box-shadow;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    
+    &:hover,
+    &:focus {
+      transform: translateY(-3px);
+      box-shadow: vars.$hover-shadow;
+    }
+    &:active {
+      transform: translateY(0);
+      box-shadow: none;
+    }
 
-  &:disabled {
-    background: #ccc;
-    color: #666;
-    cursor: not-allowed;
-
-    &:hover {
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      /* Optional: Animation und Hover-Effekte deaktivieren */
       transform: none;
       box-shadow: none;
     }
+  }
+}
+
+.alert {
+  text-align: center;
+  padding: vars.$padding-small;
+  border-radius: vars.$border-radius;
+  font-weight: vars.$font-weight-bold;
+  
+  &.alert-success {
+    background: rgba(76, 175, 80, 0.2);
+    color: #4CAF50;
+  }
+  &.alert-danger {
+    background: rgba(244, 67, 54, 0.2);
+    color: #F44336;
   }
 }

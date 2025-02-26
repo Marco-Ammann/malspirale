@@ -17,6 +17,7 @@
         <img [src]="artwork.src" [alt]="artwork.alt" />
         <div class="overlay">
           <div class="text">{{ artwork.title }}</div>
+          <div class="text"> {{ artwork.alt }} </div>
         </div>
       </div>
     </div>
@@ -30,9 +31,15 @@
           <img [src]="artwork.src" [alt]="artwork.alt" />
           <div class="overlay">
             <div class="text">{{ artwork.title }}</div>
+            <div class="text"> {{ artwork.alt }} </div>
           </div>
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- Urheberhinweis -->
+  <div class="gallery-credit">
+    <p>Bilder von Shiva Ludi</p>
   </div>
 </div>

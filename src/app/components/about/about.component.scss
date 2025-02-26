@@ -3,109 +3,100 @@
 
 .about-container {
   max-width: 1200px;
-  margin: 2rem auto;
+  margin: 0 auto;
   padding: vars.$padding-large;
-  background: vars.$background-light;
-  border-radius: vars.$border-radius;
-  box-shadow: vars.$shadow;
-  text-align: center;
   display: flex;
   flex-direction: column;
-  gap: vars.$padding-medium;
+  gap: vars.$padding-large;
+}
 
-  .hero-banner {
-    background: vars.$primary-color;
-    color: vars.$text-color-light;
-    border-radius: vars.$border-radius-small;
-    padding: vars.$padding-medium;
-    box-shadow: vars.$shadow;
+.hero-banner {
+  background: linear-gradient(135deg, rgba(255,255,255,0.8), rgba(255,255,255,0.6));
+  backdrop-filter: blur(10px);
+  padding: vars.$padding-large;
+  text-align: center;
+  border-radius: vars.$border-radius;
+  box-shadow: vars.$box-shadow;
 
-    .page-title {
-      margin: 0;
-      font-size: vars.$font-size-xxlarge;
-      font-weight: bold;
-    }
-
-    .subtitle {
-      margin-top: vars.$padding-small;
-      font-size: vars.$font-size-base;
-      font-style: italic;
-    }
+  .page-title {
+    font-size: clamp(2rem, 5vw, 3rem);
+    margin: 0;
+    color: vars.$accent-color-dark;
   }
-
-  .about-content {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: vars.$padding-large;
-    margin-top: vars.$padding-medium;
-
-    .about-image {
-      flex: 1;
-      max-width: 300px;
-
-      img {
-        width: 100%;
-        border-radius: vars.$border-radius;
-        box-shadow: vars.$shadow;
-      }
-    }
-
-    .about-text {
-      flex: 2;
-      text-align: left;
-
-      .loading-indicator {
-        font-style: italic;
-        color: vars.$primary-color;
-      }
-      
-      // Redesign list elements inside content
-      ul, ol {
-        margin: vars.$padding-small 0;
-        padding-left: vars.$padding-medium;
-        li {
-          margin-bottom: vars.$padding-small;
-          line-height: 1.6;
-        }
-      }
-
-      p {
-        font-size: vars.$font-size-base;
-        line-height: 1.7;
-        color: vars.$text-color;
-        margin-bottom: vars.$padding-small;
-      }
-
-      h1, h2, h3, h4, h5, h6 {
-        font-family: vars.$font-family;
-        font-weight: bold;
-        margin: vars.$padding-small 0;
-      }
-
-      blockquote {
-        margin: vars.$padding-medium 0;
-        padding: vars.$padding-small;
-        background: vars.$background-light;
-        border-left: 4px solid vars.$primary-color;
-        font-style: italic;
-      }
-    }
+  
+  .subtitle {
+    font-size: clamp(1rem, 2.5vw, 1.5rem);
+    color: vars.$text-color;
+    margin-top: vars.$padding-small;
   }
 }
 
-// Responsive styling using breakpoints from variables
-@media (max-width: vars.$breakpoint-md) {
-  .about-container {
-    padding: vars.$padding-medium;
-    
-    .about-content {
-      flex-direction: column;
-      text-align: center;
-      
-      .about-text {
-        text-align: center;
-      }
+.about-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: vars.$padding-large;
+  align-items: center;
+  
+  .about-image {
+    img {
+      width: 100%;
+      border-radius: vars.$border-radius;
+      box-shadow: vars.$box-shadow;
+      object-fit: cover;
     }
+  }
+  
+  .about-text {
+    background: transparentize(vars.$background-color, 0.8);
+    backdrop-filter: blur(8px);
+    padding: vars.$padding-large;
+    border-radius: vars.$border-radius;
+    box-shadow: vars.$box-shadow;
+    color: vars.$text-color;
+    font-size: vars.$font-size-medium;
+    line-height: 1.6;
+    
+    .loading-indicator {
+      font-size: vars.$font-size-large;
+      text-align: center;
+    }
+
+
+          // Redesign list elements inside content
+          ul, ol {
+            margin: vars.$padding-small 0;
+            padding-left: vars.$padding-medium;
+            li {
+              margin-bottom: vars.$padding-small;
+              line-height: 1.6;
+            }
+          }
+    
+          p {
+            font-size: vars.$font-size-base;
+            line-height: 1.7;
+            color: vars.$text-color;
+            margin-bottom: vars.$padding-small;
+          }
+    
+          h1, h2, h3, h4, h5, h6 {
+            font-family: vars.$font-family;
+            font-weight: bold;
+            margin: vars.$padding-small 0;
+          }
+    
+          blockquote {
+            margin: vars.$padding-medium 0;
+            padding: vars.$padding-small;
+            background: vars.$background-light;
+            border-left: 4px solid vars.$accent-color;
+            font-style: italic;
+          }
+  }
+}
+
+@media (max-width: vars.$tablet) {
+  .about-content {
+    grid-template-columns: 1fr;
   }
 }

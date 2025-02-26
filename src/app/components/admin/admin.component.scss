@@ -1,128 +1,119 @@
+@use 'sass:color';
 @use 'variables' as vars;
-@use 'mixins' as mix;
 
 .admin-layout {
   display: flex;
   min-height: 100vh;
-  background: vars.$background-light;
+  background: transparentize(vars.$background-color, 0.95);
 
   .admin-sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 240px;
-    height: 100vh;
-    background: vars.$primary-color;
-    color: #fff;
-    transform: translateX(-100%);
+    width: 250px;
+    background: transparentize(vars.$background-color, 0.8);
+    backdrop-filter: blur(8px);
+    padding: vars.$padding-medium;
+    box-shadow: vars.$box-shadow;
     transition: transform 0.3s ease;
-    z-index: 1000;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-
     &.open {
       transform: translateX(0);
     }
-
-    .sidebar-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: vars.$padding-medium;
-
-      h2 {
-        margin: 0;
-      }
-
-      .menu-toggle {
-        background: none;
-        border: none;
-        color: #fff;
-        font-size: 1.5em;
-        cursor: pointer;
-      }
-    }
-
     nav {
-      padding: 0 vars.$padding-medium;
-
+      display: flex;
+      flex-direction: column;
+      gap: vars.$padding-small;
       a {
-        display: block;
-        padding: vars.$padding-small;
-        margin-bottom: vars.$padding-small;
         text-decoration: none;
-        color: #fff;
-        transition: background 0.3s ease;
-
-        &:hover, &.active {
-          background: vars.$accent-color;
+        color: vars.$accent-color;
+        padding: vars.$padding-small;
+        border-radius: vars.$border-radius;
+        transition: background 0.2s ease;
+        &:hover {
+          background: transparentize(vars.$accent-color, 0.8);
+        }
+        &.active {
+          background: transparentize(vars.$accent-color, 0.7);
         }
       }
     }
-
     .logout-btn {
-      @include mix.button-style(vars.$danger-color, #fff);
-      padding: vars.$padding-small vars.$padding-medium;
-      width: 100%;
-      margin: vars.$padding-medium;
+      margin-top: auto;
+      padding: vars.$padding-small;
+      background: transparentize(vars.$danger-color, 0.3);
+      border: none;
+      border-radius: vars.$border-radius;
+      color: vars.$danger-color;
+      cursor: pointer;
+    }
+    .menu-toggle {
+      display: none;
     }
   }
 
   .admin-content {
-    flex-grow: 1;
+    flex: 1;
     padding: vars.$padding-large;
-    transition: margin-left 0.3s ease;
-    margin-left: 0;
-
-    @media (min-width: 769px) {
-      margin-left: 240px;
-    }
+    display: flex;
+    flex-direction: column;
+    background: transparentize(vars.$background-color, 0.9);
 
     .admin-header {
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      margin-bottom: vars.$padding-medium;
-
-      .menu-toggle {
-        display: block;
-        font-size: 2em;
-        background: none;
-        border: none;
-        color: vars.$primary-color;
-        cursor: pointer;
-      }
-
+      justify-content: space-between;
+      gap: vars.$padding-medium;
+      padding-bottom: vars.$padding-medium;
+      border-bottom: 1px solid transparentize(vars.$text-color, 0.7);
       h1 {
-        margin: 0;
-        font-size: vars.$font-size-xxlarge;
+        font-size: clamp(1.8rem, 4vw, 2.2rem);
+        color: vars.$accent-color-dark;
       }
-
       .user-role {
         font-size: vars.$font-size-base;
-        color: vars.$secondary-color;
+        color: vars.$text-color;
+      }
+      .menu-toggle {
+        display: none;
       }
     }
 
     .dashboard-stats {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      display: flex;
       gap: vars.$padding-medium;
-
+      margin: vars.$padding-medium 0;
       .stat-card {
-        @include mix.container-box;
-        text-align: center;
+        flex: 1;
+        background: transparentize(vars.$background-color, 0.8);
+        backdrop-filter: blur(8px);
         padding: vars.$padding-medium;
-
+        border-radius: vars.$border-radius;
+        box-shadow: vars.$box-shadow;
         h3 {
+          margin: 0 0 vars.$padding-small 0;
           font-size: vars.$font-size-large;
-          margin-bottom: vars.$padding-small;
+          color: vars.$accent-color-dark;
         }
-
         p {
-          font-size: vars.$font-size-xlarge;
+          font-size: vars.$font-size-base;
+          color: vars.$text-color;
+          margin: 0;
         }
+      }
+    }
+  }
+}
+
+@media (max-width: vars.$tablet) {
+  .admin-layout {
+    flex-direction: column;
+    .admin-sidebar {
+      width: 100%;
+      transform: translateY(0);
+      nav {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: vars.$padding-small;
+      }
+      .logout-btn {
+        width: 100%;
       }
     }
   }

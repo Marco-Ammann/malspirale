@@ -1,81 +1,207 @@
-@use "sass:color";
-@use "variables" as vars;
-@use "mixins" as mix;
+@use 'sass:color';
+@use 'variables' as vars;
 
 .admin-gallery-container {
-  text-align: center;
-  max-width: 900px;
-  margin: auto;
-}
-
-.gallery-form {
+  max-width: vars.$container-max-width-lg;
+  margin: 0 auto;
+  padding: vars.$padding-large;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin-bottom: 20px;
-
-  input {
-    padding: 8px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
+  gap: vars.$padding-large;
+  
+  h1, h2 {
+    text-align: center;
+    color: vars.$accent-color-dark;
   }
-
-  button {
-    padding: 10px;
-    border-radius: 5px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    cursor: pointer;
+  
+  h2 {
+    font-size: clamp(1.8rem, 4vw, 2.2rem);
+    margin-top: vars.$padding-large;
   }
-
-  button:hover {
-    background-color: #0056b3;
+  
+  /* Formular – gläserner Container */
+  .gallery-form {
+    background: transparentize(vars.$background-color, 0.8);
+    backdrop-filter: blur(8px);
+    padding: vars.$padding-medium;
+    border-radius: vars.$border-radius;
+    box-shadow: vars.$box-shadow;
+    display: flex;
+    flex-direction: column;
+    gap: vars.$padding-medium;
+    
+    .form-row {
+      display: flex;
+      gap: vars.$padding-small;
+      
+      .form-group {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: vars.$padding-extra-small; // ersetzt "tiny" durch extra-small (4px)
+        
+        label {
+          font-weight: vars.$font-weight-bold;
+          color: vars.$accent-color;
+        }
+        
+        input, select, textarea {
+          padding: vars.$padding-small;
+          border: 1px solid transparentize(vars.$text-color, 0.7);
+          border-radius: vars.$border-radius;
+          background: transparentize(vars.$background-color, 0.9);
+          color: vars.$text-color;
+          font-size: vars.$font-size-base;
+        }
+      }
+      
+      @media (max-width: vars.$tablet) {
+        flex-direction: column;
+      }
+    }
+    
+    /* Custom File-Input */
+    .file-input {
+      display: none;
+    }
+    .file-upload-group {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
+    .file-input-btn {
+      display: inline-block;
+      padding: vars.$padding-small vars.$padding-medium;
+      background: linear-gradient(
+        270deg,
+        color.scale(vars.$primary-color, $lightness: -10%),
+        color.scale(vars.$secondary-color, $lightness: -10%)
+      );
+      color: vars.$background-color;
+      text-align: center;
+      border-radius: vars.$border-radius;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: vars.$hover-shadow;
+      }
+    }
+    
+    .image-preview {
+      text-align: center;
+      img {
+        max-width: 100%;
+        border-radius: vars.$border-radius;
+        margin-top: vars.$padding-small;
+        box-shadow: vars.$box-shadow;
+      }
+    }
+    
+    .form-buttons {
+      display: flex;
+      gap: vars.$padding-small;
+      button {
+        flex: 1;
+        padding: vars.$padding-small;
+        border: none;
+        border-radius: vars.$border-radius;
+        cursor: pointer;
+        font-size: vars.$font-size-base;
+      }
+      .btn-primary {
+        background: linear-gradient(
+          270deg,
+          color.scale(vars.$primary-color, $lightness: -10%),
+          color.scale(vars.$secondary-color, $lightness: -10%)
+        );
+        color: vars.$background-color;
+      }
+      .cancel-btn {
+        background: transparentize(vars.$danger-color, 0.3);
+        color: vars.$danger-color;
+      }
+    }
+    
+    .error-message {
+      text-align: center;
+      color: vars.$danger-color;
+    }
+  }
+  
+  /* Galerie-List-Ansicht */
+  .gallery-grid {
+    display: flex;
+    flex-direction: column;
+    gap: vars.$padding-small;
+    
+    .gallery-item {
+      background: transparentize(vars.$background-color, 0.8);
+      backdrop-filter: blur(6px);
+      padding: vars.$padding-small;
+      border-radius: vars.$border-radius;
+      box-shadow: vars.$box-shadow;
+      display: flex;
+      align-items: center;
+      gap: vars.$padding-small;
+      
+      img {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: vars.$border-radius;
+      }
+      
+      p {
+        flex: 1;
+        margin: 0;
+        font-size: vars.$font-size-base;
+        color: vars.$text-color;
+      }
+      
+      .item-actions {
+        display: flex;
+        gap: vars.$padding-extra-small;
+        button {
+          padding: vars.$padding-extra-small;
+          border: none;
+          border-radius: vars.$border-radius;
+          cursor: pointer;
+          font-size: 0.8rem;
+        }
+        .btn-primary {
+          background: linear-gradient(
+            270deg,
+            color.scale(vars.$primary-color, $lightness: -10%),
+            color.scale(vars.$secondary-color, $lightness: -10%)
+          );
+          color: vars.$background-color;
+        }
+        .btn-danger {
+          background: rgba(244, 67, 54, 0.8);
+          color: vars.$background-color;
+        }
+      }
+    }
   }
 }
 
-.gallery-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 15px;
-}
-
-.gallery-item {
-  text-align: center;
-  background: #f9f9f9;
-  padding: 10px;
-  border-radius: 5px;
-
-  img {
-    width: 100%;
-    height: 150px;
-    object-fit: cover;
-    border-radius: 5px;
-  }
-
-  button {
-    margin-top: 5px;
-    padding: 5px;
-    width: 100%;
-    border: none;
-    cursor: pointer;
-  }
-
-  button:first-of-type {
-    background-color: #ffc107;
-  }
-
-  button:last-of-type {
-    background-color: #dc3545;
-    color: white;
-  }
-}
-
-.image-preview {
-  margin-top: 10px;
-  img {
-    max-width: 200px;
-    border-radius: 5px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+@media (max-width: vars.$tablet) {
+  .admin-gallery-container {
+    padding: vars.$padding-small;
+    
+    .gallery-form, .gallery-grid .gallery-item {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: vars.$padding-small;
+    }
+    
+    .gallery-grid .gallery-item {
+      img {
+        width: 100px;
+        height: 100px;
+      }
+    }
   }
 }

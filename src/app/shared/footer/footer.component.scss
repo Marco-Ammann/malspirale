@@ -2,28 +2,20 @@
 @use 'variables' as vars;
 
 .app-footer {
-  text-align: center;
+  background: transparentize(vars.$background-color, 0.8);
+  backdrop-filter: blur(6px);
   padding: vars.$padding-medium;
-  background: vars.$primary-color-dark;
-  color: vars.$background-color;
+  text-align: center;
   font-size: vars.$font-size-base;
-  position: relative;
-  box-shadow: vars.$box-shadow;
-  height: vars.$footer-height;
-}
+  color: vars.$text-color;
+  border-top: 1px solid transparentize(vars.$text-color, 0.7);
 
-.app-footer a {
-  color: vars.$link-color;
-  transition: color 0.3s ease;
-  &:hover {
-    color: vars.$primary-color;
-  }
-}
-
-/* Responsive Anpassungen */
-@media (max-width: vars.$tablet) {
-  .app-footer {
-    padding: vars.$padding-small;
-    font-size: vars.$font-size-small;
+  a {
+    text-decoration: none;
+    color: vars.$accent-color;
+    transition: color 0.2s ease;
+    &:hover {
+      color: vars.$accent-color-light;
+    }
   }
 }

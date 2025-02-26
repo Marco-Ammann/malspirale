@@ -1,6 +1,12 @@
 <div class="workshop-container">
   <div class="search-container">
-    <input type="text" [(ngModel)]="searchTerm" (input)="filterWorkshops()" placeholder="🔍 Workshop suchen..." class="search-box" />
+    <input
+      type="text"
+      [(ngModel)]="searchTerm"
+      (input)="filterWorkshops()"
+      placeholder="🔍 Workshop suchen..."
+      class="search-box"
+    />
   </div>
 
   <div *ngIf="loading" class="loading">⏳ Workshops werden geladen...</div>
@@ -9,16 +15,26 @@
   <section *ngIf="regularWorkshops.length > 0">
     <h2>Workshops</h2>
     <div class="workshops-grid">
-      <div *ngFor="let workshop of regularWorkshops" class="workshop-card animate-in" (click)="goToDetail(workshop)">
+      <div
+        *ngFor="let workshop of regularWorkshops"
+        class="workshop-card animate-in"
+        (click)="goToDetail(workshop)"
+      >
         <div class="workshop-image">
-          <img [src]="workshop.imageUrl || 'assets/images/default-workshop.jpg'" alt="Workshop Bild" />
+          <img
+            [src]="workshop.imageUrl || 'assets/images/default-workshop.jpg'"
+            alt="Workshop Bild"
+          />
         </div>
         <div class="workshop-info">
           <h3>{{ workshop.title }}</h3>
           <p class="meta-info">
-            📅 {{ workshop.date | date:'dd.MM.yyyy' }} | 💰 {{ workshop.price ? (workshop.price | currency:'CHF') : 'Kostenlos' }}
+            📅 {{ workshop.date | date:'dd.MM.yyyy' }} | 💰 
+            {{ workshop.price ? (workshop.price | currency:'CHF') : 'Kostenlos' }}
           </p>
-          <p class="workshop-short-description">{{ workshop.shortDescription }}</p>
+          <p class="workshop-short-description">
+            {{ workshop.shortDescription }}
+          </p>
         </div>
         <div class="workshop-actions">
           <button class="btn btn-primary">Mehr erfahren</button>
@@ -29,15 +45,27 @@
 
   <section *ngIf="malateliers.length > 0">
     <h2>Malatelier</h2>
-    <p>Unser monatlich wiederkehrendes Malatelier findet jeden 1. Mittwoch im Monat statt.</p>
+    <p>
+      Unser monatlich wiederkehrendes Malatelier findet jeden 1. Mittwoch im
+      Monat statt.
+    </p>
     <div class="workshops-grid">
-      <div *ngFor="let workshop of malateliers" class="workshop-card animate-in" (click)="goToDetail(workshop)">
+      <div
+        *ngFor="let workshop of malateliers"
+        class="workshop-card animate-in"
+        (click)="goToDetail(workshop)"
+      >
         <div class="workshop-image">
-          <img [src]="workshop.imageUrl || 'assets/images/default-workshop.jpg'" alt="Malatelier Bild" />
+          <img
+            [src]="workshop.imageUrl || 'assets/images/default-workshop.jpg'"
+            alt="Malatelier Bild"
+          />
         </div>
         <div class="workshop-info">
           <h3>{{ workshop.title }}</h3>
-          <p class="workshop-short-description">{{ workshop.shortDescription }}</p>
+          <p class="workshop-short-description">
+            {{ workshop.shortDescription }}
+          </p>
         </div>
         <div class="workshop-actions">
           <button class="btn btn-primary">Mehr erfahren</button>
@@ -48,15 +76,27 @@
 
   <section *ngIf="individuelleAnfragen.length > 0">
     <h2>Individuelle Anfragen</h2>
-    <p>Für besondere Anlässe wie Hochzeiten, Teamevents, Geburtstage oder Trauerfeiern – kontaktieren Sie uns für ein maßgeschneidertes Angebot.</p>
+    <p>
+      Für besondere Anlässe wie Hochzeiten, Teamevents, Geburtstage oder
+      Trauerfeiern – kontaktieren Sie uns für ein maßgeschneidertes Angebot.
+    </p>
     <div class="workshops-grid">
-      <div *ngFor="let workshop of individuelleAnfragen" class="workshop-card animate-in" (click)="goToDetail(workshop)">
+      <div
+        *ngFor="let workshop of individuelleAnfragen"
+        class="workshop-card animate-in"
+        (click)="goToDetail(workshop)"
+      >
         <div class="workshop-image">
-          <img [src]="workshop.imageUrl || 'assets/images/default-workshop.jpg'" alt="Individuelle Anfrage Bild" />
+          <img
+            [src]="workshop.imageUrl || 'assets/images/default-workshop.jpg'"
+            alt="Individuelle Anfrage Bild"
+          />
         </div>
         <div class="workshop-info">
           <h3>{{ workshop.title }}</h3>
-          <p class="workshop-short-description">{{ workshop.shortDescription }}</p>
+          <p class="workshop-short-description">
+            {{ workshop.shortDescription }}
+          </p>
         </div>
         <div class="workshop-actions">
           <button class="btn btn-primary">Kontakt aufnehmen</button>

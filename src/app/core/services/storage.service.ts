@@ -21,6 +21,8 @@ export class StorageService {
     }
   }
 
+  
+
   async uploadFile(file: File): Promise<string> {
     try {
       const storageRef = ref(this.storage, `images/workshops/${Date.now()}_${file.name}`);

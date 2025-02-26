@@ -39,6 +39,11 @@ export class WorkshopListComponent implements OnInit {
     });
   }
 
+
+  navigateTo(target: string): void {
+    this.router.navigate(["/" + target]);
+  }
+
   filterWorkshops(): void {
     this.dataService.getWorkshops().subscribe(workshops => {
       const filtered = workshops.filter(w =>

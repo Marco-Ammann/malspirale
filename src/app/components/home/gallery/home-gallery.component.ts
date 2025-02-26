@@ -3,13 +3,13 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-gallery',
+  selector: 'app-home-gallery',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './gallery.component.html',
-  styleUrls: ['./gallery.component.scss']
+  templateUrl: './home-gallery.component.html',
+  styleUrls: ['./home-gallery.component.scss']
 })
-export class GalleryComponent {
+export class HomeGalleryComponent {
   artworks = [
     { src: 'assets/images/art1.webp', alt: 'Kunstwerk 1', imageLoaded: false },
     { src: 'assets/images/art2.webp', alt: 'Kunstwerk 2', imageLoaded: false },

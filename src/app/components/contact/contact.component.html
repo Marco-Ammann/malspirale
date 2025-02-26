@@ -7,76 +7,66 @@
       einfach nur testest, ob alles funktioniert. Schreib mir deine Nachricht!
     </p>
   </div>
-  <form
-    #contactForm="ngForm"
-    (ngSubmit)="onSubmit(contactForm)"
-    class="contact-form"
-  >
+  <form #contactForm="ngForm" (ngSubmit)="onSubmit(contactForm)" class="contact-form">
     <div class="form-group">
       <label for="name">Name *</label>
-      <input
-        type="text"
-        id="name"
-        name="name"
-        [(ngModel)]="contact.name"
-        required
-        placeholder="Dein Name"
-      />
+      <input 
+        type="text" 
+        id="name" 
+        name="name" 
+        [(ngModel)]="contact.name" 
+        required 
+        placeholder="Dein Name" 
+        #name="ngModel" />
+      <div class="error-message" *ngIf="name.invalid && name.touched">
+        Name ist erforderlich.
+      </div>
     </div>
-
     <div class="form-group">
       <label for="email">E-Mail *</label>
-      <input
-        type="email"
-        id="email"
-        name="email"
-        [(ngModel)]="contact.email"
-        required
-        placeholder="Deine E-Mail-Adresse"
-      />
+      <input 
+        type="email" 
+        id="email" 
+        name="email" 
+        [(ngModel)]="contact.email" 
+        required 
+        placeholder="Deine E-Mail-Adresse" 
+        #email="ngModel" />
+      <div class="error-message" *ngIf="email.invalid && email.touched">
+        Bitte gib eine gültige E-Mail-Adresse ein.
+      </div>
     </div>
-
     <div class="form-group">
       <label for="phone">Telefonnummer</label>
-      <input
-        type="tel"
-        id="phone"
-        name="phone"
-        [(ngModel)]="contact.phone"
-        placeholder="Deine Telefonnummer"
-      />
+      <input 
+        type="tel" 
+        id="phone" 
+        name="phone" 
+        [(ngModel)]="contact.phone" 
+        placeholder="Deine Telefonnummer" />
     </div>
-
     <div class="form-group">
       <label for="message">Nachricht *</label>
-      <textarea
-        id="message"
-        name="message"
-        [(ngModel)]="contact.message"
-        required
-        placeholder="Deine Nachricht"
-      ></textarea>
+      <textarea 
+        id="message" 
+        name="message" 
+        [(ngModel)]="contact.message" 
+        required 
+        placeholder="Deine Nachricht" 
+        #message="ngModel"></textarea>
+      <div class="error-message" *ngIf="message.invalid && message.touched">
+        Nachricht ist erforderlich.
+      </div>
     </div>
-
-    <button
-      type="submit"
-      class="btn-cta"
-      [disabled]="!contactForm.form.valid"
-    >
+    <button type="submit" class="btn-cta" [disabled]="!contactForm.valid">
       Nachricht senden
     </button>
   </form>
 
-   <!-- Feedback-Nachrichten -->
-   <div *ngIf="successMessage" class="alert alert-success">
+  <div *ngIf="successMessage" class="alert alert-success">
     {{ successMessage }}
   </div>
   <div *ngIf="errorMessage" class="alert alert-danger">
     {{ errorMessage }}
   </div>
-  <!-- <div class="test-info">
-    <p>
-      Hinweis: Dies ist ein Test-Formular. Bitte sende keine persönlichen Daten.
-    </p>
-  </div> -->
 </div>

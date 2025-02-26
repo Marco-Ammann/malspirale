@@ -10,7 +10,6 @@ import {
   collection,
   getDocs,
   addDoc,
-  updateDoc,
   deleteDoc,
   doc,
 } from 'firebase/firestore';
@@ -35,10 +34,7 @@ interface Artwork {
 @Component({
   selector: 'app-admin-gallery',
   standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-  ],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './admin-gallery.component.html',
   styleUrls: ['./admin-gallery.component.scss'],
 })
@@ -76,7 +72,7 @@ export class AdminGalleryComponent implements OnInit {
         ...doc.data(),
       })) as Artwork[];
     } catch (error) {
-      console.error('❌ Fehler beim Laden der Galerie:', error);
+      console.error('Fehler beim Laden der Galerie:', error);
       this.errorMessage = 'Fehler beim Laden der Galerie';
     }
   }
@@ -86,8 +82,8 @@ export class AdminGalleryComponent implements OnInit {
     if (!file) return;
 
     this.selectedFile = file;
-
-    // Vorschau-Bild setzen
+    this.galleryForm.patchValue({ image: file });
+    // Bildvorschau erstellen
     const reader = new FileReader();
     reader.onload = (e) => {
       this.selectedImagePreview = e.target?.result as string;
@@ -97,46 +93,35 @@ export class AdminGalleryComponent implements OnInit {
 
   async uploadImage(): Promise<string | null> {
     if (!this.selectedFile) return null;
-
     try {
       const userRole = await this.authService.getUserRole();
       if (userRole !== 'admin') {
-        console.error('❌ Keine Admin-Berechtigung für Upload!');
+        console.error('Keine Admin-Berechtigung für Upload!');
         return null;
       }
-
-      const filename = this.galleryForm.value.filename.trim();
-      const extension = this.selectedFile.name.split('.').pop(); // Dateiendung beibehalten
-      const fullFileName = `${filename}.${extension}`;
-
-      console.log(`🔄 Hochladen: ${fullFileName}`);
-
-      const storageRef = ref(this.storage, `images/${fullFileName}`);
+      const filenameInput = this.galleryForm.value.filename.trim();
+      const extension = this.selectedFile.name.split('.').pop();
+      const fullFileName = `${Date.now()}_${filenameInput}.${extension}`;
+      // Verwende den Ordner "gallery" statt "images/workshops"
+      const storageRef = ref(this.storage, `gallery/${fullFileName}`);
       await uploadBytes(storageRef, this.selectedFile);
       return await getDownloadURL(storageRef);
     } catch (error) {
-      console.error('❌ Fehler beim Hochladen:', error);
+      console.error('Fehler beim Hochladen des Bildes:', error);
       return null;
     }
   }
 
   async addArtwork() {
     if (this.galleryForm.invalid || !this.selectedFile) {
-      console.warn('⚠️ Kein Bild ausgewählt oder Formular ungültig.');
+      console.warn('Kein Bild ausgewählt oder Formular ungültig.');
       return;
     }
-
     this.loading = true;
     const { title, alt } = this.galleryForm.value;
-    console.log('🖼️ Bild hinzufügen:', title, alt);
-
     try {
       const imageUrl = await this.uploadImage();
-
-      console.log('🔗 Bild-URL:', imageUrl);
-      if (!imageUrl) {
-        throw new Error('Bild-Upload fehlgeschlagen');
-      }
+      if (!imageUrl) throw new Error('Bild-Upload fehlgeschlagen');
 
       const docRef = await addDoc(collection(this.db, 'gallery'), {
         title,
@@ -144,26 +129,20 @@ export class AdminGalleryComponent implements OnInit {
         src: imageUrl,
         timestamp: new Date().toISOString(),
       });
-
-      console.log('✅ Bild hinzugefügt:', docRef.id);
-
       this.artworks.push({ id: docRef.id, title, alt, src: imageUrl });
       this.galleryForm.reset();
-      this.selectedImagePreview = null;
       this.selectedFile = null;
-      console.log('🖼️ Bild hinzugefügt:', title, alt);
+      this.selectedImagePreview = null;
     } catch (error) {
-      console.error('❌ Fehler beim Hinzufügen:', error);
+      console.error('Fehler beim Hinzufügen:', error);
+      this.errorMessage = 'Fehler beim Hinzufügen des Bildes.';
     } finally {
-      console.log('🏁 Fertig!');
       this.loading = false;
     }
   }
 
   async deleteArtwork(artwork: Artwork) {
-    if (!confirm('Bist du sicher, dass du dieses Bild löschen möchtest?'))
-      return;
-
+    if (!confirm('Bist du sicher, dass du dieses Bild löschen möchtest?')) return;
     this.loading = true;
     try {
       if (artwork.src) {
@@ -175,7 +154,8 @@ export class AdminGalleryComponent implements OnInit {
         this.artworks = this.artworks.filter((a) => a.id !== artwork.id);
       }
     } catch (error) {
-      console.error('❌ Fehler beim Löschen:', error);
+      console.error('Fehler beim Löschen:', error);
+      this.errorMessage = 'Fehler beim Löschen des Bildes.';
     } finally {
       this.loading = false;
     }
@@ -188,12 +168,13 @@ export class AdminGalleryComponent implements OnInit {
       alt: artwork.alt,
       filename: artwork.src.split('/').pop()?.split('?')[0] || '',
     });
+    // Bei Edit wird evtl. kein neues Bild benötigt – daher nicht resetten
   }
 
   cancelEdit() {
     this.editingArtwork = null;
     this.galleryForm.reset();
-    this.selectedImagePreview = null;
     this.selectedFile = null;
+    this.selectedImagePreview = null;
   }
 }

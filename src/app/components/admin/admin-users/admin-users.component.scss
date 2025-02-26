@@ -1,94 +1,50 @@
+@use 'sass:color';
 @use 'variables' as vars;
-@use 'mixins' as mix;
 
 .admin-users-container {
-  text-align: center;
+  max-width: vars.$container-max-width-lg;
+  margin: 0 auto;
   padding: vars.$padding-large;
+  background: transparentize(vars.$background-color, 0.9);
+  backdrop-filter: blur(8px);
+  border-radius: vars.$border-radius;
+  box-shadow: vars.$box-shadow;
 
   h1 {
-    @include mix.text-style(vars.$primary-color, 2rem, bold);
+    text-align: center;
+    font-size: clamp(2rem, 4vw, 3rem);
+    color: vars.$accent-color-dark;
     margin-bottom: vars.$padding-medium;
   }
 
   .user-list {
-    width: 100%;
-    max-width: 900px;
-    margin: auto;
-    border-radius: vars.$border-radius;
-    box-shadow: vars.$shadow;
-    background: vars.$background-color;
-    padding: vars.$padding-medium;
-
+    overflow-x: auto;
     table {
       width: 100%;
       border-collapse: collapse;
-      border-radius: vars.$border-radius;
-      overflow: hidden;
-      box-shadow: vars.$shadow;
-
+      
       th, td {
         padding: vars.$padding-small;
-        border-bottom: 1px solid vars.$secondary-color;
         text-align: left;
-      }
-
-      th {
-        background: vars.$primary-color;
-        color: #fff;
-        font-weight: bold;
-        text-transform: uppercase;
-      }
-
-      tr {
-        &:hover {
-          background: vars.$hover-color;
-        }
-      }
-
-      td {
+        border-bottom: 1px solid transparentize(vars.$text-color, 0.7);
         font-size: vars.$font-size-base;
-        color: vars.$text-color;
       }
-
-      button {
-        @include mix.button-style(vars.$primary-color, #fff);
-        margin-right: vars.$padding-small;
-        font-size: vars.$font-size-small;
-        padding: 5px 10px;
-        border-radius: vars.$border-radius-small;
+      
+      th {
+        background: transparentize(vars.$background-color, 0.8);
+        color: vars.$accent-color;
       }
-
-      .delete {
-        background-color: #ff4d4d;
+      
+      tr:hover {
+        background: transparentize(vars.$tertiary-color, 0.5);
       }
     }
   }
-
+  
   .no-users {
-    font-style: italic;
-    color: vars.$secondary-color;
-    font-size: vars.$font-size-base;
-    margin-top: vars.$padding-medium;
-  }
-
-  /* Mobile-Optimierung */
-  @media (max-width: 768px) {
-    .user-list {
-      width: 100%;
-      padding: vars.$padding-small;
-    }
-
-    table {
-      font-size: vars.$font-size-small;
-
-      th, td {
-        padding: vars.$padding-extra-small;
-      }
-
-      button {
-        font-size: vars.$font-size-small;
-        padding: 4px 8px;
-      }
-    }
+    text-align: center;
+    font-size: vars.$font-size-large;
+    color: vars.$text-color;
+    padding: vars.$padding-medium;
   }
 }

@@ -2,83 +2,53 @@
 @use 'variables' as vars;
 
 .admin-content {
+  max-width: vars.$container-max-width-lg;
+  margin: 0 auto;
   padding: vars.$padding-large;
-  background: vars.$background-light;
+  background: transparentize(vars.$background-color, 0.9);
+  backdrop-filter: blur(8px);
   border-radius: vars.$border-radius;
-  box-shadow: vars.$shadow;
-  text-align: center;
-
-  h2 {
-    color: vars.$primary-color;
-    font-size: vars.$font-size-xxlarge;
-    margin-bottom: vars.$padding-medium;
-  }
-
-  .loading-indicator {
-    font-style: italic;
-    color: vars.$secondary-color;
-  }
-
-  .quill-editor {
-    margin: vars.$padding-large auto;
-    max-width: 800px;
-
-    .ql-toolbar {
-      border-radius: vars.$border-radius-small;
-      background: vars.$background-color;
-      box-shadow: vars.$shadow;
-    }
-    .ql-container {
-      border-radius: vars.$border-radius-small;
-      background: #fff;
-      min-height: 200px;
-      box-shadow: vars.$shadow;
-    }
+  box-shadow: vars.$box-shadow;
+  display: flex;
+  flex-direction: column;
+  gap: vars.$padding-medium;
   
-    // Style list elements within Quill editor
-    ul, ol {
-      margin: vars.$padding-small 0;
-      padding-left: vars.$padding-medium;
-      li {
-        margin-bottom: vars.$padding-small;
-        line-height: 1.6;
-      }
-    }
+  h2 {
+    text-align: center;
+    font-size: clamp(2rem, 4vw, 3rem);
+    color: vars.$accent-color-dark;
   }
-
-  .btn-primary {
-    margin-top: vars.$padding-medium;
-    padding: vars.$padding-small vars.$padding-medium;
-    background-color: vars.$primary-color;
-    color: vars.$text-color-light;
+  
+  .quill-editor {
+    min-height: 300px;
+    border-radius: vars.$border-radius;
+    overflow: hidden;
+    box-shadow: vars.$box-shadow;
+  }
+  
+  button.btn-primary {
+    align-self: center;
+    padding: vars.$padding-medium vars.$padding-large;
+    font-size: clamp(1rem, 2.5vw, 1.25rem);
     border: none;
     border-radius: vars.$border-radius;
+    background: linear-gradient(
+      270deg,
+      color.scale(vars.$primary-color, $lightness: -10%),
+      color.scale(vars.$secondary-color, $lightness: -10%)
+    );
+    color: vars.$background-color;
     cursor: pointer;
-    transition: background 0.3s ease;
-
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
     &:hover {
-      background-color: vars.$hover-color;
+      transform: translateY(-2px);
+      box-shadow: vars.$hover-shadow;
     }
   }
-
+  
   .save-message {
-    margin-top: vars.$padding-medium;
-    font-size: vars.$font-size-base;
-    color: vars.$text-color;
-  }
-}
-
-// Better responsiveness using breakpoints from variables
-@media (max-width: vars.$breakpoint-md) {
-  .admin-content {
-    padding: vars.$padding-medium;
-    
-    .quill-editor {
-      max-width: 100%;
-    }
-    
-    .btn-primary {
-      width: 100%;
-    }
+    text-align: center;
+    font-weight: vars.$font-weight-bold;
+    color: vars.$accent-color;
   }
 }

@@ -1,31 +1,30 @@
 <div class="admin-users-container">
-  <h1>Benutzerverwaltung</h1>
-
-  <div class="user-list">
+    <h1>Benutzerverwaltung</h1>
+    <div class="user-list">
       <table *ngIf="users.length > 0; else noUsers">
-          <thead>
-              <tr>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Telefonnummer</th>
-                  <th>Aktionen</th>
-              </tr>
-          </thead>
-          <tbody>
-              <tr *ngFor="let user of users">
-                  <td>{{ user.fullName }}</td>
-                  <td>{{ user.email }}</td>
-                  <td>{{ user.phoneNumber }}</td>
-                  <td>
-                      <button (click)="editUser(user.id)">Bearbeiten</button>
-                      <button class="delete" (click)="deleteUser(user.id)">Löschen</button>
-                  </td>
-              </tr>
-          </tbody>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Telefonnummer</th>
+            <th>Aktionen</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of users">
+            <td>{{ user.fullName }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.phoneNumber }}</td>
+            <td>
+              <button (click)="editUser(user.id)" class="btn btn-primary">Bearbeiten</button>
+              <button (click)="deleteUser(user.id)" class="btn btn-danger">Löschen</button>
+            </td>
+          </tr>
+        </tbody>
       </table>
-  </div>
-
-  <ng-template #noUsers>
+    </div>
+    <ng-template #noUsers>
       <p class="no-users">Keine Benutzer gefunden.</p>
-  </ng-template>
-</div>
+    </ng-template>
+  </div>
+  
