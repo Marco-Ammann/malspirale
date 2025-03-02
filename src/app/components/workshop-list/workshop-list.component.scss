@@ -1,6 +1,28 @@
 @use 'sass:color';
 @use 'variables' as vars;
 
+
+.workshop-header {
+  background: linear-gradient(135deg, rgba(255,255,255,0.8), rgba(255,255,255,0.6));
+  backdrop-filter: blur(10px);
+  padding: vars.$padding-large;
+  text-align: center;
+  border-radius: vars.$border-radius;
+  box-shadow: vars.$box-shadow;
+
+  margin-bottom: vars.$padding-large;
+  h2 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    color: vars.$accent-color-dark;
+    margin-bottom: vars.$padding-medium;
+  }
+  p {
+    font-size: clamp(1rem, 2.5vw, 1.5rem);
+    color: vars.$text-color;
+  }
+}
+
+
 .workshop-container {
   max-width: vars.$container-max-width-lg; // z. B. 960px
   margin: 0 auto;

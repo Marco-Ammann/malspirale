@@ -1,45 +1,54 @@
 <div class="gallery-page">
-  <h2>Galerie</h2>
-
-  <!-- Ladeanzeige -->
-  <div *ngIf="loading" class="loading">
-    <p>Lade Bilder...</p>
-  </div>
-
-  <!-- Fehlermeldung -->
-  <div *ngIf="errorMessage" class="error-message">
-    <p>{{ errorMessage }}</p>
-  </div>
-
-  <div class="gallery-grid" *ngIf="!loading && artworks.length > 0">
-    <div *ngFor="let artwork of artworks" class="artwork">
-      <div class="image-container">
-        <img [src]="artwork.src" [alt]="artwork.alt" />
-        <div class="overlay">
-          <div class="text">{{ artwork.title }}</div>
-          <div class="text"> {{ artwork.alt }} </div>
-        </div>
-      </div>
+  <header class="gallery-header">
+    <h2>Isabels Kunstwelt</h2>
+    <p>
+      Willkommen in meiner Galerie. Hier präsentiere ich meine Werke – authentisch, lebendig und persönlich.
+    </p>
+    <p>
+      Alle Bilder wurden von Shiva Ludi fotografiert.
+    </p>
+    <div class="scroll-link">
+      <a href="#sub-gallery" (click)="scrollToSubGallery($event)">Weitere Einblicke</a>
     </div>
-  </div>
+    
+  </header>
 
-  <!-- Fallback für leere Galerie -->
-  <div *ngIf="!loading && artworks.length === 0" class="no-artworks">
-    <div class="gallery-grid" *ngIf="!loading && artworks_default.length > 0">
-      <div *ngFor="let artwork of artworks_default" class="artwork">
+  <section class="main-gallery">
+    <div *ngIf="loading" class="loading">
+      <p>Lade Kunstwerke...</p>
+    </div>
+    <div *ngIf="errorMessage" class="error-message">
+      <p>{{ errorMessage }}</p>
+    </div>
+    <div class="gallery-grid" *ngIf="!loading && artworks.length > 0">
+      <div *ngFor="let artwork of artworks" class="artwork">
         <div class="image-container">
           <img [src]="artwork.src" [alt]="artwork.alt" />
           <div class="overlay">
             <div class="text">{{ artwork.title }}</div>
-            <div class="text"> {{ artwork.alt }} </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
+    <div *ngIf="!loading && artworks.length === 0" class="no-artworks">
+      <p>Zurzeit sind keine Kunstwerke verfügbar.</p>
+    </div>
+  </section>
 
-  <!-- Urheberhinweis -->
-  <div class="gallery-credit">
-    <p>Bilder von Shiva Ludi</p>
-  </div>
+  <section id="sub-gallery" class="sub-gallery">
+    <h3>Weitere Einblicke</h3>
+    <p>
+      Hier zeige ich zusätzliche Werke, die meinen kreativen Weg dokumentieren.
+    </p>
+    <div class="masonry-grid">
+      <div *ngFor="let subArtwork of subArtworks" class="masonry-item">
+        <img [src]="subArtwork.src" [alt]="subArtwork.alt" />
+      </div>
+    </div>
+  </section>
+
+  <footer class="gallery-footer">
+    <p>&copy; 2025 Isabel Kunz – Eine Plattform für echte Kunst.</p>
+    <p>Bilder: Shiva Ludi</p>
+  </footer>
 </div>

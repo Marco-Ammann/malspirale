@@ -65,18 +65,23 @@
 }
 
 /* Responsive bis 320px */
-@media (max-width: 320px) {
+@media (max-width: vars.$tablet) {
   .farben-page {
-    padding: vars.$padding-small;
+    padding: 0!important;
   }
   h2 {
-    font-size: 1.75rem;
+    font-size: 1.5rem!important;
   }
   p {
-    font-size: vars.$font-size-base;
+    font-size: vars.$font-size-base!important;
   }
   .farben-list {
-    grid-template-columns: 1fr;
-    gap: vars.$padding-small;
+    grid-template-columns: 1fr!important;
+    gap: vars.$padding-small!important;
+    padding: vars.$padding-small!important;
+  }
+
+  .farbe {
+    width: 100%;
   }
 }

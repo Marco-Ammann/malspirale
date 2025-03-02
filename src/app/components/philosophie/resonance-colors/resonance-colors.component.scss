@@ -2,7 +2,6 @@
 @use 'variables' as vars;
 
 .resonance-colors-page {
-  max-width: 800px;
   margin: 0 auto;
   padding: vars.$padding-large;
   background: linear-gradient(135deg, vars.$background-light, vars.$background-whiter);
@@ -92,16 +91,16 @@
 }
 
 /* Responsive Anpassungen bis 320px */
-@media (max-width: 320px) {
+@media (max-width: vars.$tablet) {
   .resonance-colors-page {
-    padding: vars.$padding-small;
+    padding: vars.$padding-small !important;
   }
   
   .page-header h1 {
-    font-size: 1.75rem;
+    font-size: 1.5rem !important;
   }
   
   section, .page-footer {
-    font-size: vars.$font-size-base;
+    font-size: vars.$font-size-base !important;
   }
 }

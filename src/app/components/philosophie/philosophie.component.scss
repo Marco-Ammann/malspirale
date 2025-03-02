@@ -1,6 +1,24 @@
 @use 'sass:color';
 @use 'variables' as vars;
 
+.philosophie-header {
+  background: linear-gradient(135deg, rgba(255,255,255,0.8), rgba(255,255,255,0.6));
+  backdrop-filter: blur(10px);
+  padding: vars.$padding-large;
+  text-align: center;
+  border-radius: vars.$border-radius;
+  box-shadow: vars.$box-shadow;
+  h2 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    color: vars.$accent-color-dark;
+    margin-bottom: vars.$padding-medium;
+  }
+  p {
+    font-size: clamp(1rem, 2.5vw, 1.5rem);
+    color: vars.$text-color;
+  }
+}
+
 .philosophie-page {
   max-width: 1200px;
   margin: 0 auto;
@@ -56,24 +74,28 @@
     color: vars.$text-color;
     font-size: vars.$font-size-medium;
   }
+
+
+  
 }
 
-/* Responsive Anpassungen bis 320px */
-@media (max-width: 320px) {
+@media (max-width: #{vars.$tablet}) {
   .philosophie-page {
-    padding: vars.$padding-small;
+    padding: vars.$padding-large vars.$padding-small!important;
   }
   
   h2 {
-    font-size: 1.75rem;
+    font-size: 1.75rem!important;
   }
   
   .intro, .philosophie-content {
-    font-size: vars.$font-size-base;
+    font-size: vars.$font-size-base!important;
+    padding: vars.$padding-small!important;
   }
+
   
   .sub-nav {
     flex-direction: column;
-    gap: vars.$padding-small;
+    gap: vars.$padding-small!important;
   }
 }

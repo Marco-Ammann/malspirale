@@ -19,9 +19,11 @@ interface Artwork {
 })
 export class GalleryComponent implements OnInit {
   artworks: Artwork[] = [];
+  subArtworks: Artwork[] = [];
   loading: boolean = true;
   errorMessage: string = '';
   artworks_default: Artwork[] = [];
+  subArtworks_default: Artwork[] = [];
 
   constructor() {
     for (let i = 1; i <= 21; i++) {
@@ -32,12 +34,22 @@ export class GalleryComponent implements OnInit {
         title: `Bild ${i}`,
       });
     }
-}
+
+    for (let i = 1; i <= 10; i++) {
+      this.subArtworks_default.push({
+        id: `sub${i}`,
+        src: `assets/images/art${i}.webp`,
+        alt: `Untergalerie Beschreibung ${i}`,
+        title: `Untergalerie Bild ${i}`,
+      });
+    }
+  }
 
   private db = getFirestore(firebaseApp);
 
   async ngOnInit(): Promise<void> {
     await this.loadArtworks();
+    await this.loadSubArtworks();
   }
 
   async loadArtworks(): Promise<void> {
@@ -52,13 +64,44 @@ export class GalleryComponent implements OnInit {
         })) as Artwork[];
       } else {
         console.warn('⚠️ Keine Bilder in Firestore.');
-        this.artworks = [];
+        this.artworks = this.artworks_default;
       }
     } catch (error) {
       console.error('❌ Fehler beim Laden der Galerie:', error);
-      this.errorMessage = 'Fehler beim Laden der Galerie.';
+      this.artworks = this.artworks_default;
     } finally {
       this.loading = false;
+    }
+  }
+
+  async loadSubArtworks(): Promise<void> {
+    try {
+      const subArtworksCollection = collection(this.db, 'subGallery');
+      const snapshot = await getDocs(subArtworksCollection);
+
+      if (!snapshot.empty) {
+        this.subArtworks = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        })) as Artwork[];
+      } else {
+        console.warn('⚠️ Keine Untergalerie-Bilder in Firestore.');
+        this.subArtworks = this.subArtworks_default;
+      }
+    } catch (error) {
+      console.error('❌ Fehler beim Laden der Untergalerie:', error);
+      this.subArtworks = this.subArtworks_default;
+    } finally {
+      this.loading = false;
+    }
+  }
+
+
+  scrollToSubGallery(event: Event): void {
+    event.preventDefault();
+    const target = document.getElementById('sub-gallery');
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth' });
     }
   }
 }

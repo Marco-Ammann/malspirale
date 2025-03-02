@@ -16,7 +16,7 @@
     flex: 1;
     position: relative;
     /* Sicherstellen, dass der Content den gleichen Hintergrund hat */
-    background-color: vars.$background-color;
+    background-color: vars.$background-dark;
     
     .loading-overlay {
       position: absolute;

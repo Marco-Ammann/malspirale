@@ -129,3 +129,15 @@
     color: #F44336;
   }
 }
+
+
+@media (max-width: vars.$tablet) {
+  .contact-container {
+    padding: vars.$padding-small;
+  }
+
+  .contact-header, .contact-form {
+    padding: vars.$padding-small;
+  }
+
+}

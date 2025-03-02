@@ -1,32 +1,74 @@
 @use 'sass:color';
 @use 'variables' as vars;
 
+:host {
+  scroll-behavior: smooth;
+}
+
 .gallery-page {
   max-width: 1200px;
   margin: 0 auto;
   padding: vars.$padding-large;
-  display: block;
+  font-family: vars.$font-family;
+  color: vars.$text-color;
+}
+
+/* Header */
+.gallery-header {
+  background: linear-gradient(135deg, rgba(255,255,255,0.8), rgba(255,255,255,0.6));
+  backdrop-filter: blur(10px);
+  padding: vars.$padding-large;
+  text-align: center;
+  border-radius: vars.$border-radius;
+  box-shadow: vars.$box-shadow;
+  margin-bottom: vars.$padding-large;
+  display: flex;
+  flex-direction: column;
+  gap: vars.$padding-small;
   
   h2 {
-    text-align: center;
     font-size: clamp(2rem, 5vw, 3rem);
     color: vars.$accent-color-dark;
-    margin-bottom: vars.$padding-large;
+    margin-bottom: vars.$padding-medium;
   }
   
+  p {
+    font-size: clamp(1rem, 2.5vw, 1.5rem);
+    color: vars.$text-color;
+    margin: 0;
+  }
+  
+  .scroll-link {
+    margin: vars.$padding-large 0;
+    a {
+      font-size: clamp(1rem, 2vw, 1.5rem);
+      color: vars.$accent-color-dark;
+      text-decoration: none;
+      border: 2px solid vars.$accent-color-dark;
+      padding: vars.$padding-small vars.$padding-medium;
+      border-radius: vars.$border-radius;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      &:hover {
+        background-color: vars.$accent-color-dark;
+        color: vars.$background-color;
+      }
+    }
+  }
+}
+
+/* Hauptgalerie im Masonry-Stil */
+.main-gallery {
   .gallery-grid {
-    /* Masonry-Anordnung mittels CSS Columns */
     column-count: 3;
     column-gap: vars.$padding-medium;
     
     .artwork {
-      display: inline-block;
-      width: 100%;
-      margin-bottom: vars.$padding-medium;
       break-inside: avoid;
+      margin-bottom: vars.$padding-medium;
       border-radius: vars.$border-radius;
       overflow: hidden;
       box-shadow: vars.$box-shadow;
+      position: relative;
       
       .image-container {
         position: relative;
@@ -46,7 +88,6 @@
           background: rgba(0, 0, 0, 0.4);
           opacity: 0;
           display: flex;
-          flex-direction: column;
           align-items: center;
           justify-content: center;
           transition: opacity 0.3s ease;
@@ -55,7 +96,6 @@
             color: vars.$background-color;
             font-size: clamp(1rem, 2vw, 1.5rem);
             text-align: center;
-            padding: vars.$padding-small;
           }
         }
         
@@ -70,14 +110,11 @@
     }
   }
   
-  .gallery-credit {
+  .loading, .error-message {
     text-align: center;
-    margin-top: vars.$padding-large;
     
     p {
-      font-size: clamp(0.9rem, 2vw, 1.2rem);
-      color: vars.$text-color;
-      opacity: 0.8;
+      font-size: vars.$font-size-medium;
     }
   }
   
@@ -88,18 +125,79 @@
   }
 }
 
-@media (max-width: vars.$tablet) {
-  .gallery-page {
-    .gallery-grid {
-      column-count: 2;
+/* Untergalerie – Masonry-Stil */
+.sub-gallery {
+  margin-top: vars.$padding-large;
+  text-align: center;
+  
+  h3 {
+    font-size: vars.$font-size-large;
+    color: vars.$accent-color-dark;
+    margin-bottom: vars.$padding-small;
+    border-bottom: 2px solid vars.$accent-color;
+    display: inline-block;
+    padding-bottom: 4px;
+  }
+  
+  p {
+    font-size: vars.$font-size-medium;
+    margin-bottom: vars.$padding-medium;
+  }
+  
+  .masonry-grid {
+    column-count: 3;
+    column-gap: vars.$padding-medium;
+    
+    .masonry-item {
+      break-inside: avoid;
+      margin-bottom: vars.$padding-medium;
+      
+      img {
+        width: 100%;
+        display: block;
+        border-radius: vars.$border-radius;
+        box-shadow: vars.$box-shadow;
+        transition: transform 0.3s ease;
+        
+        &:hover {
+          transform: scale(1.02);
+        }
+      }
     }
   }
 }
 
-@media (max-width: vars.$mobile) {
+/* Footer */
+.gallery-footer {
+  text-align: center;
+  margin-top: vars.$padding-large;
+  
+  p {
+    font-size: clamp(1rem, 2vw, 1.5rem);
+    margin-bottom: vars.$padding-small;
+  }
+}
+
+/* Responsive Anpassungen */
+@media (max-width: 768px) {
+  .main-gallery .gallery-grid,
+  .sub-gallery .masonry-grid {
+    column-count: 2;
+  }
+}
+
+@media (max-width: 320px) {
   .gallery-page {
-    .gallery-grid {
-      column-count: 1;
-    }
+    padding: vars.$padding-small;
+  }
+  .gallery-header h2 {
+    font-size: 1.75rem;
+  }
+  .main-gallery .gallery-grid,
+  .sub-gallery .masonry-grid {
+    column-count: 1;
+  }
+  .gallery-footer p {
+    font-size: vars.$font-size-base;
   }
 }
