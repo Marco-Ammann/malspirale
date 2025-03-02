@@ -1,42 +1,107 @@
 @use 'sass:color';
 @use 'variables' as vars;
-@use 'mixins' as mix;
 
 .resonance-colors-page {
-  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
   padding: vars.$padding-large;
-
-  h2 {
-    font-size: vars.$font-size-large;
-    color: vars.$text-color;
+  background: linear-gradient(135deg, vars.$background-light, vars.$background-whiter);
+  border-radius: vars.$border-radius;
+  color: vars.$text-color;
+  font-family: vars.$font-family;
+  display: flex;
+  flex-direction: column;
+  gap: vars.$padding-large;
+  
+  .page-header {
+    text-align: center;
+    margin-bottom: vars.$padding-large;
+    
+    h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      color: vars.$accent-color-dark;
+      margin: 0;
+    }
+    
+    p {
+      font-size: vars.$font-size-medium;
+      color: vars.$accent-color;
+      margin-top: vars.$padding-small;
+    }
   }
-
-  p {
-    font-size: vars.$font-size-base;
-    color: vars.$text-color;
-    line-height: 1.6;
-    margin-bottom: vars.$padding-medium;
-  }
-
-  ul {
-    list-style: none;
-    padding: 0;
-    text-align: left;
-    max-width: 600px;
-    margin: auto;
-
-    li {
-      font-size: vars.$font-size-base;
-      padding: vars.$padding-small;
-      background: vars.$primary-color;
-      border-radius: vars.$border-radius;
-      margin-bottom: vars.$padding-small;
-      color: white;
-      transition: transform 0.2s ease;
-
-      &:hover {
-        transform: scale(1.05);
+  
+  section {
+    h2 {
+      font-size: vars.$font-size-large;
+      color: vars.$accent-color-dark;
+      border-bottom: 2px solid vars.$accent-color;
+      display: inline-block;
+      padding-bottom: 4px;
+      margin-bottom: vars.$padding-medium;
+    }
+    
+    p {
+      font-size: vars.$font-size-medium;
+      line-height: 1.7;
+      text-align: justify;
+      margin-bottom: vars.$padding-medium;
+    }
+    
+    ul {
+      list-style: disc;
+      padding-left: vars.$padding-medium;
+      margin-bottom: vars.$padding-medium;
+      
+      li {
+        font-size: vars.$font-size-base;
+        margin-bottom: vars.$padding-small;
       }
     }
+  }
+  
+  .page-footer {
+    text-align: center;
+    margin-top: vars.$padding-large;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: vars.$padding-medium;
+    
+    p {
+      font-size: vars.$font-size-medium;
+      margin-bottom: vars.$padding-small;
+      text-align: start;
+    }
+    
+    .cta-link {
+      font-size: vars.$font-size-medium;
+      text-decoration: none;
+      padding: vars.$padding-small vars.$padding-medium;
+      border: 2px solid vars.$accent-color;
+      border-radius: vars.$border-radius;
+      color: vars.$accent-color;
+      transition: background 0.3s ease, color 0.3s ease;
+      align-self: center;
+      &:hover {
+        background: vars.$accent-color;
+        color: vars.$white;
+      }
+    }
+  }
+}
+
+/* Responsive Anpassungen bis 320px */
+@media (max-width: 320px) {
+  .resonance-colors-page {
+    padding: vars.$padding-small;
+  }
+  
+  .page-header h1 {
+    font-size: 1.75rem;
+  }
+  
+  section, .page-footer {
+    font-size: vars.$font-size-base;
   }
 }

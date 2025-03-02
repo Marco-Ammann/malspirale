@@ -10,6 +10,8 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+
+  text-rendering: geometricPrecision;
 }
 
 body {
@@ -181,14 +183,14 @@ a {
 .underlined-a {
   cursor: pointer;
   text-decoration: none;
-  color: vars.$secondary-color;
-  padding-bottom: 0.15em;
+  color: vars.$info-color;
+  padding-bottom: 0.15rem;
   box-sizing: border-box;
-  box-shadow: inset 0 -0.2em 0 vars.$secondary-color;
+  box-shadow: inset 0 -0.1rem 0 vars.$info-color;
   transition: 0.2s;
   &:hover {
     color: vars.$text-color-white;
-    box-shadow: inset 0 -2em 0 vars.$secondary-color;
+    box-shadow: inset 0 -2.2rem 0 vars.$info-color;
     transition: all 0.45s cubic-bezier(0.86, 0, 0.07, 1);
   }
 }

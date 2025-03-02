@@ -1,58 +1,70 @@
-@use 'variables' as *;
-@use 'mixins';
+@use 'sass:color';
+@use 'variables' as vars;
 
 .geschichten-page {
-  max-width: 800px;
-  margin: 2rem auto;
-  padding: 1.5rem;
-  background-color: $background-light;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: vars.$padding-large;
+  color: vars.$text-color;
 
   h2 {
+    font-size: clamp(2rem, 5vw, 3rem);
     text-align: center;
-    margin-bottom: 2rem;
-    font-size: 2rem;
-    color: $primary-color;
+    margin-bottom: vars.$padding-large;
+    color: vars.$accent-color-dark;
+    text-transform: uppercase;
   }
-
+  
+  .stories {
+    display: flex;
+    flex-direction: column;
+    gap: vars.$padding-large;
+  }
+  
   .story {
-    margin-bottom: 1.5rem;
-    padding: 1rem 1.5rem;
-    background-color: #fff;
-    border-left: 4px solid $accent-color;
-    border-radius: 4px;
-
-    h3 {
-      font-size: 1.5rem;
-      margin-bottom: 0.5rem;
-      color: $primary-color;
+    padding: vars.$padding-medium;
+    background: vars.$background-light;
+    border: 1px solid vars.$secondary-color-light;
+    border-radius: vars.$border-radius;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
-
+    
+    h3 {
+      font-size: vars.$font-size-large;
+      margin-bottom: vars.$padding-small;
+      color: vars.$accent-color-dark;
+    }
+    
     p {
-      font-size: 1rem;
-      line-height: 1.6;
-      color: #333;
+      font-size: vars.$font-size-base;
+      line-height: 1.7;
+      margin-bottom: vars.$padding-small;
     }
   }
 }
 
-@media screen and (max-width: 768px) {
+@media (max-width: 320px) {
   .geschichten-page {
-    padding: 1rem;
-
-    h2 {
-      font-size: 1.8rem;
-    }
-
-    .story {
-      h3 {
-        font-size: 1.3rem;
-      }
-      
-      p {
-        font-size: 0.95rem;
-      }
-    }
+    padding: vars.$padding-small;
+  }
+  
+  h2 {
+    font-size: 1.75rem;
+  }
+  
+  .story {
+    padding: vars.$padding-small;
+  }
+  
+  h3 {
+    font-size: 1.5rem;
+  }
+  
+  p {
+    font-size: vars.$font-size-base;
   }
 }

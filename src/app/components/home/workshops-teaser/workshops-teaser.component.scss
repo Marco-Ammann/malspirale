@@ -6,12 +6,14 @@ h2 {
   font-size: vars.$font-size-xxlarge;
   margin-bottom: vars.$padding-medium;
   text-align: left;
+  color: vars.$accent-color-dark;
 }
 
 h3 {
   font-size: vars.$font-size-xlarge;
   margin-bottom: vars.$padding-extra-small;
   text-align: left;
+  color: vars.$accent-color-dark;
 }
 
 p {
@@ -32,7 +34,7 @@ p {
 
 .workshops-teaser {
   text-align: center;
-  background-color: vars.$background-whiter;
+  background: linear-gradient(135deg, rgba(255,255,255,0.8), rgba(255,255,255,0.6));
   border-radius: vars.$border-radius;
   box-shadow: vars.$box-shadow-deep;
   padding: vars.$padding-large;

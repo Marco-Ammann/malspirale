@@ -2,7 +2,7 @@
 @use 'variables' as vars;
 
 .contact-container {
-  max-width: 800px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: vars.$padding-large;
   display: flex;
@@ -11,7 +11,12 @@
 }
 
 .contact-header {
+  background: linear-gradient(135deg, rgba(255,255,255,0.8), rgba(255,255,255,0.6));
+  backdrop-filter: blur(10px);
+  padding: vars.$padding-large;
   text-align: center;
+  border-radius: vars.$border-radius;
+  box-shadow: vars.$box-shadow;
   h2 {
     font-size: clamp(2rem, 5vw, 3rem);
     color: vars.$accent-color-dark;
@@ -24,7 +29,7 @@
 }
 
 .contact-form {
-  background: transparentize(vars.$background-color, 0.7);
+  background: linear-gradient(135deg, rgba(255,255,255,0.8), rgba(255,255,255,0.6));
   backdrop-filter: blur(8px);
   padding: vars.$padding-large;
   border-radius: vars.$border-radius;

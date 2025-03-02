@@ -12,23 +12,33 @@ import Typed from 'typed.js';
 })
 export class HeroComponent implements AfterViewInit {
   scrollPosition = 0;
+  private ticking = false;
+
   constructor(private router: Router) {}
 
   ngAfterViewInit(): void {
     this.updateParallax();
   }
 
-  @HostListener('window:scroll', ['$event'])
-  onScroll(event: any): void {
+  @HostListener('window:scroll')
+  onScroll(): void {
     this.scrollPosition = window.scrollY;
-    this.updateParallax();
+
+    if (!this.ticking) {
+      this.ticking = true;
+
+      requestAnimationFrame(() => {
+        this.updateParallax();
+        this.ticking = false;
+      });
+    }
   }
 
   updateParallax(): void {
     const heroBackground = document.querySelector('.hero-background') as HTMLElement;
     if (heroBackground) {
-      const offset = this.scrollPosition * 0.4; // Adjust the multiplier for desired effect
-      heroBackground.style.backgroundPositionY = `-${offset}px`;
+      const offset = this.scrollPosition * 0.4;
+      heroBackground.style.transform = `translateY(${offset}px)`;
     }
   }
 

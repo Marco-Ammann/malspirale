@@ -5,13 +5,28 @@
   </header>
 
   <section class="about-content">
-    <figure class="about-image">
-      <img src="assets/images/isabel/isabel3.jpg" alt="Isabel Kunz">
-    </figure>
-
     <article class="about-text">
+      <!-- Bild wird in den Text integriert, sodass der Text darum herum fließt -->
+      <figure class="about-image">
+        <img src="assets/images/isabel/isabel3.jpg" alt="Isabel Kunz">
+      </figure>
       <p *ngIf="loading" class="loading-indicator">⏳ Loading content...</p>
       <div *ngIf="!loading" [innerHTML]="aboutText"></div>
     </article>
+  </section>
+
+  <!-- Überarbeitet: Projekt-Abschnitt mit narrativer Aussage -->
+  <section class="about-project" data-aos="fade-up">
+    <h2>Unsere kreative Reise</h2>
+    <p>
+      Dieses Projekt war für mich eine unglaublich inspirierende und freudige Erfahrung – voller Spaß, kreativer Freiheit und gemeinsamer Leidenschaft.
+    </p>
+    <p>
+      Isabel, eine wunderbare Frau mit einer beeindruckenden Vision, hat mit ihrem Engagement und ihrer Energie dieses Projekt zu etwas Einzigartigem gemacht.
+    </p>
+    <p>
+      Es war ein echtes Privileg, ihre Ideen in die digitale Welt zu übersetzen und dabei meine freie Hand in der Umsetzung zu genießen. 
+      Entwickelt von <a href="https://marco-ammann.ch" target="_blank" class="developer-link">Marco Ammann</a>, spiegelt diese Webseite den Geist innovativer Zusammenarbeit und die pure Freude am kreativen Schaffen wider.
+    </p>
   </section>
 </div>

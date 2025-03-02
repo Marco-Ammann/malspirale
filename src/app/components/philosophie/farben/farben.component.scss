@@ -1,126 +1,82 @@
-@use "variables" as vars;
-@use "mixins" as mix;
+@use 'sass:color';
+@use 'variables' as vars;
 
 .farben-page {
-  max-width: 900px;
-  margin: auto;
-  padding: vars.$container-padding-large;
-}
-
-.farben-list {
-  display: flex;
-  flex-direction: column;
-  gap: vars.$padding-medium;
-  margin-top: vars.$padding-large;
-}
-
-.farbe {
-  display: flex;
-  background: vars.$background-light;
-  padding: vars.$padding-medium;
-  border-radius: vars.$border-radius-large;
-  box-shadow: vars.$box-shadow;
-}
-
-.farblinie {
-  width: 8px;
-  border-radius: 4px;
-  margin-right: vars.$padding-medium;
-}
-
-.farbtext {
-  flex: 1;
-
-  h3 {
-    margin: 0;
-    font-size: vars.$font-size-xlarge;
-  }
-
-  p {
-    margin: vars.$padding-small 0;
-    font-size: vars.$font-size-large;
-  }
-}
-
-@media (max-width: 768px) {
-  .farben-page {
-    padding: vars.$container-padding;
-  }
-
-  .farbe {
-    display: flex;
-    flex-direction: column;
-    text-align: start;
-    padding: vars.$padding-medium;
-    justify-content: start;
-    margin: 0;
-  }
-
-  .farblinie {
-    height: 8px;
-    width: 70%;
-  }
-
-  .farbtext {
-    h3 {
-      font-size: vars.$font-size-large;
-    }
-
-    p {
-      font-size: vars.$font-size-medium;
-    }
-  }
-
-
-}
-
-@media (max-width: 480px) {
-  .farben-page {
-    padding: vars.$container-padding;
-  }
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: vars.$padding-large;
 
   h2 {
-    font-size: vars.$font-size-xlarge;
+    font-size: clamp(2rem, 5vw, 3rem);
+    text-align: center;
+    color: vars.$accent-color-dark;
+    margin-bottom: vars.$padding-large;
+    text-transform: uppercase;
   }
 
   p {
     font-size: vars.$font-size-medium;
+    line-height: 1.7;
+    color: vars.$text-color;
+    text-align: center;
+    margin-bottom: vars.$padding-large;
   }
 
-  .farbe {
-    padding: vars.$padding-small;
-    justify-content: start;
-  }
-
-  .farblinie {
-    margin: 0;
-  }
-
-
-  .farbtext {
-    text-align: start;
-    h3 {
-      font-size: vars.$font-size-medium;
-    }
-
-    p {
-      font-size: vars.$font-size-small;
+  .farben-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: vars.$padding-large;
+    
+    .farbe {
+      background: linear-gradient(135deg, vars.$background-light, vars.$background-whiter);
+      backdrop-filter: blur(8px);
+      padding: vars.$padding-medium;
+      border-radius: vars.$border-radius;
+      box-shadow: vars.$box-shadow;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      
+      &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      }
+      
+      .farblinie {
+        height: 5px;
+        border-radius: vars.$border-radius-small;
+        margin-bottom: vars.$padding-small;
+      }
+      
+      .farbtext {
+        h3 {
+          font-size: vars.$font-size-large;
+          color: vars.$accent-color-dark;
+          margin-bottom: vars.$padding-small;
+        }
+        
+        p {
+          font-size: vars.$font-size-base;
+          line-height: 1.7;
+          color: vars.$text-color;
+          margin-bottom: vars.$padding-small;
+        }
+      }
     }
   }
 }
 
+/* Responsive bis 320px */
 @media (max-width: 320px) {
   .farben-page {
-    padding: vars.$container-padding;
-  }
-
-  h2 {
-    font-size: vars.$font-size-large;
-  }
-
-
-
-  .farbe {
     padding: vars.$padding-small;
+  }
+  h2 {
+    font-size: 1.75rem;
+  }
+  p {
+    font-size: vars.$font-size-base;
+  }
+  .farben-list {
+    grid-template-columns: 1fr;
+    gap: vars.$padding-small;
   }
 }

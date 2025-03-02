@@ -1,62 +1,79 @@
 @use 'sass:color';
 @use 'variables' as vars;
-@use 'mixins' as mix;
 
 .philosophie-page {
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: vars.$padding-large;
-  text-align: center;
-
+  display: flex;
+  flex-direction: column;
+  gap: vars.$padding-large;
+  
   h2 {
-    font-size: vars.$font-size-xlarge;
+    font-size: clamp(2rem, 5vw, 3rem);
+    text-align: center;
+    color: vars.$accent-color-dark;
+    margin-bottom: vars.$padding-medium;
+    text-transform: uppercase;
+  }
+  
+  .intro {
+    font-size: vars.$font-size-medium;
+    text-align: center;
     color: vars.$text-color;
     margin-bottom: vars.$padding-medium;
+    line-height: 1.7;
   }
-
-  // Subnavigation für die Philosophie-Seiten
+  
   .sub-nav {
     display: flex;
     justify-content: center;
     gap: vars.$padding-medium;
-    margin-bottom: vars.$padding-medium;
-
+    margin-bottom: vars.$padding-large;
+    
     a {
       text-decoration: none;
       font-size: vars.$font-size-base;
-      padding: vars.$padding-small vars.$padding-medium;
-      border-radius: vars.$border-radius-small;
-      color: vars.$text-color;
-      background: vars.$primary-color;
-      transition: background-color 0.3s ease, transform 0.2s ease;
-
+      color: vars.$link-color;
+      transition: color 0.3s ease, border-bottom 0.3s ease;
+      padding-bottom: 2px;
+      border-bottom: 2px solid transparent;
+      
       &:hover,
       &.active {
-        background: color.adjust(vars.$primary-color, $lightness: -10%);
-        color: #fff;
-        transform: scale(1.05);
+        color: vars.$accent-color;
+        border-bottom: 2px solid vars.$accent-color;
       }
     }
   }
-
-  // Container für die Inhalte der Unterseiten
+  
   .philosophie-content {
-    background: white;
-    padding: vars.$padding-medium;
+    background: linear-gradient(135deg, vars.$background-light, vars.$background-whiter);
+    backdrop-filter: blur(8px);
+    padding: vars.$padding-large;
     border-radius: vars.$border-radius;
-    box-shadow: vars.$hover-shadow;
-    text-align: left;
+    box-shadow: vars.$box-shadow;
+    color: vars.$text-color;
+    font-size: vars.$font-size-medium;
   }
 }
 
-/* 📱 Responsive Anpassungen */
-@media (max-width: vars.$tablet) {
+/* Responsive Anpassungen bis 320px */
+@media (max-width: 320px) {
+  .philosophie-page {
+    padding: vars.$padding-small;
+  }
+  
+  h2 {
+    font-size: 1.75rem;
+  }
+  
+  .intro, .philosophie-content {
+    font-size: vars.$font-size-base;
+  }
+  
   .sub-nav {
     flex-direction: column;
     gap: vars.$padding-small;
-  }
-
-  .philosophie-page {
-    padding: vars.$padding-medium;
   }
 }

@@ -4,11 +4,12 @@
 .gallery {
   text-align: center;
   padding: vars.$padding-large 0;
-  background-color: transparent;
-  
+  background: linear-gradient(135deg, rgba(255,255,255,0.8), rgba(255,255,255,0.6));
+
   h2 {
     font-size: vars.$font-size-xxlarge;
     margin-bottom: vars.$padding-small;
+    color: vars.$accent-color-dark;
   }
   
   .gallery-grid {

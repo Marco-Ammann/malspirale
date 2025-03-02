@@ -89,6 +89,6 @@ export class HeaderComponent implements OnDestroy {
 
   @HostListener('window:scroll', [])
   onWindowScroll() {
-    this.isScrolled = window.pageYOffset > 50;
+    this.isScrolled = window.scrollY > 50;
   }
 }

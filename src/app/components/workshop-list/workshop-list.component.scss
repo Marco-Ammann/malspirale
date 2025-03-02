@@ -26,7 +26,7 @@
 
 h2 {
   text-align: center;
-  font-size: clamp(1.8rem, 4vw, 2.2rem);
+  font-size: clamp(2rem, 5vw, 3rem);
   color: vars.$accent-color-dark;
   margin-bottom: vars.$padding-small;
 }
@@ -56,7 +56,7 @@ p {
     height: vars.$padding-medium;
   }
   break-inside: avoid;
-  background: transparentize(vars.$background-color, 0.65);
+  background: linear-gradient(135deg, rgba(255,255,255,0.8), rgba(255,255,255,0.6));
   backdrop-filter: blur(6px);
   border-radius: vars.$border-radius;
   box-shadow: vars.$box-shadow;
