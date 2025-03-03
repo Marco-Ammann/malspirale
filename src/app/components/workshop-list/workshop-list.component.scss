@@ -1,30 +1,8 @@
 @use 'sass:color';
 @use 'variables' as vars;
 
-
-.workshop-header {
-  background: linear-gradient(135deg, rgba(255,255,255,0.8), rgba(255,255,255,0.6));
-  backdrop-filter: blur(10px);
-  padding: vars.$padding-large;
-  text-align: center;
-  border-radius: vars.$border-radius;
-  box-shadow: vars.$box-shadow;
-
-  margin-bottom: vars.$padding-large;
-  h2 {
-    font-size: clamp(2rem, 5vw, 3rem);
-    color: vars.$accent-color-dark;
-    margin-bottom: vars.$padding-medium;
-  }
-  p {
-    font-size: clamp(1rem, 2.5vw, 1.5rem);
-    color: vars.$text-color;
-  }
-}
-
-
 .workshop-container {
-  max-width: vars.$container-max-width-lg; // z. B. 960px
+  max-width: vars.$container-max-width-lg; // z.B. 960px
   margin: 0 auto;
   padding: vars.$padding-medium;
   display: flex;
@@ -46,37 +24,36 @@
   }
 }
 
-h2 {
+.workshop-header {
+  background: linear-gradient(135deg, rgba(255,255,255,0.8), rgba(255,255,255,0.6));
+  backdrop-filter: blur(10px);
+  padding: vars.$padding-large;
   text-align: center;
-  font-size: clamp(2rem, 5vw, 3rem);
-  color: vars.$accent-color-dark;
-  margin-bottom: vars.$padding-small;
+  border-radius: vars.$border-radius;
+  box-shadow: vars.$box-shadow;
+  margin-bottom: vars.$padding-large;
+  
+  h2 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    color: vars.$accent-color-dark;
+    margin-bottom: vars.$padding-medium;
+  }
+  p {
+    font-size: clamp(1rem, 2.5vw, 1.5rem);
+    color: vars.$text-color;
+  }
 }
 
-p {
-  font-size: vars.$font-size-base;
-  line-height: 1.4;
-  color: vars.$text-color;
-  margin-bottom: vars.$padding-small;
-}
-
-/* Masonry Layout per CSS Columns */
 .workshops-grid {
-  column-count: 3;
-  column-gap: vars.$padding-small;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: vars.$padding-small;
 }
 
 .workshop-card {
   display: inline-block;
   width: 100%;
-  /* Verwende einen größeren unteren Abstand */
   margin-bottom: vars.$padding-medium;
-  /* Zusätzlich: Pseudo-Element, um sicherzustellen, dass der Abstand nicht kollabiert */
-  &::after {
-    content: "";
-    display: block;
-    height: vars.$padding-medium;
-  }
   break-inside: avoid;
   background: linear-gradient(135deg, rgba(255,255,255,0.8), rgba(255,255,255,0.6));
   backdrop-filter: blur(6px);
@@ -84,43 +61,43 @@ p {
   box-shadow: vars.$box-shadow;
   cursor: pointer;
   transition: transform 0.2s ease;
-
+  
   &:hover {
     transform: translateY(-2px);
   }
-
+  
   .workshop-image {
     max-height: 200px;
     overflow: hidden;
     img {
       width: 100%;
       height: 100%;
-      object-fit: contain; /* Ganze Bilder anzeigen, ohne sie stark zuzuschneiden */
+      object-fit: contain;
       display: block;
     }
   }
-
+  
   .workshop-info {
     padding: vars.$padding-small;
-
+    
     h3 {
-      margin: 0 0 vars.$padding-extra-small 0;  // ersetzt "padding-tiny" durch "padding-extra-small"
+      margin: 0 0 vars.$padding-extra-small 0;
       font-size: clamp(1.1rem, 2vw, 1.4rem);
       color: vars.$accent-color-dark;
     }
-
+    
     .meta-info {
       font-size: 0.85rem;
       color: vars.$text-color;
       margin-bottom: vars.$padding-extra-small;
     }
-
+    
     .workshop-short-description {
       font-size: 0.85rem;
       color: vars.$text-color;
     }
   }
-
+  
   .workshop-actions {
     text-align: center;
     padding: vars.$padding-extra-small;
@@ -147,7 +124,7 @@ p {
 
 @media (max-width: vars.$desktop) {
   .workshops-grid {
-    column-count: 2;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   }
 }
 
@@ -155,18 +132,13 @@ p {
   .workshop-container {
     padding: vars.$padding-small;
   }
-  .workshops-grid {
-    column-count: 1;
+  .search-container .search-box {
+    max-width: 300px;
   }
 }
 
 @media (max-width: vars.$mobile) {
   .workshop-container {
     padding: vars.$padding-extra-small;
-    .search-container {
-      .search-box {
-        max-width: 300px;
-      }
-    }
   }
 }

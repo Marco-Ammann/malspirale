@@ -1,84 +1,148 @@
 @use 'sass:color';
 @use 'variables' as vars;
 
-.workshop-detail {
+::ng-deep.workshop-detail {
   max-width: 1000px;
   margin: 0 auto;
+  /* Optional: Padding um den gesamten Bereich herum */
   padding: vars.$padding-large;
-  
-  .detail-wrapper {
-    display: flex;
-    gap: vars.$padding-large;
-    background: transparentize(vars.$background-color, 0.7);
-    backdrop-filter: blur(8px);
+
+  .hero-image {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
     border-radius: vars.$border-radius;
     box-shadow: vars.$box-shadow;
-    overflow: hidden;
-    
-    .workshop-image {
-      flex: 1;
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
+    margin-bottom: vars.$padding-large;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
     }
-    
-    .workshop-info {
-      flex: 1;
-      padding: vars.$padding-large;
+
+    .hero-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.7),
+        transparent
+      );
+      color: vars.$white;
+      padding: vars.$padding-medium;
       display: flex;
       flex-direction: column;
-      gap: vars.$padding-medium;
-      
-      h2 {
+      gap: vars.$padding-extra-small;
+
+      h1 {
         font-size: clamp(2rem, 4vw, 3rem);
-        color: vars.$accent-color-dark;
         margin: 0;
       }
-      
-      p {
+      .hero-meta {
         font-size: vars.$font-size-base;
-        color: vars.$text-color;
+      }
+    }
+  }
+
+  .detail-content {
+    background: linear-gradient(135deg, vars.$background-light, vars.$background-whiter);
+    backdrop-filter: blur(6px);
+    border-radius: vars.$border-radius;
+    box-shadow: vars.$box-shadow;
+    padding: vars.$padding-large;
+
+    display: flex;
+    flex-direction: column;
+    gap: vars.$padding-medium;
+
+    .meta-info {
+      display: flex;
+      flex-wrap: wrap;
+      gap: vars.$padding-small;
+      font-size: vars.$font-size-base;
+      p {
         margin: 0;
       }
+    }
+
+    .description {
+      font-size: vars.$font-size-medium;
+      line-height: 1.6;
+      color: vars.$text-color;
       
-      .description {
-        font-size: vars.$font-size-medium;
-        line-height: 1.6;
+      strong {
+        font-weight: bold;
+        margin-top: 8px;
       }
-      
-      .workshop-actions {
-        margin-top: auto;
-        text-align: center;
-        button.btn-primary {
-          padding: vars.$padding-medium vars.$padding-large;
-          font-size: clamp(1rem, 2.5vw, 1.5rem);
-          border: none;
-          border-radius: vars.$border-radius;
-          background: linear-gradient(
-            270deg,
-            color.scale(vars.$primary-color, $lightness: -10%),
-            color.scale(vars.$secondary-color, $lightness: -10%)
-          );
-          color: vars.$background-color;
-          cursor: pointer;
-          transition: transform 0.3s ease, box-shadow 0.3s ease;
-          
-          &:hover {
-            transform: translateY(-3px);
-            box-shadow: vars.$hover-shadow;
-          }
+
+      em {
+        font-style: italic;
+      }
+
+      ul, ol {
+        margin: vars.$padding-small 0;
+        padding-left: vars.$padding-medium;
+      }
+
+      p {
+        margin-bottom: 16px!important;
+      }
+    }
+
+    .detail-actions {
+      text-align: center;
+      button.btn-primary {
+        padding: vars.$padding-medium vars.$padding-large;
+        font-size: clamp(1rem, 2.5vw, 1.5rem);
+        border: none;
+        border-radius: vars.$border-radius;
+        background: linear-gradient(
+          270deg,
+          color.scale(vars.$primary-color, $lightness: -10%),
+          color.scale(vars.$secondary-color, $lightness: -10%)
+        );
+        color: vars.$white;
+        cursor: pointer;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        
+        &:hover {
+          transform: translateY(-3px);
+          box-shadow: vars.$hover-shadow;
         }
       }
     }
+  }
+
+  .error {
+    font-size: vars.$font-size-medium;
+    color: vars.$danger-color;
+    text-align: center;
+    margin-top: vars.$padding-large;
   }
 }
 
 @media (max-width: vars.$tablet) {
   .workshop-detail {
-    .detail-wrapper {
-      flex-direction: column;
+    padding: vars.$padding-medium;
+    .hero-image {
+      height: 200px;
+      .hero-overlay {
+        padding: vars.$padding-small;
+      }
+    }
+  }
+}
+
+@media (max-width: 320px) {
+  .workshop-detail {
+    padding: vars.$padding-small;
+    .hero-image {
+      height: 180px;
     }
   }
 }

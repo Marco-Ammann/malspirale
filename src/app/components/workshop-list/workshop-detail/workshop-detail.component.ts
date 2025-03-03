@@ -1,8 +1,9 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Workshop } from '../../../core/interfaces/interfaces';
-import { DataService } from '../../../core/services/data.service';
+
 import { CommonModule } from '@angular/common';
+import { DataService } from '../../../core/services/data.service';
+import { Workshop } from '../../../core/interfaces/interfaces';
 
 @Component({
   selector: 'app-workshop-detail',
@@ -16,23 +17,19 @@ export class WorkshopDetailComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   workshop!: Workshop;
-  imageLoaded = false;
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.dataService.getWorkshop(id).subscribe({
-        next: (data) => this.workshop = data,
-        error: (err) => console.error('Workshop nicht gefunden', err)
+        next: (data: Workshop) => { this.workshop = data; },
+        error: (err: any) => console.error('Workshop nicht gefunden', err)
       });
     }
   }
 
   registerForWorkshop(): void {
-    // Logik zur Anmeldung zum Workshop
-  }
-
-  requestIndividualInquiry(): void {
-    this.router.navigate(['/contact']);
+    // Beispiel: Navigiere zur Anmeldeseite mit der Workshop-ID
+    this.router.navigate(['/register', this.workshop.id]);
   }
 }

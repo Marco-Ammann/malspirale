@@ -1,26 +1,44 @@
-import { Component, OnInit, inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+
+import { FormsModule } from '@angular/forms';
+import { QuillModule } from 'ngx-quill';
 import { Workshop } from '../../../core/interfaces/interfaces';
+import { AuthService } from '../../../core/services/auth.service';
 import { DataService } from '../../../core/services/data.service';
 import { StorageService } from '../../../core/services/storage.service';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-admin-workshops',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, QuillModule],
   templateUrl: './admin-workshops.component.html',
   styleUrls: ['./admin-workshops.component.scss']
 })
 export class AdminWorkshopsComponent implements OnInit {
-  private dataService = inject(DataService);
-  private router = inject(Router);
-  private storageService = inject(StorageService);
-
   workshops: Workshop[] = [];
   selectedWorkshop: Workshop | null = null;
-  errorMessage = '';
+  errorMessage: string = '';
+
+  // Konfiguration für den Quill-Editor
+  quillConfig = {
+    toolbar: [
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ header: 1 }, { header: 2 }],
+      [{ list: 'ordered' }, { list: 'bullet' }],
+      [{ indent: '-1' }, { indent: '+1' }],
+      [{ size: ['small', false, 'large', 'huge'] }],
+      [{ color: [] }, { background: [] }],
+      [{ align: [] }],
+      ['clean']
+    ]
+  };
+
+  constructor(
+    private dataService: DataService,
+    private authService: AuthService,
+    private storageService: StorageService
+  ) {}
 
   ngOnInit(): void {
     this.loadWorkshops();
@@ -28,27 +46,27 @@ export class AdminWorkshopsComponent implements OnInit {
 
   loadWorkshops(): void {
     this.dataService.getWorkshops().subscribe({
-      next: (data) => { this.workshops = data; },
-      error: (err) => { console.error('Fehler beim Laden der Angebote', err); }
+      next: (data: Workshop[]) => { this.workshops = data; },
+      error: (err: any) => { console.error('Fehler beim Laden der Workshops', err); }
     });
   }
 
   createWorkshop(): void {
     this.selectedWorkshop = {
+      type: 'workshop',
       title: '',
       shortDescription: '',
       description: '',
       location: '',
       date: '',
       price: 0,
-      imageUrl: '',
       startTime: '',
       endTime: '',
       maxParticipants: undefined,
       availableSlots: undefined,
       frequency: '',
       contactEmail: '',
-      type: 'workshop'
+      imageUrl: ''
     };
   }
 
@@ -58,25 +76,24 @@ export class AdminWorkshopsComponent implements OnInit {
 
   async deleteWorkshop(id?: string): Promise<void> {
     if (!id) return;
-    try {
-      await this.dataService.deleteWorkshop(id);
-      this.loadWorkshops();
-    } catch (error) {
-      console.error('Fehler beim Löschen des Angebots', error);
+    if (confirm('Möchtest du diesen Workshop wirklich löschen?')) {
+      try {
+        await this.dataService.deleteWorkshop(id);
+        this.workshops = this.workshops.filter(w => w.id !== id);
+      } catch (error) {
+        console.error('Fehler beim Löschen des Workshops', error);
+      }
     }
   }
 
   async saveWorkshop(): Promise<void> {
     if (!this.selectedWorkshop) return;
+    
+    // Bereinige Texte, um nicht-brechende Leerzeichen zu entfernen
+    this.selectedWorkshop.shortDescription = this.selectedWorkshop.shortDescription.replace(/&nbsp;/g, ' ');
+    this.selectedWorkshop.description = this.selectedWorkshop.description.replace(/&nbsp;/g, ' ');
+    
     try {
-      if (this.selectedWorkshop.type === 'workshop' && !this.selectedWorkshop.date) {
-        this.errorMessage = 'Bitte geben Sie ein Datum für den Workshop an.';
-        return;
-      }
-      if (this.selectedWorkshop.type === 'malatelier' && !this.selectedWorkshop.frequency) {
-        this.errorMessage = 'Bitte geben Sie an, wie oft das Malatelier stattfindet.';
-        return;
-      }
       if (this.selectedWorkshop.id) {
         await this.dataService.updateWorkshop(this.selectedWorkshop);
       } else {
@@ -86,8 +103,8 @@ export class AdminWorkshopsComponent implements OnInit {
       this.selectedWorkshop = null;
       this.loadWorkshops();
     } catch (error) {
-      console.error('Fehler beim Speichern des Angebots', error);
-      this.errorMessage = 'Fehler beim Speichern des Angebots.';
+      console.error('Fehler beim Speichern des Workshops', error);
+      this.errorMessage = 'Fehler beim Speichern des Workshops.';
     }
   }
 
@@ -95,16 +112,17 @@ export class AdminWorkshopsComponent implements OnInit {
     this.selectedWorkshop = null;
   }
 
-  handleImageUpload(event: any): void {
-    const file = event.target.files[0];
-    if (file) {
-      this.storageService.uploadFile(file).then(url => {
-        if (this.selectedWorkshop) {
-          this.selectedWorkshop.imageUrl = url;
-        }
-      }).catch(err => {
-        console.error('Fehler beim Bild-Upload', err);
-      });
+  async handleImageUpload(event: Event): Promise<void> {
+    const input = event.target as HTMLInputElement;
+    if (!input.files || input.files.length === 0) return;
+    const file = input.files[0];
+    try {
+      const url = await this.storageService.uploadFile(file);
+      if (this.selectedWorkshop) {
+        this.selectedWorkshop.imageUrl = url;
+      }
+    } catch (error) {
+      console.error('Fehler beim Hochladen des Bildes', error);
     }
   }
 }

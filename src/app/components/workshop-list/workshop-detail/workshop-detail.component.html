@@ -1,19 +1,34 @@
 <div class="workshop-detail" *ngIf="workshop; else notFound">
-  <div class="detail-wrapper animate-in">
-    <div class="workshop-image">
-      <img [src]="workshop.imageUrl || 'assets/images/default-workshop.jpg'" alt="Workshop Bild" />
+  <div class="hero-image animate-in">
+    <img
+      [src]="workshop.imageUrl || 'assets/images/default-workshop.jpg'"
+      alt="Workshop Bild"
+    />
+    <div class="hero-overlay">
+      <h1>{{ workshop.title }}</h1>
+      <p *ngIf="workshop.date" class="hero-meta">
+        <span>📅 {{ workshop.date | date:'dd.MM.yyyy' }}</span>
+      </p>
     </div>
-    <div class="workshop-info">
-      <h2>{{ workshop.title }}</h2>
-      <p *ngIf="workshop.date">📅 {{ workshop.date | date:'dd.MM.yyyy' }}</p>
+  </div>
+
+  <div class="detail-content">
+    <div class="meta-info">
       <p *ngIf="workshop.location">📍 {{ workshop.location }}</p>
       <p *ngIf="workshop.price !== undefined">
         💰 {{ workshop.price ? (workshop.price | currency:'CHF') : 'Kostenlos' }}
       </p>
-      <p class="description">{{ workshop.description }}</p>
-      <div class="workshop-actions">
-        <button class="btn btn-primary" (click)="registerForWorkshop()">Jetzt anmelden</button>
-      </div>
+    </div>
+
+    <!-- Ausführliche Beschreibung -->
+    <div
+      class="description"
+      [innerHTML]="workshop.description"
+    ></div>
+
+    <!-- Aktionen (z.B. "Jetzt anmelden") -->
+    <div class="detail-actions">
+      <button class="btn btn-primary" (click)="registerForWorkshop()">Jetzt anmelden</button>
     </div>
   </div>
 </div>

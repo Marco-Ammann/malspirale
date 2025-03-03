@@ -1,7 +1,7 @@
 <div class="admin-workshops">
-  <h2>Angebote verwalten</h2>
+  <h2>Workshops &amp; Angebote verwalten</h2>
   
-  <!-- Liste der bestehenden Angebote -->
+  <!-- Liste der bestehenden Workshops -->
   <div class="workshops-list">
     <div *ngFor="let workshop of workshops" class="workshop-list-item">
       <div class="workshop-image">
@@ -19,7 +19,6 @@
           <span *ngIf="workshop.startTime && workshop.endTime">
             <strong>Uhrzeit:</strong> {{ workshop.startTime }} - {{ workshop.endTime }}
           </span>
-          <!-- Weitere Infos nach Bedarf -->
         </div>
       </div>
       <div class="actions">
@@ -30,164 +29,136 @@
   </div>
 
   <button (click)="createWorkshop()" class="new-workshop-btn">
-    Neuen Eintrag hinzufügen
+    Neuen Workshop hinzufügen
   </button>
-<!-- Formular zur Erstellung/Bearbeitung -->
-<div class="workshop-edit-form" *ngIf="selectedWorkshop">
-  <form (ngSubmit)="saveWorkshop()">
-    <!-- Zeile 1: Art des Angebots & Titel -->
-    <div class="form-row">
-      <div class="form-group half">
-        <label for="type">Art des Angebots</label>
-        <select id="type" [(ngModel)]="selectedWorkshop.type" name="type" required>
-          <option value="workshop">Workshop (feste Termine)</option>
-          <option value="malatelier">Malatelier (wiederkehrend)</option>
-          <option value="individuelleAnfrage">Individuelle Anfrage (für besondere Anlässe)</option>
-        </select>
-      </div>
-      <div class="form-group half">
-        <label for="title">Titel</label>
-        <input id="title" [(ngModel)]="selectedWorkshop.title" name="title" required />
-      </div>
-    </div>
-
-    <!-- Zeile 2: Kurzbeschreibung & Beschreibung -->
-    <div class="form-group">
-      <label for="shortDescription">Kurzbeschreibung</label>
-      <textarea
-        id="shortDescription"
-        [(ngModel)]="selectedWorkshop.shortDescription"
-        name="shortDescription"
-        required
-      ></textarea>
-    </div>
-    <div class="form-group">
-      <label for="description">Beschreibung</label>
-      <textarea
-        id="description"
-        [(ngModel)]="selectedWorkshop.description"
-        name="description"
-        required
-      ></textarea>
-    </div>
-
-    <!-- Zeile 3: Ort (immer benötigt) -->
-    <div class="form-group">
-      <label for="location">Ort</label>
-      <input id="location" [(ngModel)]="selectedWorkshop.location" name="location" required />
-    </div>
-
-    <!-- Typ-spezifische Felder: Workshop -->
-    <div *ngIf="selectedWorkshop.type === 'workshop'" class="type-specific">
+  
+  <!-- Formular zur Erstellung/Bearbeitung -->
+  <div class="workshop-edit-form" *ngIf="selectedWorkshop">
+    <form (ngSubmit)="saveWorkshop()">
+      <!-- Zeile 1: Angebotstyp & Titel -->
       <div class="form-row">
         <div class="form-group half">
-          <label for="date">Datum</label>
-          <input id="date" type="date" [(ngModel)]="selectedWorkshop.date" name="date" required />
+          <label for="type">Art des Angebots</label>
+          <select id="type" [(ngModel)]="selectedWorkshop.type" name="type" required>
+            <option value="workshop">Workshop (feste Termine)</option>
+            <option value="malatelier">Malatelier (wiederkehrend)</option>
+            <option value="individuelleAnfrage">Individuelle Anfrage (für besondere Anlässe)</option>
+          </select>
         </div>
         <div class="form-group half">
-          <label for="price">Preis</label>
-          <input id="price" type="number" [(ngModel)]="selectedWorkshop.price" name="price" required />
+          <label for="title">Titel</label>
+          <input id="title" [(ngModel)]="selectedWorkshop.title" name="title" required />
         </div>
       </div>
-      <div class="form-row">
-        <div class="form-group half">
-          <label for="startTime">Startzeit</label>
-          <input id="startTime" type="time" [(ngModel)]="selectedWorkshop.startTime" name="startTime" />
-        </div>
-        <div class="form-group half">
-          <label for="endTime">Endzeit</label>
-          <input id="endTime" type="time" [(ngModel)]="selectedWorkshop.endTime" name="endTime" />
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group half">
-          <label for="maxParticipants">Max. Teilnehmer</label>
-          <input id="maxParticipants" type="number" [(ngModel)]="selectedWorkshop.maxParticipants" name="maxParticipants" />
-        </div>
-        <div class="form-group half">
-          <label for="availableSlots">Verfügbare Plätze</label>
-          <input id="availableSlots" type="number" [(ngModel)]="selectedWorkshop.availableSlots" name="availableSlots" />
-        </div>
-      </div>
-    </div>
 
-    <!-- Typ-spezifische Felder: Malatelier -->
-    <div *ngIf="selectedWorkshop.type === 'malatelier'" class="type-specific">
-      <div class="form-row">
-        <div class="form-group half">
-          <label for="frequency">Häufigkeit</label>
-          <input
-            id="frequency"
-            type="text"
-            [(ngModel)]="selectedWorkshop.frequency"
-            name="frequency"
-            placeholder="z.B. Jeden 1. Mittwoch im Monat"
-            required
-          />
-        </div>
-        <div class="form-group half">
-          <label for="price">Preis (optional)</label>
-          <input id="price" type="number" [(ngModel)]="selectedWorkshop.price" name="price" />
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group half">
-          <label for="maxParticipants">Max. Teilnehmer</label>
-          <input
-            id="maxParticipants"
-            type="number"
-            [(ngModel)]="selectedWorkshop.maxParticipants"
-            name="maxParticipants"
-          />
-        </div>
-        <div class="form-group half">
-          <label for="availableSlots">Verfügbare Plätze</label>
-          <input
-            id="availableSlots"
-            type="number"
-            [(ngModel)]="selectedWorkshop.availableSlots"
-            name="availableSlots"
-          />
-        </div>
-      </div>
-    </div>
-
-    <!-- Typ-spezifische Felder: Individuelle Anfrage -->
-    <div *ngIf="selectedWorkshop.type === 'individuelleAnfrage'" class="type-specific">
+      <!-- Zeile 2: Kurzbeschreibung -->
       <div class="form-group">
-        <label for="contactEmail">Kontakt E-Mail</label>
-        <input id="contactEmail" type="email" [(ngModel)]="selectedWorkshop.contactEmail" name="contactEmail" required />
+        <label for="shortDescription">Kurzbeschreibung</label>
+        <textarea id="shortDescription" [(ngModel)]="selectedWorkshop.shortDescription" name="shortDescription" required></textarea>
       </div>
-    </div>
 
-    <!-- Bildfelder: URL + Upload -->
-    <div class="form-row">
-      <div class="form-group half">
-        <label for="imageUrl">Bild-URL</label>
-        <input id="imageUrl" [(ngModel)]="selectedWorkshop.imageUrl" name="imageUrl" />
+      <!-- Zeile 3: Ausführliche Beschreibung (Rich Text) -->
+      <div class="form-group">
+        <label for="description">Beschreibung</label>
+        <quill-editor 
+          id="description"
+          [(ngModel)]="selectedWorkshop.description"
+          name="description"
+          [modules]="quillConfig"
+          [required]="true">
+        </quill-editor>
       </div>
-      <div class="form-group half">
-        <label>Bild hochladen</label>
-        <!-- Versteckter File-Input -->
-        <input
-          id="imageUpload"
-          type="file"
-          (change)="handleImageUpload($event)"
-          class="file-input"
-        />
-        <!-- Custom-Label als Button -->
-        <label for="imageUpload" class="file-input-btn">
-          Bild auswählen
-        </label>
+
+      <!-- Zeile 4: Ort -->
+      <div class="form-group">
+        <label for="location">Ort</label>
+        <input id="location" [(ngModel)]="selectedWorkshop.location" name="location" required />
       </div>
-    </div>
 
-    <div class="form-buttons">
-      <button type="submit" class="btn-primary">Speichern</button>
-      <button type="button" (click)="cancelEdit()" class="cancel-btn">Abbrechen</button>
-    </div>
-    <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
-  </form>
-</div>
+      <!-- Typ-spezifische Felder: Workshop -->
+      <div *ngIf="selectedWorkshop.type === 'workshop'" class="type-specific">
+        <div class="form-row">
+          <div class="form-group half">
+            <label for="date">Datum</label>
+            <input id="date" type="date" [(ngModel)]="selectedWorkshop.date" name="date" required />
+          </div>
+          <div class="form-group half">
+            <label for="price">Preis</label>
+            <input id="price" type="number" [(ngModel)]="selectedWorkshop.price" name="price" required />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group half">
+            <label for="startTime">Startzeit</label>
+            <input id="startTime" type="time" [(ngModel)]="selectedWorkshop.startTime" name="startTime" />
+          </div>
+          <div class="form-group half">
+            <label for="endTime">Endzeit</label>
+            <input id="endTime" type="time" [(ngModel)]="selectedWorkshop.endTime" name="endTime" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group half">
+            <label for="maxParticipants">Max. Teilnehmer</label>
+            <input id="maxParticipants" type="number" [(ngModel)]="selectedWorkshop.maxParticipants" name="maxParticipants" />
+          </div>
+          <div class="form-group half">
+            <label for="availableSlots">Verfügbare Plätze</label>
+            <input id="availableSlots" type="number" [(ngModel)]="selectedWorkshop.availableSlots" name="availableSlots" />
+          </div>
+        </div>
+      </div>
 
+      <!-- Typ-spezifische Felder: Malatelier -->
+      <div *ngIf="selectedWorkshop.type === 'malatelier'" class="type-specific">
+        <div class="form-row">
+          <div class="form-group half">
+            <label for="frequency">Häufigkeit</label>
+            <input id="frequency" type="text" [(ngModel)]="selectedWorkshop.frequency" name="frequency" placeholder="z.B. Jeden 1. Mittwoch im Monat" required />
+          </div>
+          <div class="form-group half">
+            <label for="price">Preis (optional)</label>
+            <input id="price" type="number" [(ngModel)]="selectedWorkshop.price" name="price" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group half">
+            <label for="maxParticipants">Max. Teilnehmer</label>
+            <input id="maxParticipants" type="number" [(ngModel)]="selectedWorkshop.maxParticipants" name="maxParticipants" />
+          </div>
+          <div class="form-group half">
+            <label for="availableSlots">Verfügbare Plätze</label>
+            <input id="availableSlots" type="number" [(ngModel)]="selectedWorkshop.availableSlots" name="availableSlots" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Typ-spezifische Felder: Individuelle Anfrage -->
+      <div *ngIf="selectedWorkshop.type === 'individuelleAnfrage'" class="type-specific">
+        <div class="form-group">
+          <label for="contactEmail">Kontakt E-Mail</label>
+          <input id="contactEmail" type="email" [(ngModel)]="selectedWorkshop.contactEmail" name="contactEmail" required />
+        </div>
+      </div>
+
+      <!-- Bildfelder: URL & Upload -->
+      <div class="form-row">
+        <div class="form-group half">
+          <label for="imageUrl">Bild-URL</label>
+          <input id="imageUrl" [(ngModel)]="selectedWorkshop.imageUrl" name="imageUrl" />
+        </div>
+        <div class="form-group half">
+          <label>Bild hochladen</label>
+          <input id="imageUpload" type="file" (change)="handleImageUpload($event)" class="file-input" />
+          <label for="imageUpload" class="file-input-btn">Bild auswählen</label>
+        </div>
+      </div>
+
+      <div class="form-buttons">
+        <button type="submit" class="btn-primary">Speichern</button>
+        <button type="button" (click)="cancelEdit()" class="cancel-btn">Abbrechen</button>
+      </div>
+      <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
+    </form>
+  </div>
 </div>

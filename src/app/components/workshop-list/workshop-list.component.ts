@@ -1,9 +1,10 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+
+import { FormsModule } from '@angular/forms';
 import { Workshop } from '../../core/interfaces/interfaces';
 import { DataService } from '../../core/services/data.service';
-import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-workshop-list',
@@ -26,26 +27,21 @@ export class WorkshopListComponent implements OnInit {
   ngOnInit(): void {
     this.loading = true;
     this.dataService.getWorkshops().subscribe({
-      next: (workshops) => {
+      next: (workshops: Workshop[]) => {
         this.regularWorkshops = workshops.filter(w => w.type === 'workshop');
         this.malateliers = workshops.filter(w => w.type === 'malatelier');
         this.individuelleAnfragen = workshops.filter(w => w.type === 'individuelleAnfrage');
         this.loading = false;
       },
-      error: (err) => {
+      error: (err: any) => {
         this.errorMessage = 'Fehler beim Laden der Workshops.';
         this.loading = false;
       }
     });
   }
 
-
-  navigateTo(target: string): void {
-    this.router.navigate(["/" + target]);
-  }
-
   filterWorkshops(): void {
-    this.dataService.getWorkshops().subscribe(workshops => {
+    this.dataService.getWorkshops().subscribe((workshops: Workshop[]) => {
       const filtered = workshops.filter(w =>
         w.title.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
         w.shortDescription.toLowerCase().includes(this.searchTerm.toLowerCase())
@@ -57,7 +53,6 @@ export class WorkshopListComponent implements OnInit {
   }
 
   goToDetail(workshop: Workshop): void {
-
-      this.router.navigate(['/workshop', workshop.id]);
+    this.router.navigate(['/workshop', workshop.id]);
   }
 }
