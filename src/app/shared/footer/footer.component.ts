@@ -12,7 +12,7 @@ import { RouterLink } from '@angular/router';
         <div class="footer__main">
           <div class="footer__brand">
             <h2 class="footer__title">Malspirale</h2>
-            <p class="footer__subtitle">Kreatives Ausdrucksmalen in Thun</p>
+            <p class="footer__subtitle">Kreatives Ausdrucksmalen in Riggisberg</p>
             <p class="footer__description">
               Entdecken Sie die Kraft der Farben und lassen Sie Ihrer Kreativität freien Lauf.
             </p>
@@ -64,7 +64,6 @@ import { RouterLink } from '@angular/router';
       background-color: $accent-color;
       color: $text-color-white;
       padding: $padding-extra-large 0;
-      margin-top: $padding-extra-large;
       
       &__container {
         max-width: $container-max-width-xl;
@@ -76,7 +75,7 @@ import { RouterLink } from '@angular/router';
         display: grid;
         grid-template-columns: minmax(250px, 1fr) 2fr;
         gap: $container-gap-large;
-        margin-bottom: $container-gap-large;
+        margin-bottom: $padding-large;
         
         @media (max-width: $breakpoint-md) {
           grid-template-columns: 1fr;
