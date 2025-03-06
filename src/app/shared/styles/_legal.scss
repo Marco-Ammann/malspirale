@@ -1,0 +1,92 @@
+@use 'variables' as vars;
+
+.legal-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7));
+  backdrop-filter: blur(10px);
+  border-radius: vars.$border-radius;
+  box-shadow: vars.$box-shadow;
+
+  header {
+    text-align: center;
+    margin-bottom: 3rem;
+
+    h1 {
+      color: vars.$accent-color-dark;
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+      color: vars.$text-color-light;
+      font-size: 1.1rem;
+    }
+  }
+
+  .legal-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+
+    .privacy-section, .contact-info, .disclaimer, .copyright {
+      padding: 1.5rem;
+      background: rgba(255, 255, 255, 0.5);
+      border-radius: vars.$border-radius;
+      border-left: 4px solid vars.$accent-color;
+
+      h2 {
+        color: vars.$accent-color-dark;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+      }
+
+      p, ul {
+        color: vars.$text-color;
+        line-height: 1.6;
+      }
+
+      ul {
+        list-style-type: none;
+        padding-left: 1rem;
+
+        li {
+          position: relative;
+          padding-left: 1.5rem;
+          margin-bottom: 0.5rem;
+
+          &:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: vars.$accent-color;
+          }
+        }
+      }
+
+      address {
+        font-style: normal;
+        line-height: 1.6;
+      }
+
+      a {
+        color: vars.$link-color;
+        text-decoration: none;
+        transition: color 0.3s ease;
+
+        &:hover {
+          color: vars.$accent-color-dark;
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: vars.$tablet) {
+  .legal-container {
+    margin: 1rem;
+    padding: 1rem;
+  }
+}

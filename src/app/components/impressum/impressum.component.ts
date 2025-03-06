@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-impressum',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './impressum.component.html',
   styleUrls: ['./impressum.component.scss']
 })
 export class ImpressumComponent {
-
+  currentYear = new Date().getFullYear();
 }

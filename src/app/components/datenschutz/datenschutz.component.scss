@@ -1,11 +1,11 @@
 @use 'sass:color';
-
 @use 'variables' as vars;
 @use 'mixins' as mix;
+@use '../../shared/styles/legal';
 
 .legal-container {
   max-width: vars.$container-width;
-  margin: auto;
+  margin: vars.$padding-large auto;
   padding: vars.$padding-medium;
   font-family: vars.$font-family;
   color: vars.$text-color;
