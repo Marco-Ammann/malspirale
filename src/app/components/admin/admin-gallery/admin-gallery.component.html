@@ -1,55 +1,226 @@
-<div class="admin-gallery-container">
-    <h1>Galerie verwalten</h1>
-  
-    <form [formGroup]="galleryForm" (ngSubmit)="addArtwork()" class="gallery-form">
-      <div class="form-row">
-        <div class="form-group half">
-          <label for="title">Titel:</label>
-          <input type="text" id="title" formControlName="title" required />
-        </div>
-        <div class="form-group half">
-          <label for="alt">Bildbeschreibung:</label>
-          <input type="text" id="alt" formControlName="alt" required />
-        </div>
+<div class="gallery-admin">
+  <div class="action-header">
+    <h2>Galerie-Verwaltung</h2>
+    <div class="gallery-controls">
+      <div class="gallery-selector">
+        <label for="galleryType">Galerie:</label>
+        <select id="galleryType" [(ngModel)]="selectedGalleryType" (change)="changeGalleryType()">
+          <option value="main">Hauptgalerie</option>
+          <option value="subgallery">Untergalerie</option>
+          <option value="photographer">Nach Fotograf</option>
+        </select>
       </div>
+      
+      <button class="btn btn-primary" (click)="openUploadModal()">
+        <span class="material-icons">add_photo_alternate</span> Bilder hinzufügen
+      </button>
+    </div>
+  </div>
   
-      <div class="form-row">
-        <div class="form-group half">
-          <label for="filename">Dateiname:</label>
-          <input type="text" id="filename" formControlName="filename" placeholder="Neuer Dateiname (ohne .jpg)" required />
-        </div>
-        <div class="form-group half file-upload-group">
-          <label for="imageInput" class="file-input-btn">Bild hochladen</label>
-          <input type="file" id="imageInput" (change)="onFileSelected($event)" class="file-input" />
-        </div>
-      </div>
-  
-      <!-- Bild-Vorschau -->
-      <div *ngIf="selectedImagePreview" class="image-preview">
-        <img [src]="selectedImagePreview" alt="Bildvorschau" />
-      </div>
-  
-      <div class="form-buttons">
-        <button type="submit" [disabled]="loading || galleryForm.invalid" class="btn-primary">
-          {{ editingArtwork ? "Bild aktualisieren" : "Bild hinzufügen" }}
+  <!-- Beschreibung der gewählten Galerie -->
+  <div class="gallery-description">
+    <div *ngIf="selectedGalleryType === 'main'">
+      <p>Hauptgalerie - Diese Bilder werden im zentralen Galeriebereich der Website angezeigt.</p>
+    </div>
+    <div *ngIf="selectedGalleryType === 'subgallery'">
+      <p>Untergalerie - Diese Bilder werden zusätzlich im "Weitere Einblicke" Bereich angezeigt.</p>
+    </div>
+    <div *ngIf="selectedGalleryType === 'photographer'">
+      <p>Fotografen-Galerie - Hier kannst du Bilder verschiedener Fotografen organisieren.</p>
+      
+      <div class="photographer-selector">
+        <label for="photographerName">Fotograf:</label>
+        <select id="photographerName" [(ngModel)]="selectedPhotographer" (change)="loadPhotographerGallery()">
+          <option *ngFor="let photographer of photographers" [value]="photographer">{{ photographer }}</option>
+        </select>
+        <button class="btn btn-sm" (click)="addNewPhotographer()">
+          <span class="material-icons">add</span> Neuer Fotograf
         </button>
-        <button type="button" (click)="cancelEdit()" *ngIf="editingArtwork" class="cancel-btn">
-          Abbrechen
-        </button>
-      </div>
-      <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
-    </form>
-  
-    <h2>Galeriebilder</h2>
-    <div class="gallery-grid">
-      <div *ngFor="let artwork of artworks" class="gallery-item">
-        <img [src]="artwork.src || 'assets/images/placeholder.jpg'" [alt]="artwork.alt" />
-        <p>{{ artwork.title }}</p>
-        <div class="item-actions">
-          <button (click)="editArtwork(artwork)" class="btn-primary">🖊 Bearbeiten</button>
-          <button (click)="deleteArtwork(artwork)" class="btn-danger">🗑 Löschen</button>
-        </div>
       </div>
     </div>
   </div>
   
+  <!-- Bildergalerie mit Filteroptionen -->
+  <div class="gallery-management">
+    <div class="gallery-filters">
+      <div class="search-filter">
+        <span class="material-icons">search</span>
+        <input type="text" [(ngModel)]="searchTerm" placeholder="Nach Titel oder Beschreibung suchen" (input)="filterImages()">
+      </div>
+      
+      <div class="view-mode">
+        <button [class.active]="viewMode === 'grid'" (click)="viewMode = 'grid'">
+          <span class="material-icons">grid_view</span>
+        </button>
+        <button [class.active]="viewMode === 'list'" (click)="viewMode = 'list'">
+          <span class="material-icons">view_list</span>
+        </button>
+      </div>
+    </div>
+    
+    <!-- Ladezustand -->
+    <div *ngIf="loading" class="loading-indicator">
+      <div class="spinner"></div>
+      <span>Bilder werden geladen...</span>
+    </div>
+    
+    <!-- Rasteransicht -->
+    <div *ngIf="!loading && viewMode === 'grid'" class="gallery-grid">
+      <div *ngFor="let artwork of filteredArtworks" class="gallery-item" [class.portrait]="isPortrait(artwork)" [class.landscape]="!isPortrait(artwork)">
+        <div class="image-container">
+          <img [src]="artwork.src" [alt]="artwork.alt" (load)="onImageLoad(artwork)" [class.loaded]="artwork.loaded">
+          <div class="image-overlay">
+            <div class="overlay-content">
+              <h3>{{ artwork.title }}</h3>
+              <p>{{ artwork.alt }}</p>
+            </div>
+            <div class="overlay-actions">
+              <button class="action-btn" (click)="editArtwork(artwork)">
+                <span class="material-icons">edit</span>
+              </button>
+              <button class="action-btn" (click)="deleteArtwork(artwork)">
+                <span class="material-icons">delete</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Listenansicht -->
+    <div *ngIf="!loading && viewMode === 'list'" class="gallery-list">
+      <table>
+        <thead>
+          <tr>
+            <th>Vorschau</th>
+            <th>Titel</th>
+            <th>Beschreibung</th>
+            <th>Format</th>
+            <th>Aktionen</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let artwork of filteredArtworks">
+            <td class="image-cell">
+              <img [src]="artwork.src" [alt]="artwork.alt" (load)="onImageLoad(artwork)" [class.loaded]="artwork.loaded">
+            </td>
+            <td>{{ artwork.title }}</td>
+            <td>{{ artwork.alt }}</td>
+            <td>{{ isPortrait(artwork) ? 'Portrait' : 'Landscape' }}</td>
+            <td class="action-cell">
+              <button class="action-btn" (click)="editArtwork(artwork)">
+                <span class="material-icons">edit</span>
+              </button>
+              <button class="action-btn" (click)="deleteArtwork(artwork)">
+                <span class="material-icons">delete</span>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+    <!-- Leere Galerie -->
+    <div *ngIf="!loading && filteredArtworks.length === 0" class="empty-gallery">
+      <div class="empty-content">
+        <span class="material-icons">photo_library</span>
+        <h3>Keine Bilder gefunden</h3>
+        <p *ngIf="searchTerm">
+          Keine Bilder mit dem Suchbegriff "{{ searchTerm }}" gefunden.
+          <a href="javascript:void(0)" (click)="searchTerm = ''; filterImages()">Suche zurücksetzen</a>
+        </p>
+        <p *ngIf="!searchTerm">
+          Diese Galerie enthält noch keine Bilder. Klicke auf "Bilder hinzufügen", um loszulegen.
+        </p>
+        <button class="btn btn-primary" (click)="openUploadModal()">
+          <span class="material-icons">add_photo_alternate</span> Bilder hinzufügen
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Upload Modal -->
+  <div *ngIf="showUploadModal" class="modal-overlay" (click)="closeModal($event)">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Neue Bilder hochladen</h3>
+        <button class="close-btn" (click)="showUploadModal = false">×</button>
+      </div>
+      
+      <div class="modal-body">
+        <div class="upload-area" 
+             [class.active]="isDragging" 
+             (dragover)="onDragOver($event)" 
+             (dragleave)="isDragging = false" 
+             (drop)="onDrop($event)">
+          <input type="file" id="fileUpload" (change)="onFileSelected($event)" accept="image/*" multiple hidden>
+          <label for="fileUpload">
+            <span class="material-icons">cloud_upload</span>
+            <span>Drag & Drop Bilder hier oder</span>
+            <span class="browse-btn">Durchsuchen</span>
+          </label>
+        </div>
+        
+        <div *ngIf="selectedFiles.length > 0" class="selected-files">
+          <h4>Ausgewählte Bilder ({{ selectedFiles.length }})</h4>
+          <div class="files-grid">
+            <div *ngFor="let file of selectedFiles; let i = index" class="file-preview">
+              <img [src]="file.preview" [alt]="file.name">
+              <div class="file-info">
+                <input type="text" [(ngModel)]="file.title" placeholder="Titel" class="file-title">
+                <input type="text" [(ngModel)]="file.description" placeholder="Beschreibung" class="file-description">
+                <button class="remove-file" (click)="removeFile(i)">×</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="showUploadModal = false">Abbrechen</button>
+        <button class="btn btn-primary" [disabled]="selectedFiles.length === 0 || uploading" (click)="uploadFiles()">
+          <span *ngIf="!uploading">{{ selectedFiles.length }} Bilder hochladen</span>
+          <span *ngIf="uploading">Wird hochgeladen... ({{ uploadProgress }}%)</span>
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Edit Modal -->
+  <div *ngIf="showEditModal" class="modal-overlay" (click)="closeModal($event)">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Bild bearbeiten</h3>
+        <button class="close-btn" (click)="showEditModal = false">×</button>
+      </div>
+      
+      <div *ngIf="editingArtwork" class="modal-body">
+        <div class="edit-image-preview">
+          <img [src]="editingArtwork.src" [alt]="editingArtwork.alt">
+        </div>
+        
+        <div class="form-group">
+          <label for="editTitle">Titel</label>
+          <input type="text" id="editTitle" [(ngModel)]="editingArtwork.title">
+        </div>
+        
+        <div class="form-group">
+          <label for="editDescription">Beschreibung</label>
+          <textarea id="editDescription" [(ngModel)]="editingArtwork.alt"></textarea>
+        </div>
+        
+        <div *ngIf="selectedGalleryType === 'photographer'" class="form-group">
+          <label for="editPhotographer">Fotograf</label>
+          <select id="editPhotographer" [(ngModel)]="editingArtwork.photographer">
+            <option *ngFor="let photographer of photographers" [value]="photographer">{{ photographer }}</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="showEditModal = false">Abbrechen</button>
+        <button class="btn btn-primary" (click)="saveEditedArtwork()">Speichern</button>
+      </div>
+    </div>
+  </div>
+</div>
