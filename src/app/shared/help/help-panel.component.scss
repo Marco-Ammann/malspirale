@@ -1,0 +1,234 @@
+@use 'sass:color';
+@use 'variables' as vars;
+
+// Hauptcontainer für das Hilfepanel
+.help-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 350px;
+  height: 100vh;
+  background-color: white;
+  box-shadow: -4px 0 15px rgba(0, 0, 0, 0.1);
+  z-index: 1050;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+  
+  &.open {
+    transform: translateX(0);
+  }
+  
+  .help-header {
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e9ecef;
+    
+    h2 {
+      margin: 0;
+      font-size: 1.25rem;
+      color: vars.$accent-color-dark;
+    }
+    
+    .close-btn {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      background: none;
+      border-radius: 50%;
+      cursor: pointer;
+      
+      &:hover {
+        background-color: #f8f9fa;
+      }
+      
+      .material-icons {
+        font-size: 1.25rem;
+        color: vars.$text-color;
+      }
+    }
+  }
+  
+  .help-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0;
+    display: flex;
+    
+    .topic-selector {
+      width: 120px;
+      background-color: #f8f9fa;
+      border-right: 1px solid #e9ecef;
+      padding: 1rem 0;
+      
+      h3 {
+        font-size: 0.9rem;
+        padding: 0 1rem;
+        margin: 0 0 0.75rem 0;
+        color: vars.$text-color-light;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      
+      ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        
+        li {
+          padding: 0.5rem 1rem;
+          font-size: 0.9rem;
+          color: vars.$text-color;
+          cursor: pointer;
+          transition: background-color 0.2s ease;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          
+          &:hover {
+            background-color: rgba(vars.$accent-color, 0.05);
+          }
+          
+          &.active {
+            background-color: rgba(vars.$accent-color, 0.1);
+            border-left: 3px solid vars.$accent-color;
+            font-weight: 500;
+            color: vars.$accent-color-dark;
+          }
+        }
+      }
+    }
+    
+    .topic-content {
+      flex: 1;
+      padding: 1.5rem;
+      
+      h3 {
+        font-size: 1.2rem;
+        margin: 0 0 1rem 0;
+        color: vars.$accent-color-dark;
+      }
+      
+      p {
+        color: vars.$text-color;
+        line-height: 1.5;
+        margin-bottom: 1.5rem;
+      }
+      
+      .steps-container {
+        margin-bottom: 1.5rem;
+        
+        h4 {
+          font-size: 1rem;
+          margin: 0 0 0.75rem 0;
+          color: vars.$text-color;
+        }
+        
+        .steps-list {
+          padding-left: 1.5rem;
+          margin: 0;
+          
+          li {
+            margin-bottom: 1rem;
+            
+            .step-title {
+              font-weight: 500;
+              margin-bottom: 0.25rem;
+              color: vars.$text-color;
+            }
+            
+            .step-description {
+              font-size: 0.9rem;
+              color: vars.$text-color-light;
+              line-height: 1.4;
+            }
+          }
+        }
+      }
+      
+      .video-tutorial {
+        h4 {
+          font-size: 1rem;
+          margin: 0 0 0.75rem 0;
+          color: vars.$text-color;
+        }
+        
+        .video-btn {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          padding: 0.75rem 1rem;
+          background-color: #f8f9fa;
+          border: 1px solid #e9ecef;
+          border-radius: 4px;
+          color: vars.$accent-color;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          
+          &:hover {
+            background-color: vars.$accent-color-light;
+            color: white;
+            border-color: vars.$accent-color;
+          }
+          
+          .material-icons {
+            font-size: 1.25rem;
+          }
+        }
+      }
+    }
+  }
+  
+  .help-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #e9ecef;
+    
+    .contact-support {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.75rem;
+      background-color: white;
+      border: 1px solid vars.$accent-color;
+      border-radius: 4px;
+      color: vars.$accent-color;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      
+      &:hover {
+        background-color: vars.$accent-color-light;
+        color: white;
+      }
+      
+      .material-icons {
+        font-size: 1.1rem;
+      }
+    }
+  }
+}
+
+// Hintergrundverdunkelung, wenn das Hilfepanel geöffnet ist
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 1040;
+}
+
+// Responsive Anpassungen
+@media (max-width: vars.$mobile) {
+  .help-panel {
+    width: 100%;
+  }
+}

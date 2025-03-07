@@ -4,6 +4,9 @@ import { CommonModule } from '@angular/common';
 import { BehaviorSubject, Subscription, filter } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
 import { DataService } from '../../core/services/data.service';
+import { HelpService } from '../../core/services/help.service';
+import { HelpPanelComponent } from "../../shared/help/help-panel.component";
+import { OnboardingTourComponent } from "../../shared/help/onboarding-tour.component";
 
 interface Activity {
   id: string;
@@ -16,7 +19,7 @@ interface Activity {
 @Component({
   selector: 'app-admin',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, HelpPanelComponent, OnboardingTourComponent],
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.scss']
 })
@@ -40,7 +43,8 @@ export class AdminComponent implements OnInit, OnDestroy {
   constructor(
     private authService: AuthService,
     private dataService: DataService,
-    private router: Router
+    private router: Router,
+    private helpService: HelpService
   ) {}
 
   ngOnInit(): void {
@@ -61,6 +65,31 @@ export class AdminComponent implements OnInit, OnDestroy {
         // Bei Routenwechsel mobile Menü schließen
         if (window.innerWidth <= 768) {
           this.menuOpen = false;
+        }
+      })
+    );
+
+      // Route-Hilfe-Thema setzen
+  this.subscriptions.add(
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe((event: any) => {
+      // Extrahiere den Hauptpfad (admin/xyz)
+      const path = event.url.split('/')[2] || 'dashboard';
+      // Setze Hilfethema basierend auf aktuellem Pfad
+      this.helpService.setCurrentTopic(path);
+    })
+  );
+
+    // Zeige Einführungsdialog, wenn der Benutzer zum ersten Mal die Admin-Seite besucht
+    this.subscriptions.add(
+      this.helpService.firstVisit$.subscribe(isFirstVisit => {
+        if (isFirstVisit) {
+          // Dialog oder Tour starten
+          setTimeout(() => {
+            // Kurze Verzögerung, um sicherzustellen, dass alles geladen ist
+            this.openHelp();
+          }, 1000);
         }
       })
     );
@@ -141,11 +170,11 @@ export class AdminComponent implements OnInit, OnDestroy {
   }
   
   openHelp(): void {
-    this.showHelp = true;
+    this.helpService.openHelpPanel();
   }
   
   closeHelp(): void {
-    this.showHelp = false;
+    this.helpService.closeHelpPanel();
   }
 
   logout(): void {

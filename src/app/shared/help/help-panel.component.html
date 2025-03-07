@@ -1,0 +1,54 @@
+<div class="help-panel" [class.open]="showPanel">
+    <div class="help-header">
+      <h2>Hilfe & Tipps</h2>
+      <button class="close-btn" (click)="closePanel()">
+        <span class="material-icons">close</span>
+      </button>
+    </div>
+    
+    <div class="help-body">
+      <div class="topic-selector">
+        <h3>Themen</h3>
+        <ul>
+          <li *ngFor="let topic of allTopics" 
+              [class.active]="currentTopic?.id === topic.id"
+              (click)="selectTopic(topic.id)">
+            {{ topic.title }}
+          </li>
+        </ul>
+      </div>
+      
+      <div class="topic-content" *ngIf="currentTopic">
+        <h3>{{ currentTopic.title }}</h3>
+        <p>{{ currentTopic.content }}</p>
+        
+        <div *ngIf="currentTopic.steps && currentTopic.steps.length > 0" class="steps-container">
+          <h4>So geht's</h4>
+          <ol class="steps-list">
+            <li *ngFor="let step of currentTopic.steps">
+              <div class="step-title">{{ step.title }}</div>
+              <div class="step-description">{{ step.description }}</div>
+            </li>
+          </ol>
+        </div>
+        
+        <div *ngIf="currentTopic.videoUrl" class="video-tutorial">
+          <h4>Video-Anleitung</h4>
+          <button class="video-btn" (click)="playVideo()">
+            <span class="material-icons">play_circle_filled</span>
+            <span>Video anschauen</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="help-footer">
+      <button class="contact-support">
+        <span class="material-icons">mail</span>
+        Support kontaktieren
+      </button>
+    </div>
+  </div>
+  
+  <!-- Optional: Leere Klick-Fläche zum Schließen, wenn Panel offen ist -->
+  <div *ngIf="showPanel" class="backdrop" (click)="closePanel()"></div>
