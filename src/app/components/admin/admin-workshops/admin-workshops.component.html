@@ -1,164 +1,124 @@
-<div class="admin-workshops">
-  <h2>Workshops &amp; Angebote verwalten</h2>
-  
-  <!-- Liste der bestehenden Workshops -->
-  <div class="workshops-list">
-    <div *ngFor="let workshop of workshops" class="workshop-list-item">
-      <div class="workshop-image">
-        <img [src]="workshop.imageUrl || 'assets/images/default-workshop.jpg'" [alt]="workshop.title" />
-      </div>
-      <div class="workshop-details">
-        <h3>{{ workshop.title }}</h3>
-        <p class="short-description">{{ workshop.shortDescription }}</p>
-        <div class="info">
-          <span *ngIf="workshop.location"><strong>Ort:</strong> {{ workshop.location }}</span>
-          <span *ngIf="workshop.date"><strong>Datum:</strong> {{ workshop.date | date:'dd.MM.yyyy' }}</span>
-          <span *ngIf="workshop.price !== undefined">
-            <strong>Preis:</strong> {{ workshop.price ? (workshop.price | currency:'CHF') : 'Kostenlos' }}
-          </span>
-          <span *ngIf="workshop.startTime && workshop.endTime">
-            <strong>Uhrzeit:</strong> {{ workshop.startTime }} - {{ workshop.endTime }}
-          </span>
-        </div>
-      </div>
-      <div class="actions">
-        <button (click)="editWorkshop(workshop)" class="btn btn-primary">Bearbeiten</button>
-        <button (click)="deleteWorkshop(workshop.id)" class="btn btn-danger">Löschen</button>
-      </div>
+<div class="workshops-container">
+  <!-- Keine Komponente ausgewählt - Übersicht -->
+  <div *ngIf="!showWorkshopWizard">
+    <div class="action-header">
+      <h2>Workshop-Verwaltung</h2>
+      <button class="btn btn-primary" (click)="createWorkshop()">
+        <span class="material-icons">add</span> Neuer Workshop
+      </button>
     </div>
-  </div>
-
-  <button (click)="createWorkshop()" class="new-workshop-btn">
-    Neuen Workshop hinzufügen
-  </button>
-  
-  <!-- Formular zur Erstellung/Bearbeitung -->
-  <div class="workshop-edit-form" *ngIf="selectedWorkshop">
-    <form (ngSubmit)="saveWorkshop()">
-      <!-- Zeile 1: Angebotstyp & Titel -->
-      <div class="form-row">
-        <div class="form-group half">
-          <label for="type">Art des Angebots</label>
-          <select id="type" [(ngModel)]="selectedWorkshop.type" name="type" required>
-            <option value="workshop">Workshop (feste Termine)</option>
-            <option value="malatelier">Malatelier (wiederkehrend)</option>
-            <option value="individuelleAnfrage">Individuelle Anfrage (für besondere Anlässe)</option>
+    
+    <div class="filters">
+      <div class="search-bar">
+        <span class="material-icons">search</span>
+        <input type="text" [(ngModel)]="searchTerm" placeholder="Suchen..." (input)="filterWorkshops()">
+      </div>
+      
+      <div class="filter-controls">
+        <div class="filter-group">
+          <label for="typeFilter">Typ:</label>
+          <select id="typeFilter" [(ngModel)]="typeFilter" (change)="filterWorkshops()">
+            <option value="all">Alle Typen</option>
+            <option value="workshop">Einzeltermine</option>
+            <option value="malatelier">Malatetliers</option>
+            <option value="individuelleAnfrage">Individuelle Anfragen</option>
           </select>
         </div>
-        <div class="form-group half">
-          <label for="title">Titel</label>
-          <input id="title" [(ngModel)]="selectedWorkshop.title" name="title" required />
+        
+        <div class="filter-group">
+          <label for="sortBy">Sortieren:</label>
+          <select id="sortBy" [(ngModel)]="sortBy" (change)="filterWorkshops()">
+            <option value="dateDesc">Datum (neueste zuerst)</option>
+            <option value="dateAsc">Datum (älteste zuerst)</option>
+            <option value="title">Titel (A-Z)</option>
+          </select>
         </div>
       </div>
-
-      <!-- Zeile 2: Kurzbeschreibung -->
-      <div class="form-group">
-        <label for="shortDescription">Kurzbeschreibung</label>
-        <textarea id="shortDescription" [(ngModel)]="selectedWorkshop.shortDescription" name="shortDescription" required></textarea>
-      </div>
-
-      <!-- Zeile 3: Ausführliche Beschreibung (Rich Text) -->
-      <div class="form-group">
-        <label for="description">Beschreibung</label>
-        <quill-editor 
-          id="description"
-          [(ngModel)]="selectedWorkshop.description"
-          name="description"
-          [modules]="quillConfig"
-          [required]="true">
-        </quill-editor>
-      </div>
-
-      <!-- Zeile 4: Ort -->
-      <div class="form-group">
-        <label for="location">Ort</label>
-        <input id="location" [(ngModel)]="selectedWorkshop.location" name="location" required />
-      </div>
-
-      <!-- Typ-spezifische Felder: Workshop -->
-      <div *ngIf="selectedWorkshop.type === 'workshop'" class="type-specific">
-        <div class="form-row">
-          <div class="form-group half">
-            <label for="date">Datum</label>
-            <input id="date" type="date" [(ngModel)]="selectedWorkshop.date" name="date" required />
-          </div>
-          <div class="form-group half">
-            <label for="price">Preis</label>
-            <input id="price" type="number" [(ngModel)]="selectedWorkshop.price" name="price" required />
-          </div>
+    </div>
+    
+    <div *ngIf="loading" class="loading-indicator">
+      <div class="spinner"></div>
+      <span>Workshops werden geladen...</span>
+    </div>
+    
+    <!-- Workshop-Karten -->
+    <div *ngIf="!loading && filteredWorkshops.length > 0" class="workshops-grid">
+      <div *ngFor="let workshop of filteredWorkshops" class="workshop-card">
+        <div class="card-status" [ngClass]="{
+          'status-active': isWorkshopActive(workshop),
+          'status-draft': workshop.status === 'draft',
+          'status-past': isWorkshopPast(workshop)
+        }">
+          {{ workshop.status === 'draft' ? 'Entwurf' : 
+             isWorkshopPast(workshop) ? 'Vergangen' : 'Aktiv' }}
         </div>
-        <div class="form-row">
-          <div class="form-group half">
-            <label for="startTime">Startzeit</label>
-            <input id="startTime" type="time" [(ngModel)]="selectedWorkshop.startTime" name="startTime" />
-          </div>
-          <div class="form-group half">
-            <label for="endTime">Endzeit</label>
-            <input id="endTime" type="time" [(ngModel)]="selectedWorkshop.endTime" name="endTime" />
-          </div>
+        
+        <div class="card-image">
+          <img [src]="workshop.imageUrl || 'assets/images/default-workshop.jpg'" [alt]="workshop.title">
         </div>
-        <div class="form-row">
-          <div class="form-group half">
-            <label for="maxParticipants">Max. Teilnehmer</label>
-            <input id="maxParticipants" type="number" [(ngModel)]="selectedWorkshop.maxParticipants" name="maxParticipants" />
+        
+        <div class="card-content">
+          <h3>{{ workshop.title }}</h3>
+          
+          <div class="card-details">
+            <div class="detail-item" *ngIf="workshop.type === 'workshop' && workshop.date">
+              <span class="material-icons">event</span>
+              <span>{{ workshop.date | date:'dd.MM.yyyy' }}</span>
+            </div>
+            
+            <div class="detail-item" *ngIf="workshop.type === 'malatelier' && workshop.frequency">
+              <span class="material-icons">repeat</span>
+              <span>{{ workshop.frequency }}</span>
+            </div>
+            
+            <div class="detail-item" *ngIf="workshop.location">
+              <span class="material-icons">location_on</span>
+              <span>{{ workshop.location }}</span>
+            </div>
+            
+            <div class="detail-item" *ngIf="workshop.price !== undefined && workshop.price !== null">
+              <span class="material-icons">paid</span>
+              <span>{{ workshop.price }} CHF</span>
+            </div>
           </div>
-          <div class="form-group half">
-            <label for="availableSlots">Verfügbare Plätze</label>
-            <input id="availableSlots" type="number" [(ngModel)]="selectedWorkshop.availableSlots" name="availableSlots" />
-          </div>
+          
+          <p class="card-description">{{ workshop.shortDescription }}</p>
         </div>
-      </div>
-
-      <!-- Typ-spezifische Felder: Malatelier -->
-      <div *ngIf="selectedWorkshop.type === 'malatelier'" class="type-specific">
-        <div class="form-row">
-          <div class="form-group half">
-            <label for="frequency">Häufigkeit</label>
-            <input id="frequency" type="text" [(ngModel)]="selectedWorkshop.frequency" name="frequency" placeholder="z.B. Jeden 1. Mittwoch im Monat" required />
-          </div>
-          <div class="form-group half">
-            <label for="price">Preis (optional)</label>
-            <input id="price" type="number" [(ngModel)]="selectedWorkshop.price" name="price" />
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group half">
-            <label for="maxParticipants">Max. Teilnehmer</label>
-            <input id="maxParticipants" type="number" [(ngModel)]="selectedWorkshop.maxParticipants" name="maxParticipants" />
-          </div>
-          <div class="form-group half">
-            <label for="availableSlots">Verfügbare Plätze</label>
-            <input id="availableSlots" type="number" [(ngModel)]="selectedWorkshop.availableSlots" name="availableSlots" />
-          </div>
+        
+        <div class="card-actions">
+          <button class="btn btn-icon" (click)="duplicateWorkshop(workshop)" title="Duplizieren">
+            <span class="material-icons">content_copy</span>
+          </button>
+          
+          <button class="btn btn-icon" (click)="editWorkshop(workshop)" title="Bearbeiten">
+            <span class="material-icons">edit</span>
+          </button>
+          
+          <button class="btn btn-icon" (click)="deleteWorkshop(workshop.id)" title="Löschen">
+            <span class="material-icons">delete</span>
+          </button>
         </div>
       </div>
-
-      <!-- Typ-spezifische Felder: Individuelle Anfrage -->
-      <div *ngIf="selectedWorkshop.type === 'individuelleAnfrage'" class="type-specific">
-        <div class="form-group">
-          <label for="contactEmail">Kontakt E-Mail</label>
-          <input id="contactEmail" type="email" [(ngModel)]="selectedWorkshop.contactEmail" name="contactEmail" required />
-        </div>
+    </div>
+    
+    <!-- Leerer Zustand -->
+    <div *ngIf="!loading && filteredWorkshops.length === 0" class="empty-state">
+      <div class="empty-icon">
+        <span class="material-icons">event_busy</span>
       </div>
-
-      <!-- Bildfelder: URL & Upload -->
-      <div class="form-row">
-        <div class="form-group half">
-          <label for="imageUrl">Bild-URL</label>
-          <input id="imageUrl" [(ngModel)]="selectedWorkshop.imageUrl" name="imageUrl" />
-        </div>
-        <div class="form-group half">
-          <label>Bild hochladen</label>
-          <input id="imageUpload" type="file" (change)="handleImageUpload($event)" class="file-input" />
-          <label for="imageUpload" class="file-input-btn">Bild auswählen</label>
-        </div>
-      </div>
-
-      <div class="form-buttons">
-        <button type="submit" class="btn-primary">Speichern</button>
-        <button type="button" (click)="cancelEdit()" class="cancel-btn">Abbrechen</button>
-      </div>
-      <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
-    </form>
+      <h3>Keine Workshops gefunden</h3>
+      <p *ngIf="searchTerm || typeFilter !== 'all'">
+        Versuche es mit anderen Suchkriterien oder <a href="javascript:void(0)" (click)="resetFilters()">setze die Filter zurück</a>.
+      </p>
+      <p *ngIf="!searchTerm && typeFilter === 'all'">
+        Du hast noch keine Workshops erstellt. Klicke auf "Neuer Workshop", um zu beginnen.
+      </p>
+      <button class="btn btn-primary" (click)="createWorkshop()">
+        <span class="material-icons">add</span> Neuer Workshop
+      </button>
+    </div>
   </div>
+  
+  <!-- Workshop-Wizard Komponente -->
+  <app-workshop-wizard *ngIf="showWorkshopWizard" [workshopId]="selectedWorkshopId"></app-workshop-wizard>
 </div>

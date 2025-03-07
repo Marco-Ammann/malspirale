@@ -1,13 +1,193 @@
-<div class="admin-content">
-  <h2>Edit "About Me" Content</h2>
-  <p *ngIf="loading" class="loading-indicator">⏳ Loading current content...</p>
-  <!-- Quill Editor in einem gläsernen Container -->
-  <quill-editor
-    class="quill-editor"
-    [(ngModel)]="siteContent"
-    [modules]="quillConfig"
-    *ngIf="!loading">
-  </quill-editor>
-  <button class="btn btn-primary" (click)="saveContent()">💾 Save</button>
-  <p class="save-message" *ngIf="saveMessage">{{ saveMessage }}</p>
+<div class="content-editor">
+  <div class="content-header">
+    <h2>Inhalte verwalten</h2>
+    <div class="page-selector">
+      <label for="pageSelector">Seite auswählen:</label>
+      <select id="pageSelector" [(ngModel)]="selectedPage" (change)="loadSelectedContent()">
+        <option value="about">Über mich</option>
+        <option value="philosophie">Philosophie</option>
+        <option value="farben">Farben</option>
+        <option value="geschichten">Geschichten</option>
+      </select>
+    </div>
+  </div>
+  
+  <div class="content-container">
+    <div class="editor-sidebar">
+      <div class="sidebar-header">
+        <h3>Abschnitte</h3>
+        <button class="btn btn-sm" (click)="addSection()">
+          <span class="material-icons">add</span> Neu
+        </button>
+      </div>
+      
+      <div class="section-list">
+        <div *ngFor="let section of contentSections; let i = index" 
+             class="section-item"
+             [class.active]="currentSectionIndex === i"
+             (click)="selectSection(i)">
+          <span class="section-name">{{ section.title || 'Unbenannter Abschnitt' }}</span>
+          <div class="section-actions">
+            <button class="btn-icon" (click)="moveSection(i, -1); $event.stopPropagation()" [disabled]="i === 0">
+              <span class="material-icons">arrow_upward</span>
+            </button>
+            <button class="btn-icon" (click)="moveSection(i, 1); $event.stopPropagation()" [disabled]="i === contentSections.length - 1">
+              <span class="material-icons">arrow_downward</span>
+            </button>
+            <button class="btn-icon" (click)="deleteSection(i); $event.stopPropagation()">
+              <span class="material-icons">delete</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="editor-main">
+      <div *ngIf="loading" class="loading-indicator">
+        <div class="spinner"></div>
+        <span>Inhalt wird geladen...</span>
+      </div>
+      
+      <div *ngIf="!loading && contentSections.length === 0" class="empty-state">
+        <span class="material-icons">article</span>
+        <h3>Keine Inhalte verfügbar</h3>
+        <p>Beginne damit, einen neuen Abschnitt hinzuzufügen.</p>
+        <button class="btn btn-primary" (click)="addSection()">
+          <span class="material-icons">add</span> Abschnitt hinzufügen
+        </button>
+      </div>
+      
+      <div *ngIf="!loading && contentSections.length > 0 && currentSectionIndex !== -1" class="section-editor">
+        <div class="section-header">
+          <div class="form-group">
+            <label for="sectionTitle">Abschnittstitel</label>
+            <input 
+              type="text" 
+              id="sectionTitle" 
+              [(ngModel)]="contentSections[currentSectionIndex].title"
+              placeholder="Titel des Abschnitts">
+          </div>
+          
+          <div class="form-group">
+            <label for="sectionType">Abschnittstyp</label>
+            <select 
+              id="sectionType" 
+              [(ngModel)]="contentSections[currentSectionIndex].type"
+              (change)="onSectionTypeChange()">
+              <option value="text">Text</option>
+              <option value="image">Bild</option>
+              <option value="gallery">Bildergalerie</option>
+              <option value="quote">Zitat</option>
+            </select>
+          </div>
+        </div>
+        
+        <!-- Editor für verschiedene Abschnittstypen -->
+        <div [ngSwitch]="contentSections[currentSectionIndex].type" class="section-content">
+          <!-- Text Editor -->
+          <div *ngSwitchCase="'text'" class="text-editor">
+            <div class="editor-toolbar">
+              <button type="button" class="toolbar-btn"><b>B</b></button>
+              <button type="button" class="toolbar-btn"><i>I</i></button>
+              <button type="button" class="toolbar-btn"><u>U</u></button>
+              <span class="toolbar-separator"></span>
+              <button type="button" class="toolbar-btn">H2</button>
+              <button type="button" class="toolbar-btn">H3</button>
+              <span class="toolbar-separator"></span>
+              <button type="button" class="toolbar-btn">•</button>
+              <button type="button" class="toolbar-btn">1.</button>
+            </div>
+            <textarea 
+              [(ngModel)]="contentSections[currentSectionIndex].content" 
+              placeholder="Gib hier deinen Text ein..."></textarea>
+          </div>
+          
+          <!-- Bild Editor -->
+          <div *ngSwitchCase="'image'" class="image-editor">
+            <div class="image-upload">
+              <div *ngIf="contentSections[currentSectionIndex].imageUrl" class="image-preview">
+                <img [src]="contentSections[currentSectionIndex].imageUrl" alt="Bildvorschau">
+                <button class="remove-image" (click)="removeImage()">×</button>
+              </div>
+              <div *ngIf="!contentSections[currentSectionIndex].imageUrl" class="upload-area">
+                <input type="file" id="imageUpload" (change)="handleImageUpload($event)" accept="image/*" hidden>
+                <label for="imageUpload" class="upload-label">
+                  <span class="material-icons">cloud_upload</span>
+                  <span>Bild hochladen</span>
+                </label>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="imageDescription">Bildbeschreibung</label>
+              <input 
+                type="text" 
+                id="imageDescription" 
+                [(ngModel)]="contentSections[currentSectionIndex].imageCaption"
+                placeholder="Beschreibung des Bildes">
+            </div>
+          </div>
+          
+          <!-- Galerie Editor -->
+          <div *ngSwitchCase="'gallery'" class="gallery-editor">
+            <div class="gallery-upload">
+              <div class="upload-area">
+                <input type="file" id="galleryUpload" (change)="handleGalleryImageUpload($event)" accept="image/*" multiple hidden>
+                <label for="galleryUpload" class="upload-label">
+                  <span class="material-icons">photo_library</span>
+                  <span>Bilder hinzufügen</span>
+                </label>
+              </div>
+            </div>
+            <div class="gallery-images">
+              <div *ngFor="let image of contentSections[currentSectionIndex].galleryImages; let i = index" class="gallery-image-item">
+                <img [src]="image.url" alt="Galeriebild">
+                <div class="image-actions">
+                  <button class="btn-icon" (click)="moveGalleryImage(i, -1)" [disabled]="i === 0">
+                    <span class="material-icons">arrow_back</span>
+                  </button>
+                  <button class="btn-icon" (click)="moveGalleryImage(i, 1)" [disabled]="i === contentSections[currentSectionIndex].galleryImages!.length - 1">
+                    <span class="material-icons">arrow_forward</span>
+                  </button>
+                  <button class="btn-icon" (click)="removeGalleryImage(i)">
+                    <span class="material-icons">delete</span>
+                  </button>
+                </div>
+                <input 
+                  type="text" 
+                  [(ngModel)]="image.caption"
+                  placeholder="Bildunterschrift">
+              </div>
+            </div>
+          </div>
+          
+          <!-- Zitat Editor -->
+          <div *ngSwitchCase="'quote'" class="quote-editor">
+            <textarea 
+              [(ngModel)]="contentSections[currentSectionIndex].content" 
+              placeholder="Gib hier dein Zitat ein..."></textarea>
+            <div class="form-group">
+              <label for="quoteAuthor">Autor</label>
+              <input 
+                type="text" 
+                id="quoteAuthor" 
+                [(ngModel)]="contentSections[currentSectionIndex].quoteAuthor"
+                placeholder="Name des Autors">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="content-actions">
+    <button class="btn btn-secondary" (click)="resetContent()">Zurücksetzen</button>
+    <button class="btn btn-primary" (click)="saveContent()" [disabled]="saving">
+      <span *ngIf="!saving">Speichern</span>
+      <span *ngIf="saving">Wird gespeichert...</span>
+    </button>
+  </div>
+  
+  <div *ngIf="saveMessage" class="save-message" [class.success]="saveSuccess" [class.error]="!saveSuccess">
+    {{ saveMessage }}
+  </div>
 </div>

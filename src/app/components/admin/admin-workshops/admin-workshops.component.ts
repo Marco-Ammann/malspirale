@@ -1,128 +1,169 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { FormsModule } from '@angular/forms';
-import { QuillModule } from 'ngx-quill';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Workshop } from '../../../core/interfaces/interfaces';
-import { AuthService } from '../../../core/services/auth.service';
 import { DataService } from '../../../core/services/data.service';
-import { StorageService } from '../../../core/services/storage.service';
+import { WorkshopWizardComponent } from './workshop-wizard/workshop-wizard.component';
 
 @Component({
   selector: 'app-admin-workshops',
   standalone: true,
-  imports: [CommonModule, FormsModule, QuillModule],
+  imports: [CommonModule, FormsModule, WorkshopWizardComponent],
   templateUrl: './admin-workshops.component.html',
-  styleUrls: ['./admin-workshops.component.scss']
+  styleUrls: ['./admin-workshops.component.scss'],
 })
 export class AdminWorkshopsComponent implements OnInit {
   workshops: Workshop[] = [];
-  selectedWorkshop: Workshop | null = null;
-  errorMessage: string = '';
+  filteredWorkshops: Workshop[] = [];
+  loading = true;
+  searchTerm = '';
+  typeFilter = 'all';
+  sortBy = 'dateDesc';
 
-  // Konfiguration für den Quill-Editor
-  quillConfig = {
-    toolbar: [
-      ['bold', 'italic', 'underline', 'strike'],
-      [{ header: 1 }, { header: 2 }],
-      [{ list: 'ordered' }, { list: 'bullet' }],
-      [{ indent: '-1' }, { indent: '+1' }],
-      [{ size: ['small', false, 'large', 'huge'] }],
-      [{ color: [] }, { background: [] }],
-      [{ align: [] }],
-      ['clean']
-    ]
-  };
+  showWorkshopWizard = false;
+  selectedWorkshopId: string | null = null;
 
   constructor(
     private dataService: DataService,
-    private authService: AuthService,
-    private storageService: StorageService
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
-    this.loadWorkshops();
-  }
-
-  loadWorkshops(): void {
-    this.dataService.getWorkshops().subscribe({
-      next: (data: Workshop[]) => { this.workshops = data; },
-      error: (err: any) => { console.error('Fehler beim Laden der Workshops', err); }
+    // Prüfe URL-Parameter
+    this.route.queryParams.subscribe((params) => {
+      if (params['action'] === 'new') {
+        this.createWorkshop();
+      } else if (params['id']) {
+        this.editWorkshop({ id: params['id'] } as Workshop);
+      } else {
+        this.loadWorkshops();
+      }
     });
   }
 
+  loadWorkshops(): void {
+    this.loading = true;
+    this.dataService.getWorkshops().subscribe({
+      next: (workshops: Workshop[]) => {
+        this.workshops = workshops;
+        this.filterWorkshops();
+        this.loading = false;
+      },
+      error: (err: any) => {
+        console.error('Fehler beim Laden der Workshops', err);
+        this.loading = false;
+      },
+    });
+  }
+
+  filterWorkshops(): void {
+    // Filtern nach Suchbegriff und Typ
+    this.filteredWorkshops = this.workshops.filter((workshop) => {
+      const matchesSearchTerm =
+        this.searchTerm === '' ||
+        workshop.title?.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+        workshop.shortDescription
+          ?.toLowerCase()
+          .includes(this.searchTerm.toLowerCase());
+
+      const matchesType =
+        this.typeFilter === 'all' || workshop.type === this.typeFilter;
+
+      return matchesSearchTerm && matchesType;
+    });
+
+    // Sortieren
+    this.filteredWorkshops.sort((a, b) => {
+      if (this.sortBy === 'dateAsc') {
+        return this.compareWorkshopDates(a, b);
+      } else if (this.sortBy === 'dateDesc') {
+        return this.compareWorkshopDates(b, a);
+      } else if (this.sortBy === 'title') {
+        return (a.title || '').localeCompare(b.title || '');
+      }
+      return 0;
+    });
+  }
+
+  compareWorkshopDates(a: Workshop, b: Workshop): number {
+    if (!a.date && !b.date) return 0;
+    if (!a.date) return 1;
+    if (!b.date) return -1;
+    return new Date(a.date).getTime() - new Date(b.date).getTime();
+  }
+
+  resetFilters(): void {
+    this.searchTerm = '';
+    this.typeFilter = 'all';
+    this.sortBy = 'dateDesc';
+    this.filterWorkshops();
+  }
+
   createWorkshop(): void {
-    this.selectedWorkshop = {
-      type: 'workshop',
-      title: '',
-      shortDescription: '',
-      description: '',
-      location: '',
-      date: '',
-      price: 0,
-      startTime: '',
-      endTime: '',
-      maxParticipants: undefined,
-      availableSlots: undefined,
-      frequency: '',
-      contactEmail: '',
-      imageUrl: ''
-    };
+    this.selectedWorkshopId = null;
+    this.showWorkshopWizard = true;
   }
 
   editWorkshop(workshop: Workshop): void {
-    this.selectedWorkshop = { ...workshop };
+    if (workshop.id) {
+      this.selectedWorkshopId = workshop.id;
+      this.showWorkshopWizard = true;
+    }
+  }
+
+  duplicateWorkshop(workshop: Workshop): void {
+    // Erstelle eine Kopie ohne ID
+    const duplicatedWorkshop: Workshop = { ...workshop };
+    delete duplicatedWorkshop.id;
+
+    // Füge "(Kopie)" zum Titel hinzu
+    duplicatedWorkshop.title = `${duplicatedWorkshop.title} (Kopie)`;
+
+    // Speichere als neuen Workshop
+    this.dataService.saveWorkshop(duplicatedWorkshop).then((newId) => {
+      this.loadWorkshops();
+    });
   }
 
   async deleteWorkshop(id?: string): Promise<void> {
     if (!id) return;
+
     if (confirm('Möchtest du diesen Workshop wirklich löschen?')) {
       try {
         await this.dataService.deleteWorkshop(id);
-        this.workshops = this.workshops.filter(w => w.id !== id);
+        this.workshops = this.workshops.filter((w) => w.id !== id);
+        this.filterWorkshops();
       } catch (error) {
         console.error('Fehler beim Löschen des Workshops', error);
       }
     }
   }
 
-  async saveWorkshop(): Promise<void> {
-    if (!this.selectedWorkshop) return;
-    
-    // Bereinige Texte, um nicht-brechende Leerzeichen zu entfernen
-    this.selectedWorkshop.shortDescription = this.selectedWorkshop.shortDescription.replace(/&nbsp;/g, ' ');
-    this.selectedWorkshop.description = this.selectedWorkshop.description.replace(/&nbsp;/g, ' ');
-    
-    try {
-      if (this.selectedWorkshop.id) {
-        await this.dataService.updateWorkshop(this.selectedWorkshop);
-      } else {
-        const newId = await this.dataService.saveWorkshop(this.selectedWorkshop);
-        this.selectedWorkshop.id = newId;
-      }
-      this.selectedWorkshop = null;
-      this.loadWorkshops();
-    } catch (error) {
-      console.error('Fehler beim Speichern des Workshops', error);
-      this.errorMessage = 'Fehler beim Speichern des Workshops.';
+  isWorkshopActive(workshop: Workshop): boolean {
+    if (workshop.status === 'draft') return false;
+    if (workshop.type !== 'workshop') return true; // Malateliers und Anfragen sind immer aktiv
+
+    // Für Termine mit Datum: prüfen ob Datum in der Zukunft liegt
+    if (workshop.date) {
+      const workshopDate = new Date(workshop.date);
+      const today = new Date();
+      // Setze Zeit auf 00:00:00 für fairen Vergleich
+      today.setHours(0, 0, 0, 0);
+      return workshopDate >= today;
     }
+
+    return true;
   }
 
-  cancelEdit(): void {
-    this.selectedWorkshop = null;
-  }
+  isWorkshopPast(workshop: Workshop): boolean {
+    if (workshop.type !== 'workshop') return false; // Nur für Einzeltermine relevant
+    if (!workshop.date) return false;
 
-  async handleImageUpload(event: Event): Promise<void> {
-    const input = event.target as HTMLInputElement;
-    if (!input.files || input.files.length === 0) return;
-    const file = input.files[0];
-    try {
-      const url = await this.storageService.uploadFile(file);
-      if (this.selectedWorkshop) {
-        this.selectedWorkshop.imageUrl = url;
-      }
-    } catch (error) {
-      console.error('Fehler beim Hochladen des Bildes', error);
-    }
+    const workshopDate = new Date(workshop.date);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return workshopDate < today;
   }
 }
