@@ -1,222 +1,401 @@
-@use 'sass:color';
-@use 'variables' as vars;
+@use "sass:color";
+@use "variables" as vars;
 
-.admin-workshops {
+.workshops-container {
   max-width: 1200px;
+  width: 100%;
   margin: 0 auto;
-  padding: vars.$padding-large;
-  font-family: vars.$font-family;
-  color: vars.$text-color;
-}
 
-h2 {
-  text-align: center;
-  font-size: clamp(2rem, 5vw, 3rem);
-  color: vars.$accent-color-dark;
-  margin-bottom: vars.$padding-large;
-}
-
-/* Liste der bestehenden Workshops */
-.workshops-list {
-  display: flex;
-  flex-direction: column;
-  gap: vars.$padding-large;
-  margin-bottom: vars.$padding-large;
-
-  .workshop-list-item {
+  .action-header {
     display: flex;
-    flex-wrap: wrap;
-    gap: vars.$padding-medium;
-    padding: vars.$padding-medium;
-    border: 1px solid vars.$secondary-color-light;
-    border-radius: vars.$border-radius;
-    box-shadow: vars.$box-shadow;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
 
-    .workshop-image {
-      flex: 0 0 200px;
-      img {
-        width: 100%;
-        height: auto;
-        border-radius: vars.$border-radius;
-        object-fit: cover;
-      }
+    h2 {
+      font-size: 1.5rem;
+      margin: 0;
+      color: vars.$accent-color-dark;
     }
-    
-    .workshop-details {
-      flex: 1;
-      h3 {
-        font-size: vars.$font-size-large;
-        margin-bottom: vars.$padding-small;
-        color: vars.$accent-color-dark;
-      }
-      .short-description {
-        font-size: vars.$font-size-base;
-        margin-bottom: vars.$padding-small;
-      }
-      .info {
-        font-size: vars.$font-size-base;
-        span {
-          display: block;
-          margin-bottom: vars.$padding-small;
-        }
-      }
-    }
-    
-    .actions {
+
+    .btn-primary {
       display: flex;
-      flex-direction: column;
-      gap: vars.$padding-small;
-      button {
-        padding: vars.$padding-small vars.$padding-medium;
-        border: none;
-        border-radius: vars.$border-radius;
-        cursor: pointer;
-        transition: background 0.3s ease;
-      }
-      .btn-primary {
-        background-color: vars.$accent-color;
-        color: vars.$white;
-        &:hover {
-          background-color: vars.$accent-color-dark;
-        }
-      }
-      .btn-danger {
-        background-color: vars.$danger-color;
-        color: vars.$white;
-        &:hover {
-          background-color: darken(vars.$danger-color, 10%);
-        }
-      }
-    }
-  }
-}
-
-.new-workshop-btn {
-  display: block;
-  margin: 0 auto vars.$padding-large auto;
-  padding: vars.$padding-small vars.$padding-medium;
-  background-color: vars.$accent-color;
-  color: vars.$white;
-  border: none;
-  border-radius: vars.$border-radius;
-  cursor: pointer;
-  transition: background 0.3s ease;
-  &:hover {
-    background-color: vars.$accent-color-dark;
-  }
-}
-
-/* Formular zur Erstellung/Bearbeitung */
-.workshop-edit-form {
-  background: linear-gradient(135deg, vars.$background-light, vars.$background-whiter);
-  backdrop-filter: blur(8px);
-  padding: vars.$padding-large;
-  border-radius: vars.$border-radius;
-  box-shadow: vars.$box-shadow;
-  margin-top: vars.$padding-large;
-
-  form {
-    display: flex;
-    flex-direction: column;
-    gap: vars.$padding-medium;
-
-    .form-row {
-      display: flex;
-      gap: vars.$padding-medium;
-      flex-wrap: wrap;
-
-      .form-group {
-        flex: 1;
-        min-width: 200px;
-        label {
-          display: block;
-          font-weight: bold;
-          margin-bottom: vars.$padding-small;
-        }
-        input, select, textarea {
-          width: 100%;
-          padding: vars.$padding-small;
-          border: 1px solid vars.$secondary-color-light;
-          border-radius: vars.$border-radius;
-          box-sizing: border-box;
-        }
-      }
-      
-      .half {
-        flex: 0 0 48%;
-      }
-    }
-    
-    .form-group {
-      margin-bottom: vars.$padding-medium;
-    }
-    
-    .form-buttons {
-      display: flex;
-      gap: vars.$padding-medium;
-      button {
-        padding: vars.$padding-small vars.$padding-medium;
-        border: none;
-        border-radius: vars.$border-radius;
-        cursor: pointer;
-        transition: background 0.3s ease;
-      }
-      .btn-primary {
-        background-color: vars.$accent-color;
-        color: vars.$white;
-        &:hover {
-          background-color: vars.$accent-color-dark;
-        }
-      }
-      .cancel-btn {
-        background-color: vars.$secondary-color;
-        color: vars.$white;
-        &:hover {
-          background-color: darken(vars.$secondary-color, 10%);
-        }
-      }
-    }
-    
-    .file-input {
-      display: none;
-    }
-    
-    .file-input-btn {
-      display: inline-block;
-      padding: vars.$padding-small vars.$padding-medium;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1rem;
       background-color: vars.$accent-color;
-      color: vars.$white;
-      border-radius: vars.$border-radius;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-weight: 500;
       cursor: pointer;
-      transition: background 0.3s ease;
+      transition: background-color 0.2s ease;
+
       &:hover {
         background-color: vars.$accent-color-dark;
       }
     }
-    
-    .error-message {
-      color: vars.$danger-color;
-      font-size: vars.$font-size-base;
+  }
+
+  .filters {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+
+    .search-bar {
+      flex: 1;
+      min-width: 250px;
+      position: relative;
+
+      .material-icons {
+        position: absolute;
+        left: 0.75rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: vars.$text-color-light;
+      }
+
+      input {
+        width: 100%;
+        padding: 0.75rem 0.75rem 0.75rem 2.5rem;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        font-size: 1rem;
+
+        &:focus {
+          outline: none;
+          border-color: vars.$accent-color;
+          box-shadow: 0 0 0 3px rgba(vars.$accent-color, 0.15);
+        }
+      }
+    }
+
+    .filter-controls {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+
+      .filter-group {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        label {
+          color: vars.$text-color;
+          white-space: nowrap;
+        }
+
+        select {
+          padding: 0.75rem;
+          border: 1px solid #ced4da;
+          border-radius: 4px;
+          background-color: white;
+          font-size: 1rem;
+
+          &:focus {
+            outline: none;
+            border-color: vars.$accent-color;
+            box-shadow: 0 0 0 3px rgba(vars.$accent-color, 0.15);
+          }
+        }
+      }
     }
   }
-}
 
-/* Responsive Anpassungen */
-@media (max-width: 768px) {
-  .admin-workshops {
-    padding: vars.$padding-medium;
-  }
-  .workshops-list .workshop-list-item {
+  .loading-indicator {
+    display: flex;
     flex-direction: column;
     align-items: center;
-  }
-}
+    justify-content: center;
+    padding: 2rem;
 
-@media (max-width: 320px) {
-  .admin-workshops {
-    padding: vars.$padding-extra-small;
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(vars.$accent-color, 0.3);
+      border-radius: 50%;
+      border-top-color: vars.$accent-color;
+      animation: spin 1s linear infinite;
+      margin-bottom: 1rem;
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    }
+
+    span {
+      color: vars.$text-color;
+    }
   }
-  h2 {
-    font-size: 1.75rem;
+
+  .workshops-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+
+    .workshop-card {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+      position: relative;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+      &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .card-status {
+        position: absolute;
+        top: 0.75rem;
+        right: 0.75rem;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+
+        &.status-active {
+          background-color: #d4edda;
+          color: darken(vars.$success-color, 10%);
+        }
+
+        &.status-draft {
+          background-color: #f8f9fa;
+          color: vars.$text-color-light;
+        }
+
+        &.status-past {
+          background-color: #e9ecef;
+          color: vars.$text-color-light;
+        }
+      }
+
+      .card-image {
+        height: 170px;
+        overflow: hidden;
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 0.3s ease;
+        }
+      }
+
+      .card-content {
+        padding: 1.25rem;
+
+        h3 {
+          font-size: 1.2rem;
+          margin: 0 0 0.75rem 0;
+          color: vars.$accent-color-dark;
+          display: -webkit-box;
+          -webkit-line-clamp: 1;
+          line-clamp: 1;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+
+        .card-meta {
+          display: flex;
+          gap: 0.5rem;
+          margin-bottom: 0.75rem;
+
+          .status-badge,
+          .date-badge {
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+          }
+
+          .status-badge {
+            &.status-published {
+              background-color: rgba(vars.$success-color, 0.15);
+              color: darken(vars.$success-color, 10%);
+            }
+
+            &.status-draft {
+              background-color: rgba(vars.$text-color-light, 0.15);
+              color: vars.$text-color-light;
+            }
+          }
+
+          .date-badge {
+            background-color: rgba(vars.$accent-color, 0.1);
+            color: vars.$accent-color-dark;
+          }
+        }
+
+        .card-details {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.75rem;
+          margin-bottom: 0.75rem;
+
+          .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.9rem;
+            color: vars.$text-color;
+
+            .material-icons {
+              font-size: 1rem;
+              color: vars.$accent-color;
+            }
+          }
+        }
+
+        .card-description {
+          color: vars.$text-color;
+          font-size: 0.95rem;
+          line-height: 1.5;
+          margin: 0;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+      }
+
+      .card-actions {
+        padding: 0.75rem 1.25rem;
+        background-color: #f8f9fa;
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.5rem;
+        border-top: 1px solid #e9ecef;
+
+        .btn-icon {
+          width: 36px;
+          height: 36px;
+          border-radius: 50%;
+          border: none;
+          background-color: white;
+          color: vars.$text-color;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: all 0.2s ease;
+
+          &:hover {
+            background-color: vars.$accent-color-light;
+            color: white;
+          }
+        }
+      }
+    }
+  }
+
+  .empty-state {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    padding: 3rem;
+    text-align: center;
+
+    .empty-icon {
+      margin-bottom: 1.5rem;
+
+      .material-icons {
+        font-size: 4rem;
+        color: #e9ecef;
+      }
+    }
+
+    h3 {
+      font-size: 1.3rem;
+      margin: 0 0 1rem 0;
+      color: vars.$text-color;
+    }
+
+    p {
+      color: vars.$text-color-light;
+      margin-bottom: 1.5rem;
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+
+      a {
+        color: vars.$accent-color;
+        text-decoration: none;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      background-color: vars.$accent-color;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+
+      &:hover {
+        background-color: vars.$accent-color-dark;
+      }
+    }
+  }
+
+  .workshop-list-item .workshop-image,
+  .workshop-card .card-image {
+    flex: 0 0 200px;
+    height: 170px;
+    overflow: hidden;
+    position: relative;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      position: absolute; /* Wichtig für die Positionierung */
+      top: 0;
+      left: 0;
+      transition: transform 0.3s ease;
+    }
+  }
+
+  @media (max-width: vars.$tablet) {
+    .action-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+
+    .filters {
+      flex-direction: column;
+
+      .search-bar {
+        min-width: 100%;
+      }
+
+      .filter-controls {
+        width: 100%;
+        justify-content: space-between;
+      }
+    }
   }
 }

@@ -6,21 +6,36 @@ export interface State {
 
 export interface Workshop {
   id?: string;
+  type: 'workshop' | 'malatelier' | 'individuelleAnfrage';
   title: string;
   shortDescription: string;
   description: string;
-  date?: string;           // z.B. "2025-06-15" – nur für reguläre Workshops
+  
+  // Gemeinsame Felder
   location?: string;
   price?: number;
   imageUrl?: string;
-  startTime?: string;
-  endTime?: string;
   maxParticipants?: number;
   availableSlots?: number;
-  frequency?: string;      // Für Malatelier, z.B. "Jeden 1. Mittwoch im Monat"
-  contactEmail?: string;   // Für individuelle Anfragen
+  
+  // Nur für Einzeltermine
+  date?: string;
+  startTime?: string;
+  endTime?: string;
+  
+  // Nur für Malateliers
+  frequency?: string;
+  
+  // Nur für individuelle Anfragen
+  contactEmail?: string;
+  
+  // Status und Metadaten
+  status?: 'published' | 'draft';
+  createdAt?: string;
+  updatedAt?: string;
+  
+  // UI-Flags (nicht persistiert)
   imageLoaded?: boolean;
-  type: 'workshop' | 'malatelier' | 'individuelleAnfrage';
 }
 
 
