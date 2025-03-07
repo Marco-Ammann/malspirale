@@ -1,5 +1,10 @@
 <div class="workshop-wizard">
     <div class="wizard-header">
+      <div class="back-button">
+        <button class="btn btn-link" (click)="cancelWorkshop()">
+          <span class="material-icons">arrow_back</span> Zurück zur Übersicht
+        </button>
+      </div>
       <h2>{{ isEditMode ? 'Workshop bearbeiten' : 'Neuen Workshop erstellen' }}</h2>
       <div class="progress-steps">
         <div class="step" [class.active]="currentStep >= 1" [class.completed]="currentStep > 1">

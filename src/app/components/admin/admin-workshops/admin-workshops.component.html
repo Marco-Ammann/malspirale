@@ -7,24 +7,33 @@
         <span class="material-icons">add</span> Neuer Workshop
       </button>
     </div>
-    
+
     <div class="filters">
       <div class="search-bar">
         <span class="material-icons">search</span>
-        <input type="text" [(ngModel)]="searchTerm" placeholder="Suchen..." (input)="filterWorkshops()">
+        <input
+          type="text"
+          [(ngModel)]="searchTerm"
+          placeholder="Suchen..."
+          (input)="filterWorkshops()"
+        />
       </div>
-      
+
       <div class="filter-controls">
         <div class="filter-group">
           <label for="typeFilter">Typ:</label>
-          <select id="typeFilter" [(ngModel)]="typeFilter" (change)="filterWorkshops()">
+          <select
+            id="typeFilter"
+            [(ngModel)]="typeFilter"
+            (change)="filterWorkshops()"
+          >
             <option value="all">Alle Typen</option>
             <option value="workshop">Einzeltermine</option>
             <option value="malatelier">Malatetliers</option>
             <option value="individuelleAnfrage">Individuelle Anfragen</option>
           </select>
         </div>
-        
+
         <div class="filter-group">
           <label for="sortBy">Sortieren:</label>
           <select id="sortBy" [(ngModel)]="sortBy" (change)="filterWorkshops()">
@@ -35,72 +44,123 @@
         </div>
       </div>
     </div>
-    
+
     <div *ngIf="loading" class="loading-indicator">
       <div class="spinner"></div>
       <span>Workshops werden geladen...</span>
     </div>
-    
+
     <!-- Workshop-Karten -->
-    <div *ngIf="!loading && filteredWorkshops.length > 0" class="workshops-grid">
+    <div
+      *ngIf="!loading && filteredWorkshops.length > 0"
+      class="workshops-grid"
+    >
       <div *ngFor="let workshop of filteredWorkshops" class="workshop-card">
-        <div class="card-status" [ngClass]="{
-          'status-active': isWorkshopActive(workshop),
-          'status-draft': workshop.status === 'draft',
-          'status-past': isWorkshopPast(workshop)
-        }">
-          {{ workshop.status === 'draft' ? 'Entwurf' : 
-             isWorkshopPast(workshop) ? 'Vergangen' : 'Aktiv' }}
+        <div
+          class="card-status"
+          [ngClass]="{
+            'status-active': isWorkshopActive(workshop),
+            'status-draft': workshop.status === 'draft',
+            'status-past': isWorkshopPast(workshop)
+          }"
+        >
+          {{
+            workshop.status === "draft"
+              ? "Entwurf"
+              : isWorkshopPast(workshop)
+              ? "Vergangen"
+              : "Aktiv"
+          }}
         </div>
-        
+
         <div class="card-image">
-          <img [src]="workshop.imageUrl || 'assets/images/default-workshop.jpg'" [alt]="workshop.title">
+          <img
+            [src]="workshop.imageUrl || 'assets/images/default-workshop.jpg'"
+            [alt]="workshop.title"
+          />
         </div>
-        
+
         <div class="card-content">
           <h3>{{ workshop.title }}</h3>
-          
+
+          <div class="card-meta">
+            <span
+              class="status-badge"
+              [ngClass]="{
+                'status-published':
+                  workshop.status === 'published' || !workshop.status,
+                'status-draft': workshop.status === 'draft'
+              }"
+            >
+              {{ workshop.status === "draft" ? "Entwurf" : "Veröffentlicht" }}
+            </span>
+            <span class="date-badge" *ngIf="workshop.date">
+              {{ workshop.date | date : "dd.MM.yyyy" }}
+            </span>
+          </div>
+
           <div class="card-details">
-            <div class="detail-item" *ngIf="workshop.type === 'workshop' && workshop.date">
+            <div
+              class="detail-item"
+              *ngIf="workshop.type === 'workshop' && workshop.date"
+            >
               <span class="material-icons">event</span>
-              <span>{{ workshop.date | date:'dd.MM.yyyy' }}</span>
+              <span>{{ workshop.date | date : "dd.MM.yyyy" }}</span>
             </div>
-            
-            <div class="detail-item" *ngIf="workshop.type === 'malatelier' && workshop.frequency">
+
+            <div
+              class="detail-item"
+              *ngIf="workshop.type === 'malatelier' && workshop.frequency"
+            >
               <span class="material-icons">repeat</span>
               <span>{{ workshop.frequency }}</span>
             </div>
-            
+
             <div class="detail-item" *ngIf="workshop.location">
               <span class="material-icons">location_on</span>
               <span>{{ workshop.location }}</span>
             </div>
-            
-            <div class="detail-item" *ngIf="workshop.price !== undefined && workshop.price !== null">
+
+            <div
+              class="detail-item"
+              *ngIf="workshop.price !== undefined && workshop.price !== null"
+            >
               <span class="material-icons">paid</span>
               <span>{{ workshop.price }} CHF</span>
             </div>
           </div>
-          
+
           <p class="card-description">{{ workshop.shortDescription }}</p>
         </div>
-        
+
         <div class="card-actions">
-          <button class="btn btn-icon" (click)="duplicateWorkshop(workshop)" title="Duplizieren">
+          <button
+            class="btn btn-icon"
+            (click)="duplicateWorkshop(workshop)"
+            title="Duplizieren"
+          >
             <span class="material-icons">content_copy</span>
           </button>
-          
-          <button class="btn btn-icon" (click)="editWorkshop(workshop)" title="Bearbeiten">
+
+          <button
+            class="btn btn-icon"
+            (click)="editWorkshop(workshop)"
+            title="Bearbeiten"
+          >
             <span class="material-icons">edit</span>
           </button>
-          
-          <button class="btn btn-icon" (click)="deleteWorkshop(workshop.id)" title="Löschen">
+
+          <button
+            class="btn btn-icon"
+            (click)="deleteWorkshop(workshop.id)"
+            title="Löschen"
+          >
             <span class="material-icons">delete</span>
           </button>
         </div>
       </div>
     </div>
-    
+
     <!-- Leerer Zustand -->
     <div *ngIf="!loading && filteredWorkshops.length === 0" class="empty-state">
       <div class="empty-icon">
@@ -108,17 +168,24 @@
       </div>
       <h3>Keine Workshops gefunden</h3>
       <p *ngIf="searchTerm || typeFilter !== 'all'">
-        Versuche es mit anderen Suchkriterien oder <a href="javascript:void(0)" (click)="resetFilters()">setze die Filter zurück</a>.
+        Versuche es mit anderen Suchkriterien oder
+        <a href="javascript:void(0)" (click)="resetFilters()"
+          >setze die Filter zurück</a
+        >.
       </p>
       <p *ngIf="!searchTerm && typeFilter === 'all'">
-        Du hast noch keine Workshops erstellt. Klicke auf "Neuer Workshop", um zu beginnen.
+        Du hast noch keine Workshops erstellt. Klicke auf "Neuer Workshop", um
+        zu beginnen.
       </p>
       <button class="btn btn-primary" (click)="createWorkshop()">
         <span class="material-icons">add</span> Neuer Workshop
       </button>
     </div>
   </div>
-  
+
   <!-- Workshop-Wizard Komponente -->
-  <app-workshop-wizard *ngIf="showWorkshopWizard" [workshopId]="selectedWorkshopId"></app-workshop-wizard>
+  <app-workshop-wizard
+    *ngIf="showWorkshopWizard"
+    [workshopId]="selectedWorkshopId"
+  ></app-workshop-wizard>
 </div>

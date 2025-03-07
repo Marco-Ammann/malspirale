@@ -16,6 +16,29 @@
   padding: 1.5rem;
   background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
   border-bottom: 1px solid #dee2e6;
+
+  .back-button {
+    position: absolute;
+    left: 1rem;
+    top: 1rem;
+    
+    .btn-link {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      background: none;
+      border: none;
+      color: vars.$accent-color;
+      padding: 0;
+      cursor: pointer;
+      font-size: 0.9rem;
+      
+      &:hover {
+        color: vars.$accent-color-dark;
+        text-decoration: underline;
+      }
+    }
+  }
   
   h2 {
     font-size: 1.4rem;

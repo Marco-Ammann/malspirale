@@ -1,6 +1,12 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  FormsModule,
+  ReactiveFormsModule,
+  FormBuilder,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Workshop } from '../../../../core/interfaces/interfaces';
@@ -12,7 +18,7 @@ import { StorageService } from '../../../../core/services/storage.service';
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './workshop-wizard.component.html',
-  styleUrls: ['./workshop-wizard.component.scss']
+  styleUrls: ['./workshop-wizard.component.scss'],
 })
 export class WorkshopWizardComponent implements OnInit, OnDestroy {
   currentStep = 1;
@@ -24,21 +30,21 @@ export class WorkshopWizardComponent implements OnInit, OnDestroy {
   detailsForm: FormGroup;
   descriptionForm: FormGroup;
   publishForm: FormGroup;
-  
+
   workshopTypes = [
     { id: 'workshop', label: 'Einzeltermin Workshop' },
     { id: 'malatelier', label: 'Regelmäßiges Malatelier' },
-    { id: 'individuelleAnfrage', label: 'Individuelle Anfrage' }
+    { id: 'individuelleAnfrage', label: 'Individuelle Anfrage' },
   ];
-  
+
   loading = false;
   errorMessage = '';
   successMessage = '';
-  
+
   public selectedType = 'workshop';
   public selectedFile: File | null = null;
   public subscriptions = new Subscription();
-  
+
   constructor(
     private fb: FormBuilder,
     private dataService: DataService,
@@ -51,9 +57,9 @@ export class WorkshopWizardComponent implements OnInit, OnDestroy {
       type: ['workshop', Validators.required],
       title: ['', Validators.required],
       shortDescription: ['', [Validators.required, Validators.maxLength(150)]],
-      location: ['', Validators.required]
+      location: ['', Validators.required],
     });
-    
+
     this.detailsForm = this.fb.group({
       // Dynamisch je nach Typ
       date: [''],
@@ -63,116 +69,143 @@ export class WorkshopWizardComponent implements OnInit, OnDestroy {
       maxParticipants: [null],
       availableSlots: [null],
       frequency: [''],
-      contactEmail: ['']
+      contactEmail: [''],
     });
-    
+
     this.descriptionForm = this.fb.group({
       description: ['', Validators.required],
-      imageUrl: ['']
+      imageUrl: [''],
     });
-    
+
     this.publishForm = this.fb.group({
-      status: ['published']
+      status: ['published'],
     });
   }
-  
+
   ngOnInit(): void {
     // Prüfe auf Edit-Modus und Workshop-ID
     this.workshopId = this.route.snapshot.paramMap.get('id');
     this.isEditMode = !!this.workshopId;
-    
+
     if (this.isEditMode && this.workshopId) {
       this.loadWorkshop(this.workshopId);
     }
-    
+
     // Überwache den Typ für dynamische Formularanpassungen
     this.subscriptions.add(
-      this.basicInfoForm.get('type')!.valueChanges.subscribe(type => {
+      this.basicInfoForm.get('type')!.valueChanges.subscribe((type) => {
         this.selectedType = type;
         this.updateDetailsFormValidators();
       })
     );
   }
-  
+
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
   }
-  
+
   loadWorkshop(id: string): void {
     this.loading = true;
     this.dataService.getWorkshop(id).subscribe({
       next: (workshop) => {
-        // Fülle die Formulare mit vorhandenen Daten
+        console.log('Geladener Workshop:', workshop); // Debugging
+
+        // Typ richtig setzen
+        this.selectedType = workshop.type || 'workshop';
+
+        // Grundinformationen
         this.basicInfoForm.patchValue({
-          type: workshop.type,
-          title: workshop.title,
-          shortDescription: workshop.shortDescription,
-          location: workshop.location || ''
+          type: workshop.type || 'workshop',
+          title: workshop.title || '',
+          shortDescription: workshop.shortDescription || '',
+          location: workshop.location || '',
         });
-        
-        this.detailsForm.patchValue({
-          date: workshop.date || '',
-          startTime: workshop.startTime || '',
-          endTime: workshop.endTime || '',
-          price: workshop.price || 0,
-          maxParticipants: workshop.maxParticipants || null,
-          availableSlots: workshop.availableSlots || null,
-          frequency: workshop.frequency || '',
-          contactEmail: workshop.contactEmail || ''
-        });
-        
+
+        // Details basierend auf Typ
+        const detailsData: any = {};
+        if (workshop.date) detailsData.date = workshop.date;
+        if (workshop.startTime) detailsData.startTime = workshop.startTime;
+        if (workshop.endTime) detailsData.endTime = workshop.endTime;
+        if (workshop.price !== undefined) detailsData.price = workshop.price;
+        if (workshop.maxParticipants)
+          detailsData.maxParticipants = workshop.maxParticipants;
+        if (workshop.availableSlots !== undefined)
+          detailsData.availableSlots = workshop.availableSlots;
+        if (workshop.frequency) detailsData.frequency = workshop.frequency;
+        if (workshop.contactEmail)
+          detailsData.contactEmail = workshop.contactEmail;
+
+        this.detailsForm.patchValue(detailsData);
+
+        // Beschreibung und Bild
         this.descriptionForm.patchValue({
-          description: workshop.description,
-          imageUrl: workshop.imageUrl || ''
+          description: workshop.description || '',
+          imageUrl: workshop.imageUrl || '',
         });
-        
+
+        // Status-Informationen
+        this.publishForm.patchValue({
+          status: workshop.status || 'published',
+        });
+
+        // Aktualisiere Validatoren für den ausgewählten Typ
+        this.updateDetailsFormValidators();
+
         this.loading = false;
       },
       error: (error) => {
-        this.errorMessage = 'Workshop konnte nicht geladen werden.';
+        console.error('Fehler beim Laden des Workshops:', error);
+        this.errorMessage =
+          'Workshop konnte nicht geladen werden: ' + (error.message || error);
         this.loading = false;
-      }
+      },
     });
   }
-  
+
   updateDetailsFormValidators(): void {
     // Setze Validatoren basierend auf dem Typ
     const detailsControls = this.detailsForm.controls;
-    
+
     // Zurücksetzen aller Validatoren
-    Object.keys(detailsControls).forEach(key => {
+    Object.keys(detailsControls).forEach((key) => {
       detailsControls[key].clearValidators();
     });
-    
+
     // Setze spezifische Validatoren je nach Typ
     if (this.selectedType === 'workshop') {
       detailsControls['date'].setValidators([Validators.required]);
-      detailsControls['price'].setValidators([Validators.required, Validators.min(0)]);
+      detailsControls['price'].setValidators([
+        Validators.required,
+        Validators.min(0),
+      ]);
     } else if (this.selectedType === 'malatelier') {
       detailsControls['frequency'].setValidators([Validators.required]);
     } else if (this.selectedType === 'individuelleAnfrage') {
-      detailsControls['contactEmail'].setValidators([Validators.required, Validators.email]);
+      detailsControls['contactEmail'].setValidators([
+        Validators.required,
+        Validators.email,
+      ]);
     }
-    
+
     // Aktualisiere den Formularstatus
-    Object.keys(detailsControls).forEach(key => {
+    Object.keys(detailsControls).forEach((key) => {
       detailsControls[key].updateValueAndValidity();
     });
   }
-  
+
   nextStep(): void {
     // Validiere den aktuellen Schritt
     if (this.validateCurrentStep()) {
       this.currentStep++;
     }
   }
-  
+
   previousStep(): void {
     if (this.currentStep > 1) {
       this.currentStep--;
     }
   }
-  
+
   validateCurrentStep(): boolean {
     switch (this.currentStep) {
       case 1:
@@ -185,20 +218,20 @@ export class WorkshopWizardComponent implements OnInit, OnDestroy {
         return true;
     }
   }
-  
+
   async handleImageUpload(event: Event): Promise<void> {
     const input = event.target as HTMLInputElement;
     if (!input.files || input.files.length === 0) return;
-    
+
     this.selectedFile = input.files[0];
-    
+
     // Setze die Formularfelder für die Vorschau
     if (this.selectedFile) {
       try {
         const imageUrl = await this.uploadImage(this.selectedFile);
         if (imageUrl) {
           this.descriptionForm.patchValue({
-            imageUrl: imageUrl
+            imageUrl: imageUrl,
           });
         }
       } catch (error) {
@@ -206,7 +239,7 @@ export class WorkshopWizardComponent implements OnInit, OnDestroy {
       }
     }
   }
-  
+
   async uploadImage(file: File): Promise<string | null> {
     try {
       return await this.storageService.uploadImage(file);
@@ -215,51 +248,54 @@ export class WorkshopWizardComponent implements OnInit, OnDestroy {
       return null;
     }
   }
-  
+
   async saveWorkshop(): Promise<void> {
     this.loading = true;
     
     try {
       // Sammle alle Daten aus den Formularen
-      const workshopData: Partial<Workshop> = {
+      const workshopData: Workshop = {
         ...this.basicInfoForm.value,
         ...this.detailsForm.value,
-        ...this.descriptionForm.value
+        ...this.descriptionForm.value,
+        ...this.publishForm.value,
+        type: this.selectedType
       };
       
       // Entferne leere Felder
-      Object.keys(workshopData).forEach(key => {
-        const k = key as keyof Workshop;
-        if (workshopData[k] === '' || workshopData[k] === null) {
-          delete workshopData[k];
+      Object.keys(workshopData as Record<string, any>).forEach(key => {
+        const value = (workshopData as Record<string, any>)[key];
+        if (value === '' || value === null) {
+          delete (workshopData as Record<string, any>)[key];
         }
       });
-      
-      // Stelle sicher, dass der Typ korrekt gesetzt ist
-      workshopData.type = this.selectedType as 'workshop' | 'malatelier' | 'individuelleAnfrage';
       
       if (this.isEditMode && this.workshopId) {
         // Update existierenden Workshop
         workshopData.id = this.workshopId;
-        await this.dataService.updateWorkshop(workshopData as Workshop);
+        await this.dataService.updateWorkshop(workshopData);
         this.successMessage = 'Workshop erfolgreich aktualisiert.';
       } else {
         // Erstelle neuen Workshop
-        const newId = await this.dataService.saveWorkshop(workshopData as Workshop);
+        const newId = await this.dataService.saveWorkshop(workshopData);
         this.successMessage = 'Workshop erfolgreich erstellt.';
-        // Umleiten zur Bearbeitung nach Speichern
-        setTimeout(() => {
-          this.router.navigate(['/admin/workshops']);
-        }, 1500);
       }
+      
+      // Kurz die Erfolgsmeldung anzeigen, dann zurück zur Übersicht
+      setTimeout(() => {
+        this.router.navigate(['/admin/workshops']);
+      }, 1500);
     } catch (error) {
-      console.error('Workshop speichern fehlgeschlagen:', error);
-      this.errorMessage = `Fehler beim Speichern des Workshops: ${error instanceof Error ? error.message : 'Unbekannter Fehler'}`;
+      if (error instanceof Error) {
+        this.errorMessage = 'Fehler beim Speichern des Workshops: ' + error.message;
+      } else {
+        this.errorMessage = 'Fehler beim Speichern des Workshops';
+      }      console.error("Speicherfehler:", error);
     } finally {
       this.loading = false;
     }
   }
-  
+
   cancelWorkshop(): void {
     this.router.navigate(['/admin/workshops']);
   }
