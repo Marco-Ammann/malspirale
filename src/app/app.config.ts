@@ -8,6 +8,7 @@ import {provideAnimationsAsync} from'@angular/platform-browser/animations/async'
 import { routes } from './app.routes';
 import { provideServiceWorker } from '@angular/service-worker';
 import { provideHttpClient } from '@angular/common/http';
+import { provideAnimations } from '@angular/platform-browser/animations';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -18,6 +19,7 @@ export const appConfig: ApplicationConfig = {
       registrationStrategy: 'registerWhenStable:30000',
     }),
     provideAnimationsAsync(),
+    provideAnimations(), // Hier Animationen hinzufügen
     provideHttpClient(),
   ],
 };

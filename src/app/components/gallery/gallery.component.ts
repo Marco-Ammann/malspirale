@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { getFirestore, collection, getDocs } from 'firebase/firestore';
 import { firebaseApp } from '../../../firebase-config';
+import { LightboxComponent, LightboxImage } from '../../shared/lightbox/lightbox.component';
 
 interface Artwork {
   id: string;
@@ -15,7 +16,7 @@ interface Artwork {
   templateUrl: './gallery.component.html',
   styleUrls: ['./gallery.component.scss'],
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, LightboxComponent],
 })
 export class GalleryComponent implements OnInit {
   artworks: Artwork[] = [];
@@ -24,6 +25,11 @@ export class GalleryComponent implements OnInit {
   errorMessage: string = '';
   artworks_default: Artwork[] = [];
   subArtworks_default: Artwork[] = [];
+  
+  // Lightbox-Eigenschaften
+  showLightbox: boolean = false;
+  lightboxImages: LightboxImage[] = [];
+  currentLightboxIndex: number = 0;
 
   constructor() {
     for (let i = 1; i <= 21; i++) {
@@ -96,12 +102,31 @@ export class GalleryComponent implements OnInit {
     }
   }
 
-
   scrollToSubGallery(event: Event): void {
     event.preventDefault();
     const target = document.getElementById('sub-gallery');
     if (target) {
       target.scrollIntoView({ behavior: 'smooth' });
     }
+  }
+  
+  // Lightbox-Methoden
+  openLightbox(gallery: 'main' | 'sub', index: number): void {
+    const source = gallery === 'main' ? this.artworks : this.subArtworks;
+    
+    // Konvertiere Artworks in Lightbox-Format
+    this.lightboxImages = source.map(artwork => ({
+      src: artwork.src,
+      alt: artwork.alt,
+      title: artwork.title,
+      caption: artwork.alt // Wir verwenden alt als Bildunterschrift
+    }));
+    
+    this.currentLightboxIndex = index;
+    this.showLightbox = true;
+  }
+  
+  closeLightbox(): void {
+    this.showLightbox = false;
   }
 }

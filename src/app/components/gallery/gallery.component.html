@@ -4,24 +4,25 @@
     <p>
       Willkommen in meiner Galerie. Hier präsentiere ich meine Werke – authentisch, lebendig und persönlich.
     </p>
-    <p>
+    <p class="photo-credits">
       Alle Bilder wurden von Shiva Ludi fotografiert.
     </p>
     <div class="scroll-link">
       <a href="#sub-gallery" (click)="scrollToSubGallery($event)">Weitere Einblicke</a>
     </div>
-    
   </header>
 
   <section class="main-gallery">
     <div *ngIf="loading" class="loading">
       <p>Lade Kunstwerke...</p>
     </div>
+    
     <div *ngIf="errorMessage" class="error-message">
       <p>{{ errorMessage }}</p>
     </div>
+    
     <div class="gallery-grid" *ngIf="!loading && artworks.length > 0">
-      <div *ngFor="let artwork of artworks" class="artwork">
+      <div *ngFor="let artwork of artworks; let i = index" class="artwork" (click)="openLightbox('main', i)">
         <div class="image-container">
           <img [src]="artwork.src" [alt]="artwork.alt" />
           <div class="overlay">
@@ -30,6 +31,7 @@
         </div>
       </div>
     </div>
+    
     <div *ngIf="!loading && artworks.length === 0" class="no-artworks">
       <p>Zurzeit sind keine Kunstwerke verfügbar.</p>
     </div>
@@ -41,14 +43,22 @@
       Hier zeige ich zusätzliche Werke, die meinen kreativen Weg dokumentieren.
     </p>
     <div class="masonry-grid">
-      <div *ngFor="let subArtwork of subArtworks" class="masonry-item">
+      <div *ngFor="let subArtwork of subArtworks; let i = index" class="masonry-item" (click)="openLightbox('sub', i)">
         <img [src]="subArtwork.src" [alt]="subArtwork.alt" />
       </div>
     </div>
+    
+    <!-- Statt Footer nur Quellenangabe -->
+    <p class="photo-credits-footer">
+      Fotografie: Shiva Ludi
+    </p>
   </section>
-
-  <footer class="gallery-footer">
-    <p>&copy; 2025 Isabel Kunz – Eine Plattform für echte Kunst.</p>
-    <p>Bilder: Shiva Ludi</p>
-  </footer>
+  
+  <!-- Lightbox -->
+  <app-lightbox 
+    *ngIf="showLightbox" 
+    [images]="lightboxImages" 
+    [currentIndex]="currentLightboxIndex" 
+    (close)="closeLightbox()">
+  </app-lightbox>
 </div>

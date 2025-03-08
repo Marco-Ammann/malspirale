@@ -13,14 +13,14 @@
   color: vars.$text-color;
 }
 
-/* Header */
+/* Header mit Glaseffekt */
 .gallery-header {
   background: linear-gradient(135deg, rgba(255,255,255,0.8), rgba(255,255,255,0.6));
   backdrop-filter: blur(10px);
   padding: vars.$padding-large;
   text-align: center;
   border-radius: vars.$border-radius;
-  box-shadow: vars.$box-shadow;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   margin-bottom: vars.$padding-large;
   display: flex;
   flex-direction: column;
@@ -30,12 +30,27 @@
     font-size: clamp(2rem, 5vw, 3rem);
     color: vars.$accent-color-dark;
     margin-bottom: vars.$padding-medium;
+    position: relative;
+    display: inline-block;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      bottom: -10px;
+      width: 80px;
+      height: 3px;
+      background: linear-gradient(to right, vars.$accent-color, vars.$accent-color-light);
+      transform: translateX(-50%);
+      border-radius: 2px;
+    }
   }
   
   p {
     font-size: clamp(1rem, 2.5vw, 1.5rem);
     color: vars.$text-color;
     margin: 0;
+    line-height: 1.6;
   }
   
   .scroll-link {
@@ -47,16 +62,37 @@
       border: 2px solid vars.$accent-color-dark;
       padding: vars.$padding-small vars.$padding-medium;
       border-radius: vars.$border-radius;
-      transition: background-color 0.3s ease, color 0.3s ease;
-      &:hover {
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      display: inline-block;
+      
+      &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 0;
         background-color: vars.$accent-color-dark;
+        z-index: -1;
+        transition: height 0.3s ease;
+      }
+      
+      &:hover {
         color: vars.$background-color;
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        
+        &::before {
+          height: 100%;
+        }
       }
     }
   }
 }
 
-/* Hauptgalerie im Masonry-Stil */
+/* Hauptgalerie im Masonry-Stil mit verbessertem Design */
 .main-gallery {
   .gallery-grid {
     column-count: 3;
@@ -67,44 +103,64 @@
       margin-bottom: vars.$padding-medium;
       border-radius: vars.$border-radius;
       overflow: hidden;
-      box-shadow: vars.$box-shadow;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
       position: relative;
+      cursor: pointer;
+      transform: translateY(0);
+      transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+                  box-shadow 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      
+      &:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        
+        .image-container img {
+          transform: scale(1.1);
+        }
+        
+        .overlay {
+          opacity: 1;
+        }
+      }
       
       .image-container {
         position: relative;
+        overflow: hidden;
         
         img {
           width: 100%;
           display: block;
-          transition: transform 0.3s ease;
+          transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
         
         .overlay {
           position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background: rgba(0, 0, 0, 0.4);
+          inset: 0;
+          background: linear-gradient(
+            to top,
+            rgba(0, 0, 0, 0.7) 0%,
+            rgba(0, 0, 0, 0.4) 30%,
+            rgba(0, 0, 0, 0) 70%
+          );
           opacity: 0;
           display: flex;
-          align-items: center;
-          justify-content: center;
-          transition: opacity 0.3s ease;
+          align-items: flex-end;
+          padding: 20px;
+          transition: opacity 0.4s ease;
           
           .text {
-            color: vars.$background-color;
-            font-size: clamp(1rem, 2vw, 1.5rem);
+            color: white;
+            font-size: clamp(1rem, 2vw, 1.3rem);
             text-align: center;
+            width: 100%;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            transform: translateY(20px);
+            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
           }
         }
         
-        &:hover img {
-          transform: scale(1.05);
-        }
-        
-        &:hover .overlay {
-          opacity: 1;
+        &:hover .overlay .text {
+          transform: translateY(0);
         }
       }
     }
@@ -112,9 +168,18 @@
   
   .loading, .error-message {
     text-align: center;
+    padding: vars.$padding-large;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: vars.$border-radius;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
     
     p {
       font-size: vars.$font-size-medium;
+      color: vars.$text-color;
+      
+      &.error {
+        color: vars.$danger-color;
+      }
     }
   }
   
@@ -122,26 +187,49 @@
     text-align: center;
     font-size: vars.$font-size-large;
     color: vars.$text-color;
+    padding: vars.$padding-large;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: vars.$border-radius;
   }
 }
 
-/* Untergalerie – Masonry-Stil */
+/* Untergalerie – verbesserter Masonry-Stil */
 .sub-gallery {
-  margin-top: vars.$padding-large;
+  margin-top: vars.$padding-extra-large;
   text-align: center;
+  padding: vars.$padding-large;
+  background: linear-gradient(135deg, rgba(255,255,255,0.6), rgba(255,255,255,0.4));
+  backdrop-filter: blur(5px);
+  border-radius: vars.$border-radius;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
   
   h3 {
-    font-size: vars.$font-size-large;
+    font-size: vars.$font-size-xlarge;
     color: vars.$accent-color-dark;
     margin-bottom: vars.$padding-small;
-    border-bottom: 2px solid vars.$accent-color;
+    position: relative;
     display: inline-block;
-    padding-bottom: 4px;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      bottom: -8px;
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(to right, vars.$accent-color, vars.$accent-color-light);
+      transform: translateX(-50%);
+      border-radius: 2px;
+    }
   }
   
   p {
     font-size: vars.$font-size-medium;
     margin-bottom: vars.$padding-medium;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
   }
   
   .masonry-grid {
@@ -151,17 +239,50 @@
     .masonry-item {
       break-inside: avoid;
       margin-bottom: vars.$padding-medium;
+      border-radius: vars.$border-radius;
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      transform: translateY(0);
+      transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+                  box-shadow 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      
+      &:hover {
+        transform: translateY(-10px) scale(1.02);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+      }
       
       img {
         width: 100%;
         display: block;
         border-radius: vars.$border-radius;
-        box-shadow: vars.$box-shadow;
-        transition: transform 0.3s ease;
+        transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         
         &:hover {
-          transform: scale(1.02);
+          transform: scale(1.1);
         }
+      }
+      
+      &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          to top,
+          rgba(0, 0, 0, 0.7) 0%,
+          rgba(0, 0, 0, 0.2) 40%,
+          rgba(0, 0, 0, 0) 80%
+        );
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+      
+      &:hover::after {
+        opacity: 1;
       }
     }
   }
@@ -171,33 +292,175 @@
 .gallery-footer {
   text-align: center;
   margin-top: vars.$padding-large;
+  padding: vars.$padding-medium;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: vars.$border-radius;
   
   p {
     font-size: clamp(1rem, 2vw, 1.5rem);
     margin-bottom: vars.$padding-small;
+    color: vars.$text-color;
+    
+    &:last-child {
+      font-size: 0.9rem;
+      opacity: 0.7;
+    }
+  }
+}
+
+/* Loading-Animation */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.loading {
+  p {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(90deg, 
+      rgba(255, 255, 255, 0.1) 25%, 
+      rgba(255, 255, 255, 0.5) 50%, 
+      rgba(255, 255, 255, 0.1) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+    border-radius: 4px;
+    padding: 10px;
+    display: inline-block;
   }
 }
 
 /* Responsive Anpassungen */
-@media (max-width: 768px) {
+@media (max-width: 968px) {
   .main-gallery .gallery-grid,
   .sub-gallery .masonry-grid {
     column-count: 2;
   }
 }
 
-@media (max-width: 320px) {
+@media (max-width: vars.$tablet) {
   .gallery-page {
-    padding: vars.$padding-small;
+    padding: vars.$padding-medium;
   }
-  .gallery-header h2 {
-    font-size: 1.75rem;
+  
+  .gallery-header {
+    padding: vars.$padding-medium;
   }
+  
+  .sub-gallery {
+    padding: vars.$padding-medium;
+  }
+}
+
+@media (max-width: vars.$mobile) {
   .main-gallery .gallery-grid,
   .sub-gallery .masonry-grid {
     column-count: 1;
   }
+  
+  .gallery-header h2 {
+    font-size: 1.75rem;
+  }
+  
+  .gallery-header .scroll-link a {
+    padding: 8px 16px;
+    font-size: 1rem;
+  }
+  
   .gallery-footer p {
     font-size: vars.$font-size-base;
   }
+  
+  .sub-gallery h3 {
+    font-size: 1.5rem;
+  }
+}
+
+
+/* Styling für die Foto-Credits */
+.photo-credits {
+  font-style: italic;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+  color: vars.$text-color-light;
+}
+
+.photo-credits-footer {
+  text-align: center;
+  font-style: italic;
+  font-size: 0.9rem;
+  margin-top: 2rem;
+  color: vars.$text-color-light;
+}
+
+/* Verbesserte Hover-Effekte und Interaktion */
+.gallery-grid .artwork,
+.masonry-grid .masonry-item {
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  }
+}
+
+/* Animations- und Hover-Effekte */
+.image-container, .masonry-item {
+  position: relative;
+  overflow: hidden;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(0,0,0,0) 70%, rgba(0,0,0,0.7) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+  
+  &:hover::after {
+    opacity: 1;
+  }
+  
+  img {
+    transition: transform 0.5s ease;
+  }
+  
+  &:hover img {
+    transform: scale(1.05);
+  }
+}
+
+.overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 12px;
+  color: white;
+  z-index: 1;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  
+  .text {
+    font-size: 16px;
+    font-weight: bold;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+  }
+}
+
+.image-container:hover .overlay {
+  opacity: 1;
+  transform: translateY(0);
 }

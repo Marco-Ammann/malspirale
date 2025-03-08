@@ -1,12 +1,18 @@
 <div class="contact-container">
   <div class="contact-header">
-    <h2>Kontakt</h2>
-    <p>
+    <h2>{{ isWorkshopRequest ? 'Workshop-Anfrage' : 'Kontakt' }}</h2>
+    <p *ngIf="!isWorkshopRequest">
       Hallo, ich bin Isabel. Ich freue mich sehr, von dir zu hören – egal ob du
       Fragen zu meinen Workshops hast, ein kreatives Gespräch suchst oder
       einfach nur testest, ob alles funktioniert. Schreib mir deine Nachricht!
     </p>
+    <p *ngIf="isWorkshopRequest">
+      Vielen Dank für dein Interesse an meinem Workshop 
+      <strong *ngIf="workshopTitle">{{ workshopTitle }}</strong>!
+      Bitte fülle das Formular aus und ich werde mich so schnell wie möglich bei dir melden.
+    </p>
   </div>
+  
   <form #contactForm="ngForm" (ngSubmit)="onSubmit(contactForm)" class="contact-form">
     <div class="form-group">
       <label for="name">Name *</label>
@@ -17,11 +23,13 @@
         [(ngModel)]="contact.name" 
         required 
         placeholder="Dein Name" 
-        #name="ngModel" />
-      <div class="error-message" *ngIf="name.invalid && name.touched">
+        #name="ngModel" 
+        [class.error-input]="name.invalid && (name.touched || submitted)" />
+      <div class="error-message" *ngIf="name.invalid && (name.touched || submitted)">
         Name ist erforderlich.
       </div>
     </div>
+    
     <div class="form-group">
       <label for="email">E-Mail *</label>
       <input 
@@ -30,12 +38,16 @@
         name="email" 
         [(ngModel)]="contact.email" 
         required 
+        email
         placeholder="Deine E-Mail-Adresse" 
-        #email="ngModel" />
-      <div class="error-message" *ngIf="email.invalid && email.touched">
-        Bitte gib eine gültige E-Mail-Adresse ein.
+        #email="ngModel"
+        [class.error-input]="email.invalid && (email.touched || submitted)" />
+      <div class="error-message" *ngIf="email.invalid && (email.touched || submitted)">
+        <span *ngIf="email.errors?.['required']">E-Mail-Adresse ist erforderlich.</span>
+        <span *ngIf="email.errors?.['email']">Bitte gib eine gültige E-Mail-Adresse ein.</span>
       </div>
     </div>
+    
     <div class="form-group">
       <label for="phone">Telefonnummer</label>
       <input 
@@ -43,8 +55,9 @@
         id="phone" 
         name="phone" 
         [(ngModel)]="contact.phone" 
-        placeholder="Deine Telefonnummer" />
+        placeholder="Deine Telefonnummer (optional)" />
     </div>
+    
     <div class="form-group">
       <label for="message">Nachricht *</label>
       <textarea 
@@ -53,20 +66,46 @@
         [(ngModel)]="contact.message" 
         required 
         placeholder="Deine Nachricht" 
-        #message="ngModel"></textarea>
-      <div class="error-message" *ngIf="message.invalid && message.touched">
+        #message="ngModel"
+        [class.error-input]="message.invalid && (message.touched || submitted)"
+        rows="6"></textarea>
+      <div class="error-message" *ngIf="message.invalid && (message.touched || submitted)">
         Nachricht ist erforderlich.
       </div>
     </div>
-    <button type="submit" class="btn-cta" [disabled]="!contactForm.valid">
-      Nachricht senden
+    
+    <div class="form-group privacy-policy">
+      <div class="checkbox-wrapper">
+        <input 
+          type="checkbox" 
+          id="privacy" 
+          name="agreedToPrivacyPolicy"
+          [(ngModel)]="contact.agreedToPrivacyPolicy"
+          required
+          #privacy="ngModel">
+        <label for="privacy">
+          Ich stimme zu, dass meine Daten zum Zweck der Kontaktaufnahme gespeichert werden. Weitere Informationen findest du in unserer <a routerLink="/datenschutz">Datenschutzerklärung</a>. *
+        </label>
+      </div>
+      <div class="error-message" *ngIf="!contact.agreedToPrivacyPolicy && submitted">
+        Bitte stimme den Datenschutzbestimmungen zu.
+      </div>
+    </div>
+    
+    <button type="submit" class="btn-cta" [disabled]="sending">
+      <span *ngIf="!sending && !isWorkshopRequest">Nachricht senden</span>
+      <span *ngIf="!sending && isWorkshopRequest">Anfrage senden</span>
+      <span *ngIf="sending" class="sending-indicator">
+        <span class="spinner"></span>
+        Wird gesendet...
+      </span>
     </button>
   </form>
 
-  <div *ngIf="successMessage" class="alert alert-success">
+  <div *ngIf="successMessage" class="alert alert-success fade-in">
     {{ successMessage }}
   </div>
-  <div *ngIf="errorMessage" class="alert alert-danger">
+  <div *ngIf="errorMessage" class="alert alert-danger fade-in">
     {{ errorMessage }}
   </div>
 </div>
