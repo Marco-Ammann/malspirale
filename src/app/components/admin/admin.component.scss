@@ -20,21 +20,13 @@
   color: white;
   display: flex;
   flex-direction: column;
-  transition: transform 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   position: fixed;
   left: 0;
   top: 0;
   bottom: 0;
   z-index: 1000;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-
-  @media (max-width: vars.$tablet) {
-    transform: translateX(-100%);
-
-    &.open {
-      transform: translateX(0);
-    }
-  }
 
   .sidebar-header {
     padding: 1.5rem;
@@ -54,10 +46,16 @@
       border: none;
       color: white;
       cursor: pointer;
-      display: none;
-
-      @media (max-width: vars.$tablet) {
-        display: block;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: background-color 0.3s ease;
+      
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
       }
     }
   }
@@ -74,11 +72,17 @@
       color: rgba(255, 255, 255, 0.8);
       text-decoration: none;
       transition: all 0.2s ease;
+      border-left: 3px solid transparent;
 
-      &:hover,
-      &.active {
+      &:hover {
         background-color: rgba(255, 255, 255, 0.1);
         color: white;
+      }
+      
+      &.active {
+        background-color: rgba(255, 255, 255, 0.15);
+        color: white;
+        border-left-color: white;
       }
 
       .material-icons {
@@ -102,10 +106,12 @@
       color: rgba(255, 255, 255, 0.8);
       cursor: pointer;
       padding: 0.5rem;
-      transition: color 0.2s ease;
+      border-radius: 4px;
+      transition: all 0.2s ease;
 
       &:hover {
         color: white;
+        background-color: rgba(255, 255, 255, 0.1);
       }
 
       .material-icons {
@@ -118,6 +124,7 @@
 
       &:hover {
         color: #ff6666;
+        background-color: rgba(255, 102, 102, 0.1);
       }
     }
   }
@@ -128,11 +135,7 @@
   flex: 1;
   margin-left: 260px;
   padding: 1rem;
-  transition: margin 0.3s ease;
-
-  @media (max-width: vars.$tablet) {
-    margin-left: 0;
-  }
+  transition: margin 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 
   .admin-header {
     display: flex;
@@ -148,10 +151,20 @@
       color: vars.$accent-color-dark;
       cursor: pointer;
       margin-right: 1rem;
-      display: none;
-
-      @media (max-width: vars.$tablet) {
-        display: block;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.3s ease;
+      
+      &:hover {
+        background-color: rgba(vars.$accent-color, 0.1);
+      }
+      
+      &:focus {
+        outline: none;
       }
     }
 
@@ -219,6 +232,8 @@
             background-color: vars.$accent-color-light;
             color: white;
             border-color: vars.$accent-color;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
           }
 
           .material-icons {
@@ -242,6 +257,12 @@
         display: flex;
         flex-direction: column;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        
+        &:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
 
         h3 {
           font-size: 1rem;
@@ -268,6 +289,8 @@
           color: vars.$accent-color;
           text-decoration: none;
           font-size: 0.9rem;
+          display: inline-flex;
+          align-items: center;
 
           &:hover {
             text-decoration: underline;
@@ -300,6 +323,12 @@
           padding: 0.75rem;
           border-radius: 4px;
           background-color: #f8f9fa;
+          transition: transform 0.2s ease, background-color 0.2s ease;
+          
+          &:hover {
+            transform: translateX(5px);
+            background-color: rgba(vars.$accent-color, 0.05);
+          }
 
           .material-icons {
             margin-right: 1rem;
@@ -341,89 +370,122 @@
   }
 }
 
-// ===== Help Panel =====
-.help-panel {
-  position: fixed;
-  top: 0;
-  right: 0;
-  width: 320px;
-  height: 100vh;
-  background-color: white;
-  box-shadow: -3px 0 15px rgba(0, 0, 0, 0.1);
-  z-index: 1100;
-  transform: translateX(100%);
-  transition: transform 0.3s ease;
-
-  &.show {
-    transform: translateX(0);
-  }
-
-  .help-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 1.5rem;
-    border-bottom: 1px solid #e9ecef;
-
-    h2 {
-      margin: 0;
-      font-size: 1.2rem;
-      color: vars.$accent-color-dark;
+// Mobile & Tablet Responsiveness
+@media (max-width: vars.$tablet) {
+  .admin-sidebar {
+    transform: translateX(-100%);
+    width: 300px;
+    
+    &.open {
+      transform: translateX(0);
     }
-
-    .close-btn {
-      background: none;
-      border: none;
-      color: vars.$text-color;
-      cursor: pointer;
-      padding: 0.5rem;
-
-      &:hover {
-        color: vars.$accent-color-dark;
+  }
+  
+  .admin-content {
+    margin-left: 0;
+    padding: 0.75rem;
+    
+    .admin-header {
+      .menu-toggle {
+        display: flex;
+      }
+      
+      .header-title h1 {
+        font-size: 1.2rem;
+      }
+      
+      .user-menu span:not(.user-icon) {
+        display: none;
+      }
+    }
+    
+    .dashboard {
+      .quick-actions {
+        padding: 1rem;
+        
+        .action-buttons {
+          .action-btn {
+            flex: 1;
+            min-width: 100px;
+          }
+        }
+      }
+      
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
       }
     }
   }
+}
 
-  .help-content {
-    padding: 1.5rem;
-    overflow-y: auto;
-    height: calc(100vh - 4rem);
-
-    h3 {
-      font-size: 1.1rem;
-      margin-top: 0;
-      color: vars.$accent-color-dark;
+// Small Screen Optimizations
+@media (max-width: vars.$mobile) {
+  .admin-sidebar {
+    width: 100%;
+  }
+  
+  .admin-content {
+    padding: 0.5rem;
+    
+    .admin-header {
+      padding: 0.5rem 0 1rem 0;
+      
+      .header-title h1 {
+        font-size: 1.1rem;
+      }
     }
-
-    p {
-      color: vars.$text-color;
-      line-height: 1.5;
-    }
-
-    .video-tutorial {
-      margin-top: 2rem;
-      padding-top: 1.5rem;
-      border-top: 1px solid #e9ecef;
-
-      .tutorial-btn {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
+    
+    .dashboard {
+      .dashboard-h2__userName {
+        font-size: 1.2rem;
+      }
+      
+      .quick-actions {
         padding: 0.75rem;
-        background-color: vars.$accent-color-light;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: background-color 0.2s ease;
-
-        &:hover {
-          background-color: vars.$accent-color-dark;
+        
+        h2 {
+          font-size: 1.1rem;
         }
-
-        .material-icons {
-          margin-right: 0.5rem;
+        
+        .action-buttons {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 0.5rem;
+          
+          .action-btn {
+            padding: 0.75rem;
+            font-size: 0.9rem;
+            
+            .material-icons {
+              font-size: 1.5rem;
+            }
+          }
+        }
+      }
+      
+      .stat-card {
+        padding: 1rem;
+        
+        .stat-value {
+          font-size: 1.5rem;
+        }
+      }
+      
+      .activity-section {
+        padding: 1rem;
+        
+        h2 {
+          font-size: 1.1rem;
+        }
+        
+        .activity-item {
+          padding: 0.5rem;
+          font-size: 0.9rem;
+          
+          .material-icons {
+            font-size: 1.3rem;
+          }
         }
       }
     }

@@ -3,8 +3,12 @@
   <aside class="admin-sidebar" [class.open]="menuOpen">
     <div class="sidebar-header">
       <h2>Malspirale Admin</h2>
-      <button class="menu-toggle" (click)="toggleMenu()">
-        <span class="material-icons">menu</span>
+      <button
+        class="menu-toggle"
+        (click)="toggleMenu()"
+        aria-label="Menü schließen"
+      >
+        <span class="material-icons">close</span>
       </button>
     </div>
 
@@ -165,50 +169,21 @@
     </ng-template>
   </main>
 
-  <!-- Hilfe-Panel, ausgeblendet standardmäßig -->
-  <aside *ngIf="showHelp" class="help-panel">
-    <div class="help-header">
-      <h2>Hilfe & Tipps</h2>
-      <button (click)="closeHelp()" class="close-btn">
-        <span class="material-icons">close</span>
-      </button>
-    </div>
-
-    <div class="help-content">
-      <div [ngSwitch]="currentRoute">
-        <div *ngSwitchCase="'/'">
-          <h3>Dashboard</h3>
-          <p>
-            Hier findest du eine Übersicht deiner Website. Nutze die
-            Schnellzugriff-Buttons für häufige Aufgaben.
-          </p>
-        </div>
-
-        <div *ngSwitchCase="'/admin/workshops'">
-          <h3>Workshop-Verwaltung</h3>
-          <p>
-            Hier kannst du deine Workshops erstellen, bearbeiten und verwalten.
-            Klicke auf "Neuer Workshop" um zu beginnen.
-          </p>
-        </div>
-
-        <!-- Weitere Hilfetexte für andere Routen -->
-
-        <div *ngSwitchDefault>
-          <h3>Malspirale Admin</h3>
-          <p>Wähle links einen Bereich aus, den du verwalten möchtest.</p>
-        </div>
-      </div>
-
-      <div class="video-tutorial">
-        <h3>Video-Anleitung</h3>
-        <button class="tutorial-btn">
-          <span class="material-icons">play_circle</span>
-          <span>Anleitung anschauen</span>
-        </button>
-      </div>
-    </div>
-  </aside>
+  <!-- Overlay beim Öffnen des mobilen Menüs -->
+  <div
+    *ngIf="menuOpen"
+    class="sidebar-overlay"
+    (click)="toggleMenu()"
+    style="
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+    "
+  ></div>
 </div>
 
 <app-help-panel></app-help-panel>

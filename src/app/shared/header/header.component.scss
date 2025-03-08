@@ -9,7 +9,7 @@
 
 .app-header {
   height: vars.$header-height;
-  // Beim Scrollen wird nur der Blur leicht reduziert
+  
   &.scrolled .header-inner {
     backdrop-filter: blur(8px);
   }
@@ -30,7 +30,7 @@
     .brand {
       h1 {
         margin: 0;
-        font-size: clamp(1.4rem, 4vw, 2.2rem);
+        font-size: clamp(1.2rem, 4vw, 2.2rem);
         font-weight: vars.$font-weight-bold;
         letter-spacing: vars.$letter-spacing-large;
         color: vars.$accent-color-dark;
@@ -48,12 +48,26 @@
         color: vars.$accent-color;
         text-decoration: none;
         transition: color 0.2s ease, transform 0.2s ease;
+        position: relative;
+        
         &:hover {
           color: vars.$accent-color-light;
           transform: translateY(-2px);
         }
+        
         &.active {
-          border-bottom: 2px solid vars.$accent-color;
+          color: vars.$accent-color-dark;
+          
+          &::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: vars.$accent-color;
+            border-radius: 1px;
+          }
         }
       }
       
@@ -69,32 +83,50 @@
             color: vars.$accent-color-light;
             transform: translateY(-2px);
           }
-
         }
+        
         .dropdown-toggle {
           cursor: pointer;
           display: flex;
           align-items: center;
           color: vars.$accent-color;
+          
           .material-icons {
             margin-left: 0.3rem;
             font-size: 1em;
             color: vars.$accent-color;
+            transition: transform 0.3s ease;
           }
+        }
+        
+        &.open .dropdown-toggle .material-icons {
+          transform: rotate(180deg);
         }
         
         .dropdown-menu {
           position: absolute;
           top: 120%;
-          left: 0%;
+          left: 50%;
           transform: translateX(-50%);
           z-index: 10;
           background: vars.$background-whiter;
-          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
           padding: vars.$padding-small;
           border-radius: vars.$border-radius;
           width: max-content;
           display: none;
+          animation: fadeInDown 0.3s ease;
+          
+          @keyframes fadeInDown {
+            from {
+              opacity: 0;
+              transform: translate(-50%, -10px);
+            }
+            to {
+              opacity: 1;
+              transform: translate(-50%, 0);
+            }
+          }
           
           a {
             display: block;
@@ -102,11 +134,21 @@
             border-radius: vars.$border-radius;
             text-decoration: none;
             color: vars.$accent-color!important;
-            transition: color 0.2s ease, transform 0.2s ease;
+            transition: all 0.2s ease;
             text-shadow: none;
             
             &:hover {
               color: vars.$accent-color-light!important;
+              background-color: rgba(vars.$accent-color, 0.05);
+              transform: translateX(3px);
+            }
+            
+            &.active {
+              background-color: rgba(vars.$accent-color, 0.1);
+              
+              &::after {
+                display: none;
+              }
             }
           }
         }
@@ -130,6 +172,18 @@
       background: none;
       border: none;
       cursor: pointer;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.3s ease;
+      
+      &:hover {
+        background-color: rgba(vars.$accent-color, 0.1);
+      }
+      
       .menu-icon {
         font-size: vars.$font-size-xxlarge;
         color: vars.$accent-color;
@@ -145,7 +199,7 @@
     left: 0;
     width: 100%;
     height: 100vh;
-    background: rgba(0, 0, 0, 0.5); // Etwas dunkleres Backdrop
+    background: rgba(0, 0, 0, 0.5);
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.3s ease, visibility 0.3s ease;
@@ -159,22 +213,20 @@
     .mobile-nav-overlay {
       position: fixed;
       top: 0;
-      right: 0;
-      width: 100%;
+      right: -100%;
+      width: 85%;
+      max-width: 350px;
       height: 100vh;
       background: color.scale(vars.$background-color, $lightness: 10%);
-      box-shadow: -2px 0 6px rgba(0, 0, 0, 0.2);
-      // Ausgangszustand: ein Kreis mit Radius 0 an der oberen rechten Ecke
-      clip-path: circle(0% at 100% 0%);
-      transition: clip-path 0.5s ease-in-out;
+      box-shadow: -2px 0 20px rgba(0, 0, 0, 0.2);
+      transition: right 0.4s cubic-bezier(0.23, 1, 0.32, 1);
       display: flex;
       flex-direction: column;
       padding: vars.$padding-large;
-      align-items: flex-end;
+      z-index: 999;
       
       &.open {
-        // Kreis erweitern, sodass das gesamte Menü sichtbar wird – ggf. Wert anpassen
-        clip-path: circle(150% at 100% 0%);
+        right: 0;
       }
       
       .close {
@@ -186,60 +238,121 @@
         font-size: vars.$font-size-xxlarge;
         color: vars.$accent-color;
         font-weight: vars.$font-weight-bold;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color 0.3s ease;
+        
+        &:hover {
+          background-color: rgba(vars.$accent-color, 0.1);
+        }
       }
       
       .mobile-nav-content {
         display: flex;
         flex-direction: column;
         align-items: flex-start;
-        gap: vars.$padding-large;
+        gap: vars.$padding-medium;
         text-align: left;
-        margin-right: vars.$container-padding-large;
-        margin-top: vars.$container-padding-large;
+        overflow-y: auto;
+        padding-bottom: 60px;
 
         a {
-          color: vars.$text-color;
+          color: vars.$accent-color;
           text-decoration: none;
-          font-size: vars.$font-size-xxlarge;
-          transition: color 0.2s ease;
+          font-size: vars.$font-size-large;
+          transition: color 0.2s ease, transform 0.2s ease;
+          display: flex;
+          align-items: center;
+          padding: vars.$padding-small;
+          width: 100%;
+          border-radius: vars.$border-radius-small;
+          
           &:hover {
-            color: vars.$accent-color;
+            color: vars.$accent-color-dark;
+            background-color: rgba(vars.$accent-color, 0.05);
+            transform: translateX(3px);
+          }
+          
+          &.active {
+            color: vars.$accent-color-dark;
+            background-color: rgba(vars.$accent-color, 0.1);
+            font-weight: vars.$font-weight-bold;
           }
         }
         
         .dropdown {
           position: relative;
-          width: min-content;
+          width: 100%;
           
           .dropdown-toggle {
             cursor: pointer;
             display: flex;
             align-items: center;
-            font-size: vars.$font-size-xxlarge;
-            color: vars.$text-color;
+            justify-content: space-between;
+            font-size: vars.$font-size-large;
+            color: vars.$accent-color;
+            padding: vars.$padding-small;
+            width: 100%;
+            border-radius: vars.$border-radius-small;
+            transition: all 0.2s ease;
+            
+            &:hover {
+              color: vars.$accent-color-dark;
+              background-color: rgba(vars.$accent-color, 0.05);
+            }
+            
             .material-icons {
               margin-left: 0.3rem;
               font-size: 1em;
+              transition: transform 0.3s ease;
             }
+          }
+          
+          &.open .dropdown-toggle .material-icons {
+            transform: rotate(180deg);
           }
           
           .dropdown-menu {
             margin-top: vars.$padding-small;
-            background: vars.$background-color;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
             border-radius: vars.$border-radius;
             display: none;
+            animation: slideDown 0.3s ease;
+            padding: vars.$padding-small;
+            
+            @keyframes slideDown {
+              from {
+                opacity: 0;
+                transform: translateY(-10px);
+              }
+              to {
+                opacity: 1;
+                transform: translateY(0);
+              }
+            }
             
             a {
               display: block;
               padding: vars.$padding-small vars.$padding-medium;
-              color: vars.$text-color;
+              color: vars.$accent-color;
               border-radius: vars.$border-radius;
               text-decoration: none;
-              font-size: vars.$font-size-large;
+              font-size: vars.$font-size-base;
+              margin-left: vars.$padding-medium;
 
               &:hover {
-                background-color: vars.$tertiary-color;
+                background-color: rgba(vars.$accent-color, 0.05);
+                color: vars.$accent-color-dark;
+              }
+              
+              &.active {
+                background-color: rgba(vars.$accent-color, 0.1);
+                color: vars.$accent-color-dark;
               }
             }
           }
@@ -253,26 +366,58 @@
   }
 
   // --- Responsiveness ---
-  @media (max-width: calc(vars.$tablet + 200px)) {
+  @media (max-width: 1080px) {
     .header-inner {
       .desktop-nav {
-        gap: 1rem;
-        font-weight: vars.$font-weight-light;
+        gap: 1.2rem;
+        
+        a, .dropdown .dropdown-toggle {
+          font-size: 0.95rem;
+        }
       }
     }
   }
   
-  @media (max-width: calc(vars.$tablet)) {
+  @media (max-width: 900px) {
     .header-inner {
       padding: 0 vars.$padding-medium;
+      
+      .desktop-nav {
+        gap: 0.8rem;
+      }
+    }
+  }
+  
+  @media (max-width: vars.$tablet) {
+    .header-inner {
+      padding: 0 vars.$padding-medium;
+      
+      .brand h1 {
+        font-size: 1.6rem;
+      }
       
       .desktop-nav {
         display: none;
       }
       
       .menu-toggle {
-        display: block;
+        display: flex;
       }
+    }
+  }
+  
+  @media (max-width: vars.$mobile) {
+    .header-inner {
+      padding: 0 vars.$padding-small;
+      
+      .brand h1 {
+        font-size: 1.4rem;
+      }
+    }
+    
+    .mobile-nav-overlay {
+      width: 100%;
+      max-width: 100%;
     }
   }
 }

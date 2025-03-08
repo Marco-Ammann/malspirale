@@ -15,12 +15,12 @@
       <!-- Dropdown for Philosophy -->
       <div class="dropdown" [class.open]="philosophyDropdownOpen">
         <span class="dropdown-toggle" (click)="toggleDropdown('philosophy')">
-          Philosophie <span class="material-icons">expand_more</span>
+          Philosophie <span class="material-icons">{{ philosophyDropdownOpen ? 'expand_less' : 'expand_more' }}</span>
         </span>
-        <div class="dropdown-menu">
-          <a routerLink="/philosophie/farben" routerLinkActive="active" (click)="closeAllMenus()">Farben</a>
-          <a routerLink="/philosophie/geschichten" routerLinkActive="active" (click)="closeAllMenus()">Geschichten</a>
-          <a routerLink="/philosophie/resonance-farben" routerLinkActive="active" (click)="closeAllMenus()">Resonance Colors</a>
+        <div class="dropdown-menu" role="menu">
+          <a routerLink="/philosophie/farben" routerLinkActive="active" (click)="closeAllMenus()" role="menuitem">Farben</a>
+          <a routerLink="/philosophie/geschichten" routerLinkActive="active" (click)="closeAllMenus()" role="menuitem">Geschichten</a>
+          <a routerLink="/philosophie/resonance-farben" routerLinkActive="active" (click)="closeAllMenus()" role="menuitem">Resonance Colors</a>
         </div>
       </div>
 
@@ -28,27 +28,29 @@
       <div class="dropdown user-menu" [class.open]="userDropdownOpen">
         <span class="dropdown-toggle" (click)="toggleDropdown('user')">
           <span class="material-icons user-icon">account_circle</span>
-          <span class="material-icons">expand_more</span>
+          <span class="material-icons">{{ userDropdownOpen ? 'expand_less' : 'expand_more' }}</span>
         </span>
-        <div class="dropdown-menu">
-          <a *ngIf="!isLoggedIn" routerLink="/login" routerLinkActive="active" (click)="closeAllMenus()">Login</a>
-          <a *ngIf="isLoggedIn && isAdmin" routerLink="/admin">Admin</a>
-          <a *ngIf="isLoggedIn" (click)="logout()">Logout</a>
+        <div class="dropdown-menu" role="menu">
+          <a *ngIf="!isLoggedIn" routerLink="/login" routerLinkActive="active" (click)="closeAllMenus()" role="menuitem">Login</a>
+          <a *ngIf="isLoggedIn && isAdmin" routerLink="/admin" role="menuitem">Admin</a>
+          <a *ngIf="isLoggedIn" (click)="logout()" role="menuitem">Logout</a>
         </div>
       </div>
     </nav>
 
     <!-- Mobile Menu Toggle -->
-    <button class="menu-toggle" (click)="toggleMobileMenu()">
+    <button class="menu-toggle" (click)="toggleMobileMenu()" aria-label="Menü öffnen">
       <span class="material-icons menu-icon">menu</span>
     </button>
   </div>
 
-  <!-- Backdrop-Overlay inkl. Off-Canvas Mobile Navigation -->
+  <!-- Backdrop-Overlay und Off-Canvas Mobile Navigation -->
   <div class="mobile-nav-backdrop" [class.open]="mobileMenuOpen" (click)="closeMobileMenu()">
     <nav class="mobile-nav-overlay" [class.open]="mobileMenuOpen" (click)="$event.stopPropagation()">
       <!-- Close Button -->
-      <span class="material-icons close" (click)="toggleMobileMenu()">close</span>
+      <button class="close" (click)="toggleMobileMenu()" aria-label="Menü schließen">
+        <span class="material-icons">close</span>
+      </button>
       <div class="mobile-nav-content">
         <a routerLink="/home" routerLinkActive="active" (click)="closeAllMenus()">Home</a>
         <a routerLink="/gallery" routerLinkActive="active" (click)="closeAllMenus()">Galerie</a>
@@ -58,27 +60,27 @@
         
         <!-- Mobile Dropdown for Philosophy -->
         <div class="dropdown" [class.open]="philosophyDropdownOpen">
-          <span class="dropdown-toggle" (click)="toggleDropdown('philosophy')">
-            Philosophie <span class="material-icons">expand_more</span>
-          </span>
-          <div class="dropdown-menu">
-            <a routerLink="/philosophie/farben" routerLinkActive="active" (click)="closeAllMenus()">Farben</a>
-            <a routerLink="/philosophie/geschichten" routerLinkActive="active" (click)="closeAllMenus()">Geschichten</a>
-            <a routerLink="/philosophie/resonance-farben" routerLinkActive="active" (click)="closeAllMenus()">Resonance Colors</a>
+          <div class="dropdown-toggle" (click)="toggleDropdown('philosophy')">
+            Philosophie <span class="material-icons">{{ philosophyDropdownOpen ? 'expand_less' : 'expand_more' }}</span>
+          </div>
+          <div class="dropdown-menu" role="menu">
+            <a routerLink="/philosophie/farben" routerLinkActive="active" (click)="closeAllMenus()" role="menuitem">Farben</a>
+            <a routerLink="/philosophie/geschichten" routerLinkActive="active" (click)="closeAllMenus()" role="menuitem">Geschichten</a>
+            <a routerLink="/philosophie/resonance-farben" routerLinkActive="active" (click)="closeAllMenus()" role="menuitem">Resonance Colors</a>
           </div>
         </div>
         
         <!-- Mobile User Menu -->
-        <div class="dropdown user-menu" [class.open]="userDropdownOpen" (click)="toggleDropdown('user')">
-          <span class="dropdown-toggle">
-            <span *ngIf="isLoggedIn; else loggedOut">Logout</span>
+        <div class="dropdown" [class.open]="userDropdownOpen">
+          <div class="dropdown-toggle" (click)="toggleDropdown('user')">
+            <span *ngIf="isLoggedIn; else loggedOut">Mein Konto</span>
             <ng-template #loggedOut>Login</ng-template>
-            <span class="material-icons">expand_more</span>
-          </span>
-          <div class="dropdown-menu">
-            <a *ngIf="!isLoggedIn" routerLink="/login" routerLinkActive="active" (click)="closeAllMenus()">Login</a>
-            <a *ngIf="isLoggedIn && isAdmin" routerLink="/admin">Admin</a>
-            <a *ngIf="isLoggedIn" (click)="logout()">Logout</a>
+            <span class="material-icons">{{ userDropdownOpen ? 'expand_less' : 'expand_more' }}</span>
+          </div>
+          <div class="dropdown-menu" role="menu">
+            <a *ngIf="!isLoggedIn" routerLink="/login" routerLinkActive="active" (click)="closeAllMenus()" role="menuitem">Login</a>
+            <a *ngIf="isLoggedIn && isAdmin" routerLink="/admin" role="menuitem">Admin</a>
+            <a *ngIf="isLoggedIn" (click)="logout()" role="menuitem">Logout</a>
           </div>
         </div>
       </div>
