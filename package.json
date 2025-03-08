@@ -23,6 +23,8 @@
     "@angular/service-worker": "^19.0.0",
     "aos": "^2.3.4",
     "firebase": "^11.2.0",
+    "markdown-it": "^14.1.0",
+    "marked": "^15.0.7",
     "ngx-lightbox": "^3.0.0",
     "ngx-quill": "^27.0.0",
     "quill": "^2.0.3",

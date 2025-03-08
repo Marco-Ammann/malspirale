@@ -1,8 +1,13 @@
 <div class="workshop-detail" *ngIf="workshop; else notFound">
-  <div class="hero-image animate-in">
+  <div class="hero-image" [class.portrait]="isPortraitImage">
+    <div class="image-placeholder" *ngIf="!imageLoaded">
+      <span class="material-icons">image</span>
+    </div>
     <img
       [src]="workshop.imageUrl || 'assets/images/default-workshop.jpg'"
       alt="Workshop Bild"
+      (load)="onImageLoad($event)"
+      [class.loaded]="imageLoaded"
     />
     <div class="hero-overlay">
       <h1>{{ workshop.title }}</h1>
@@ -16,19 +21,19 @@
     <div class="meta-info">
       <p *ngIf="workshop.location">📍 {{ workshop.location }}</p>
       <p *ngIf="workshop.price !== undefined">
-        💰 {{ workshop.price ? (workshop.price | currency:'CHF') : 'Kostenlos' }}
+        💰
+        {{ workshop.price ? (workshop.price | currency : "CHF") : "Kostenlos" }}
       </p>
     </div>
 
     <!-- Ausführliche Beschreibung -->
-    <div
-      class="description"
-      [innerHTML]="workshop.description"
-    ></div>
+    <div class="description" [innerHTML]="parsedDescription"></div>
 
     <!-- Aktionen (z.B. "Jetzt anmelden") -->
     <div class="detail-actions">
-      <button class="btn btn-primary" (click)="registerForWorkshop()">Jetzt anmelden</button>
+      <button class="btn btn-primary" (click)="registerForWorkshop()">
+        Jetzt anmelden
+      </button>
     </div>
   </div>
 </div>

@@ -20,7 +20,8 @@ export class HelpService {
   showHelpPanel$ = this.showHelpPanelSubject.asObservable();
   currentTopic$ = this.currentTopicSubject.asObservable();
   firstVisit$ = this.firstVisitSubject.asObservable();
-  
+  private currentTopicId: string = '';
+
   private helpTopics: Record<string, HelpTopic> = {
     'dashboard': {
       id: 'dashboard',
@@ -120,10 +121,15 @@ export class HelpService {
     this.showHelpPanelSubject.next(false);
   }
 
-  setCurrentTopic(topicId: string): void {
+setCurrentTopic(topicId: string): void {
+  // Nur öffnen, wenn das Thema sich tatsächlich geändert hat
+  if (topicId !== this.currentTopicId) {
+    this.currentTopicId = topicId;
     this.currentTopicSubject.next(topicId);
-    this.openHelpPanel();
+    // Hilfepanel nicht automatisch öffnen
+    // this.openHelpPanel(); <-- Diese Zeile entfernen oder auskommentieren
   }
+}
 
   getHelpTopic(topicId: string): HelpTopic | undefined {
     return this.helpTopics[topicId];
