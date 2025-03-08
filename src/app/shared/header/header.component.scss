@@ -1,21 +1,22 @@
-@use 'sass:color';
-@use 'variables' as vars;
+@use "sass:color";
+@use "variables" as vars;
 
 :host {
   position: sticky;
   top: 0;
   z-index: 999;
+  width: 100%;
 }
 
 .app-header {
   height: vars.$header-height;
-  
+
   &.scrolled .header-inner {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(255, 255, 255, 0.65);
     backdrop-filter: blur(10px);
   }
-  
+
   .header-inner {
     display: flex;
     justify-content: space-between;
@@ -27,7 +28,7 @@
     background: rgba(255, 255, 255, 0.8);
     backdrop-filter: blur(8px);
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    
+
     // --- Brand ---
     .brand {
       h1 {
@@ -35,49 +36,110 @@
         font-size: clamp(1.2rem, 4vw, 2.2rem);
         font-weight: vars.$font-weight-bold;
         letter-spacing: vars.$letter-spacing-large;
-        color: vars.$accent-color-dark;
-        position: relative;
-        overflow: hidden;
         
-        &::after {
-          content: '';
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          width: 100%;
-          height: 2px;
-          background: linear-gradient(
-            90deg, 
-            vars.$accent-color, 
-            vars.$primary-color, 
-            transparent
-          );
-          transform: translateX(-100%);
-          transition: transform 0.4s ease;
+        a {
+          color: vars.$accent-color-dark;
+          text-decoration: none;
+          transition: color 0.3s;
+          
+          &:hover {
+            color: vars.$accent-color;
+          }
         }
-        
-        &:hover::after {
-          transform: translateX(0);
+      }
+
+      &::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          vars.$accent-color,
+          vars.$primary-color,
+          transparent
+        );
+        transform: translateX(-100%);
+        transition: transform 0.4s ease;
+      }
+
+      &:hover::after {
+        transform: translateX(0);
+      }
+    }
+  }
+
+  // --- Desktop-Navigation ---
+  .desktop-nav {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    font-weight: vars.$font-weight-bold;
+
+    a {
+      color: vars.$accent-color;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      position: relative;
+      padding: 0.5rem 0;
+
+      &::before {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background-color: vars.$accent-color;
+        transform: scaleX(0);
+        transform-origin: right;
+        transition: transform 0.3s ease;
+      }
+
+      &:hover {
+        color: vars.$accent-color-dark;
+
+        &::before {
+          transform: scaleX(1);
+          transform-origin: left;
+        }
+      }
+
+      &.active {
+        color: vars.$accent-color-dark;
+
+        &::before {
+          transform: scaleX(1);
+          transform-origin: left;
         }
       }
     }
-    
-    // --- Desktop-Navigation ---
-    .desktop-nav {
-      display: flex;
-      gap: 2rem;
-      align-items: center;
-      font-weight: vars.$font-weight-bold;
-      
-      a {
+
+    .dropdown {
+      position: relative;
+      text-decoration: none;
+
+      span {
         color: vars.$accent-color;
-        text-decoration: none;
-        transition: all 0.3s ease;
-        position: relative;
+        transition: color 0.2s ease;
+
+        &:hover {
+          color: vars.$accent-color-light;
+        }
+      }
+
+      .dropdown-toggle {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        color: vars.$accent-color;
         padding: 0.5rem 0;
-        
+        position: relative;
+
         &::before {
-          content: '';
+          content: "";
           position: absolute;
           bottom: 0;
           left: 0;
@@ -88,156 +150,174 @@
           transform-origin: right;
           transition: transform 0.3s ease;
         }
-        
-        &:hover {
-          color: vars.$accent-color-dark;
-          
-          &::before {
-            transform: scaleX(1);
-            transform-origin: left;
-          }
-        }
-        
-        &.active {
-          color: vars.$accent-color-dark;
-          
-          &::before {
-            transform: scaleX(1);
-            transform-origin: left;
-          }
-        }
-      }
-      
-      .dropdown {
-        position: relative;
-        text-decoration: none;
 
-        span {
-          color: vars.$accent-color;
-          transition: color 0.2s ease;
-  
-          &:hover {
-            color: vars.$accent-color-light;
-          }
+        &:hover::before {
+          transform: scaleX(1);
+          transform-origin: left;
         }
-        
-        .dropdown-toggle {
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          color: vars.$accent-color;
-          padding: 0.5rem 0;
-          position: relative;
-          
-          &::before {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background-color: vars.$accent-color;
-            transform: scaleX(0);
-            transform-origin: right;
-            transition: transform 0.3s ease;
-          }
-          
-          &:hover::before {
-            transform: scaleX(1);
-            transform-origin: left;
-          }
-          
-          .material-icons {
-            margin-left: 0.3rem;
-            font-size: 1em;
-            color: vars.$accent-color;
-            transition: transform 0.3s ease;
-          }
-        }
-        
-        &.open .dropdown-toggle {
-          color: vars.$accent-color-dark;
-          
-          &::before {
-            transform: scaleX(1);
-            transform-origin: left;
-          }
-          
-          .material-icons {
-            transform: rotate(180deg);
-          }
-        }
-        
-        .dropdown-menu {
-          position: absolute;
-          top: calc(100% + 0.5rem);
-          left: 50%;
-          transform: translateX(-50%);
-          z-index: 10;
-          background: rgba(255, 255, 255, 0.95);
-          backdrop-filter: blur(10px);
-          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-          padding: 0.5rem;
-          border-radius: vars.$border-radius;
-          width: max-content;
-          opacity: 0;
-          visibility: hidden;
-          transform: translate(-50%, 10px);
-          transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-          
-          a {
-            display: block;
-            padding: 0.75rem 1.25rem;
-            border-radius: vars.$border-radius;
-            text-decoration: none;
-            color: vars.$accent-color;
-            transition: all 0.2s ease;
-            text-shadow: none;
-            white-space: nowrap;
-            
-            &::before {
-              display: none;
-            }
-            
-            &:hover {
-              color: vars.$accent-color-dark;
-              background-color: rgba(vars.$accent-color, 0.05);
-              transform: translateX(3px);
-            }
-            
-            &.active {
-              background-color: rgba(vars.$accent-color, 0.1);
-              color: vars.$accent-color-dark;
-            }
-          }
-        }
-        
-        &.open .dropdown-menu {
-          opacity: 1;
-          visibility: visible;
-          transform: translate(-50%, 0);
-        }
-      }
-      
-      .user-menu {
-        .user-icon {
-          font-size: vars.$font-size-xlarge !important;
+
+        .material-icons {
+          margin-left: 0.3rem;
+          font-size: 1em;
           color: vars.$accent-color;
           transition: transform 0.3s ease;
-          
-          &:hover {
-            transform: scale(1.1);
+        }
+      }
+
+      &.open .dropdown-toggle {
+        color: vars.$accent-color-dark;
+
+        &::before {
+          transform: scaleX(1);
+          transform-origin: left;
+        }
+
+        .material-icons {
+          transform: rotate(180deg);
+        }
+      }
+
+      .dropdown-menu {
+        position: absolute;
+        top: calc(100% + 0rem);
+        left: -20%;
+        transform: translateX(-50%);
+        z-index: 10;
+        background: rgba(255, 255, 255, 0.75);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        padding: 0.5rem;
+        border-radius: vars.$border-radius;
+        border-top-right-radius: 0;
+        width: max-content;
+        opacity: 0;
+        visibility: hidden;
+        transform: translate(-50%, 10px);
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+
+        a {
+          display: block;
+          padding: 0.75rem 1.25rem;
+          border-radius: vars.$border-radius;
+          text-decoration: none;
+          color: vars.$accent-color;
+          transition: all 0.2s ease;
+          text-shadow: none;
+          white-space: nowrap;
+
+          &::before {
+            display: none;
           }
+
+          &:hover {
+            color: vars.$accent-color-dark;
+            background-color: rgba(vars.$accent-color, 0.05);
+            transform: translateX(3px);
+          }
+
+          &.active {
+            background-color: rgba(vars.$accent-color, 0.1);
+            color: vars.$accent-color-dark;
+          }
+        }
+      }
+
+      &.open .dropdown-menu {
+        opacity: 1;
+        visibility: visible;
+        transform: translate(-50%, 0);
+      }
+    }
+
+    .user-menu {
+      .user-icon {
+        font-size: vars.$font-size-xlarge !important;
+        color: vars.$accent-color;
+        transition: transform 0.3s ease;
+
+        &:hover {
+          transform: scale(1.1);
         }
       }
     }
-    
-    // --- Burger-Button (für Mobile) ---
-    .menu-toggle {
-      display: none;
+  }
+
+  // --- Burger-Button (für Mobile) ---
+  .menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background-color: rgba(vars.$accent-color, 0.1);
+    }
+
+    .menu-icon {
+      font-size: vars.$font-size-xxlarge;
+      color: vars.$accent-color;
+      transition: transform 0.3s ease;
+
+      &:hover {
+        transform: scale(1.1);
+      }
+    }
+  }
+}
+
+// --- Mobile Navigation (Off-Canvas) mit Backdrop-Overlay ---
+.mobile-nav-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  z-index: 998;
+
+  &.open {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .mobile-nav-overlay {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 85%;
+    max-width: 350px;
+    height: 100vh;
+    background: color.scale(vars.$background-color, $lightness: 10%);
+    box-shadow: -2px 0 20px rgba(0, 0, 0, 0.2);
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    display: flex;
+    flex-direction: column;
+    padding: vars.$padding-large;
+    z-index: 999;
+    overflow-y: auto;
+
+    &.open {
+      right: 0;
+    }
+
+    .close {
+      align-self: flex-end;
       background: none;
       border: none;
       cursor: pointer;
+      margin-bottom: vars.$padding-medium;
+      font-size: vars.$font-size-xxlarge;
+      color: vars.$accent-color;
+      font-weight: vars.$font-weight-bold;
       width: 40px;
       height: 40px;
       border-radius: 50%;
@@ -245,269 +325,208 @@
       align-items: center;
       justify-content: center;
       transition: all 0.3s ease;
-      
+
       &:hover {
         background-color: rgba(vars.$accent-color, 0.1);
-      }
-      
-      .menu-icon {
-        font-size: vars.$font-size-xxlarge;
-        color: vars.$accent-color;
-        transition: transform 0.3s ease;
-        
-        &:hover {
-          transform: scale(1.1);
-        }
+        transform: rotate(90deg);
       }
     }
-  }
-  
-  // --- Mobile Navigation (Off-Canvas) mit Backdrop-Overlay ---
-  .mobile-nav-backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.5);
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s ease;
-    z-index: 998;
-    
-    &.open {
-      opacity: 1;
-      visibility: visible;
-    }
-    
-    .mobile-nav-overlay {
-      position: fixed;
-      top: 0;
-      right: -100%;
-      width: 85%;
-      max-width: 350px;
-      height: 100vh;
-      background: color.scale(vars.$background-color, $lightness: 10%);
-      box-shadow: -2px 0 20px rgba(0, 0, 0, 0.2);
-      transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+
+    .mobile-nav-content {
       display: flex;
       flex-direction: column;
-      padding: vars.$padding-large;
-      z-index: 999;
+      align-items: flex-start;
+      gap: vars.$padding-medium;
+      text-align: left;
       overflow-y: auto;
-      
-      &.open {
-        right: 0;
-      }
-      
-      .close {
-        align-self: flex-end;
-        background: none;
-        border: none;
-        cursor: pointer;
-        margin-bottom: vars.$padding-medium;
-        font-size: vars.$font-size-xxlarge;
+      padding-bottom: 60px;
+      overflow-x: hidden;
+
+      a {
         color: vars.$accent-color;
-        font-weight: vars.$font-weight-bold;
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
+        text-decoration: none;
+        font-size: vars.$font-size-large;
+        transition: all 0.3s ease;
         display: flex;
         align-items: center;
-        justify-content: center;
-        transition: all 0.3s ease;
-        
+        padding: 0.75rem 0.5rem;
+        width: 100%;
+        border-radius: vars.$border-radius-small;
+        border-left: 3px solid transparent;
+
         &:hover {
+          color: vars.$accent-color-dark;
+          background-color: rgba(vars.$accent-color, 0.05);
+          transform: translateX(5px);
+          border-left-color: vars.$accent-color-light;
+        }
+
+        &.active {
+          color: vars.$accent-color-dark;
           background-color: rgba(vars.$accent-color, 0.1);
-          transform: rotate(90deg);
+          font-weight: vars.$font-weight-bold;
+          border-left-color: vars.$accent-color;
         }
       }
-      
-      .mobile-nav-content {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: vars.$padding-medium;
-        text-align: left;
-        overflow-y: auto;
-        padding-bottom: 60px;
 
-        a {
-          color: vars.$accent-color;
-          text-decoration: none;
-          font-size: vars.$font-size-large;
-          transition: all 0.3s ease;
+      .dropdown {
+        position: relative;
+        width: 100%;
+        box-sizing: border-box;
+
+        .dropdown-toggle {
+          cursor: pointer;
           display: flex;
           align-items: center;
+          justify-content: space-between;
+          font-size: vars.$font-size-large;
+          color: vars.$accent-color;
           padding: 0.75rem 0.5rem;
           width: 100%;
           border-radius: vars.$border-radius-small;
           border-left: 3px solid transparent;
-          
+          transition: all 0.3s ease;
+
           &:hover {
             color: vars.$accent-color-dark;
             background-color: rgba(vars.$accent-color, 0.05);
             transform: translateX(5px);
             border-left-color: vars.$accent-color-light;
           }
-          
-          &.active {
-            color: vars.$accent-color-dark;
-            background-color: rgba(vars.$accent-color, 0.1);
-            font-weight: vars.$font-weight-bold;
-            border-left-color: vars.$accent-color;
+
+          .material-icons {
+            margin-left: 0.3rem;
+            font-size: 1em;
+            transition: transform 0.3s ease;
           }
         }
-        
-        .dropdown {
-          position: relative;
+
+        &.open .dropdown-toggle {
+          color: vars.$accent-color-dark;
+          background-color: rgba(vars.$accent-color, 0.08);
+          border-left-color: vars.$accent-color;
+
+          .material-icons {
+            transform: rotate(180deg);
+          }
+        }
+
+        .dropdown-menu {
+          margin-top: 0.25rem;
+          background: rgba(255, 255, 255, 0.7);
+          backdrop-filter: blur(5px);
+          border-radius: vars.$border-radius;
+          overflow: hidden;
+          max-height: 0;
+          opacity: 0;
+          transition: all 0.3s ease;
+          box-sizing: border-box;
           width: 100%;
-          
-          .dropdown-toggle {
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-size: vars.$font-size-large;
+
+          a {
+            display: block;
+            padding: 0.75rem 1rem;
             color: vars.$accent-color;
-            padding: 0.75rem 0.5rem;
-            width: 100%;
-            border-radius: vars.$border-radius-small;
-            border-left: 3px solid transparent;
-            transition: all 0.3s ease;
-            
-            &:hover {
-              color: vars.$accent-color-dark;
-              background-color: rgba(vars.$accent-color, 0.05);
-              transform: translateX(5px);
-              border-left-color: vars.$accent-color-light;
-            }
-            
-            .material-icons {
-              margin-left: 0.3rem;
-              font-size: 1em;
-              transition: transform 0.3s ease;
-            }
-          }
-          
-          &.open .dropdown-toggle {
-            color: vars.$accent-color-dark;
-            background-color: rgba(vars.$accent-color, 0.08);
-            border-left-color: vars.$accent-color;
-            
-            .material-icons {
-              transform: rotate(180deg);
-            }
-          }
-          
-          .dropdown-menu {
-            margin-top: 0.25rem;
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(5px);
             border-radius: vars.$border-radius;
-            overflow: hidden;
-            max-height: 0;
+            text-decoration: none;
+            font-size: vars.$font-size-base;
+            margin-left: 1rem;
+            transform: translateX(-10px);
             opacity: 0;
             transition: all 0.3s ease;
-            
-            a {
-              display: block;
-              padding: 0.75rem 1rem;
-              color: vars.$accent-color;
-              border-radius: vars.$border-radius;
-              text-decoration: none;
-              font-size: vars.$font-size-base;
-              margin-left: 1rem;
-              transform: translateX(-10px);
-              opacity: 0;
-              transition: all 0.3s ease;
 
-              &:hover {
-                background-color: rgba(vars.$accent-color, 0.05);
-                color: vars.$accent-color-dark;
-                transform: translateX(5px);
-              }
-              
-              &.active {
-                background-color: rgba(vars.$accent-color, 0.1);
-                color: vars.$accent-color-dark;
-                border-left-color: vars.$accent-color;
-              }
+            &:hover {
+              background-color: rgba(vars.$accent-color, 0.05);
+              color: vars.$accent-color-dark;
+              transform: translateX(5px);
+            }
+
+            &.active {
+              background-color: rgba(vars.$accent-color, 0.1);
+              color: vars.$accent-color-dark;
+              border-left-color: vars.$accent-color;
             }
           }
-          
-          &.open .dropdown-menu {
-            max-height: 500px;
+        }
+
+        &.open .dropdown-menu {
+          max-height: 500px;
+          opacity: 1;
+          padding: 0.5rem;
+
+          a {
+            transform: translateX(0);
             opacity: 1;
-            padding: 0.5rem;
-            
-            a {
-              transform: translateX(0);
-              opacity: 1;
-              
-              &:nth-child(1) { transition-delay: 0.05s; }
-              &:nth-child(2) { transition-delay: 0.1s; }
-              &:nth-child(3) { transition-delay: 0.15s; }
+
+            &:nth-child(1) {
+              transition-delay: 0.05s;
+            }
+            &:nth-child(2) {
+              transition-delay: 0.1s;
+            }
+            &:nth-child(3) {
+              transition-delay: 0.15s;
             }
           }
         }
       }
     }
   }
+}
 
-  // --- Responsiveness ---
-  @media (max-width: 1080px) {
-    .header-inner {
-      .desktop-nav {
-        gap: 1.2rem;
-        
-        a, .dropdown .dropdown-toggle {
-          font-size: 0.95rem;
-        }
+// --- Responsiveness ---
+@media (max-width: 1080px) {
+  .header-inner {
+    .desktop-nav {
+      gap: 1.2rem;
+
+      a,
+      .dropdown .dropdown-toggle {
+        font-size: 0.95rem;
       }
     }
   }
-  
-  @media (max-width: 900px) {
-    .header-inner {
-      padding: 0 vars.$padding-medium;
-      
-      .desktop-nav {
-        gap: 0.8rem;
-      }
+}
+
+@media (max-width: 900px) {
+  .header-inner {
+    padding: 0 vars.$padding-medium;
+
+    .desktop-nav {
+      gap: 0.8rem;
     }
   }
-  
-  @media (max-width: vars.$tablet) {
-    .header-inner {
-      padding: 0 vars.$padding-medium;
-      
-      .brand h1 {
-        font-size: 1.6rem;
-      }
-      
-      .desktop-nav {
-        display: none;
-      }
-      
-      .menu-toggle {
-        display: flex;
-      }
+}
+
+@media (max-width: vars.$tablet) {
+  .header-inner {
+    padding: 0 vars.$padding-medium;
+
+    .brand h1 {
+      font-size: 1.6rem;
+    }
+
+    .desktop-nav {
+      display: none;
+    }
+
+    .menu-toggle {
+      display: flex;
     }
   }
-  
-  @media (max-width: vars.$mobile) {
-    .header-inner {
-      padding: 0 vars.$padding-small;
-      
-      .brand h1 {
-        font-size: 1.4rem;
-      }
+}
+
+@media (max-width: vars.$mobile) {
+  .header-inner {
+    padding: 0 vars.$padding-small;
+
+    .brand h1 {
+      font-size: 1.4rem;
     }
-    
-    .mobile-nav-overlay {
-      width: 100%;
-      max-width: 100%;
-    }
+  }
+
+  .mobile-nav-overlay {
+    width: 100%;
+    max-width: 100%;
   }
 }

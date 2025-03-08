@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Renderer2, HostListener } from '@angular/core';
 import {
   Router,
   RouterLink,
@@ -51,6 +51,7 @@ export class AdminComponent implements OnInit, OnDestroy {
   messageCount = 0;
   currentRoute = '/';
   recentActivities: Activity[] = [];
+  screenWidth: number = window.innerWidth;
 
   private subscriptions = new Subscription();
 
@@ -58,7 +59,8 @@ export class AdminComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private dataService: DataService,
     private router: Router,
-    private helpService: HelpService
+    private helpService: HelpService,
+    private renderer: Renderer2
   ) {}
 
   ngOnInit(): void {
@@ -78,9 +80,10 @@ export class AdminComponent implements OnInit, OnDestroy {
           this.isMainDashboard =
             event.url === '/admin' || event.url === '/admin/';
           this.updatePageTitle(event.url);
-          // Bei Routenwechsel mobile Menü schließen
-          if (window.innerWidth <= 768) {
-            this.menuOpen = false;
+          
+          // Bei Routenwechsel mobile Menü schließen, nur wenn Bildschirm klein ist
+          if (this.screenWidth <= 768) {
+            this.closeMenu();
           }
         })
     );
@@ -111,8 +114,25 @@ export class AdminComponent implements OnInit, OnDestroy {
     );
   }
 
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any): void {
+    this.screenWidth = window.innerWidth;
+    
+    // Automatisch Menü öffnen/schließen bei Größenänderung
+    if (this.screenWidth > 768 && !this.menuOpen) {
+      this.menuOpen = true;
+      this.updateBodyScroll();
+    } else if (this.screenWidth <= 768 && this.menuOpen && this.screenWidth !== 0) {
+      // screenWidth !== 0 verhindert ungewolltes Schließen beim initialen Laden
+      this.menuOpen = false;
+      this.updateBodyScroll();
+    }
+  }
+
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
+    // Stelle sicher, dass Scrollen beim Verlassen der Komponente wieder aktiviert wird
+    this.renderer.removeClass(document.body, 'no-scroll');
   }
 
   loadUserCount(): void {
@@ -137,18 +157,16 @@ export class AdminComponent implements OnInit, OnDestroy {
     this.authService.getCurrentUserId().then((userId) => {
       if (userId) {
         this.dataService.getUser(userId).subscribe((user) => {
-          console.log('Loaded user data:', user);
-          this.userName$.next(user.fullName);
+          this.userName$.next(user.fullName || 'Admin');
         });
       }
     });
   }
 
   getFirstNameOfFullName(fullName: string): string {
-    return fullName.split(' ')[0];
+    return fullName ? fullName.split(' ')[0] : 'Admin';
   }
 
-  // Neue Methoden
   loadStatistics(): void {
     // Beispieldaten - hier später mit echten Daten aus einem Service ersetzen
     this.visitorCount = 245;
@@ -183,23 +201,54 @@ export class AdminComponent implements OnInit, OnDestroy {
   }
 
   updatePageTitle(url: string): void {
-    if (url.includes('/workshops')) {
-      this.pageTitle = 'Workshop-Verwaltung';
-    } else if (url.includes('/gallery')) {
-      this.pageTitle = 'Galerie-Verwaltung';
-    } else if (url.includes('/content')) {
-      this.pageTitle = 'Inhalte bearbeiten';
-    } else if (url.includes('/users')) {
-      this.pageTitle = 'Benutzerverwaltung';
-    } else if (url.includes('/reports')) {
-      this.pageTitle = 'Berichte';
-    } else {
+    // Entfernen Sie alle führenden und nachfolgenden Schrägstriche für sauberen Vergleich
+    const path = url.replace(/^\/|\/$/g, '');
+    
+    if (path === 'admin' || path === '') {
       this.pageTitle = 'Dashboard';
+      this.isMainDashboard = true;
+    } else if (path.includes('admin/workshops')) {
+      this.pageTitle = 'Workshop-Verwaltung';
+      this.isMainDashboard = false;
+    } else if (path.includes('admin/gallery')) {
+      this.pageTitle = 'Galerie-Verwaltung';
+      this.isMainDashboard = false;
+    } else if (path.includes('admin/content')) {
+      this.pageTitle = 'Inhalte bearbeiten';
+      this.isMainDashboard = false;
+    } else if (path.includes('admin/users')) {
+      this.pageTitle = 'Benutzerverwaltung';
+      this.isMainDashboard = false;
+    } else if (path.includes('admin/reports')) {
+      this.pageTitle = 'Berichte';
+      this.isMainDashboard = false;
+    } else {
+      // Fallback für unbekannte Routen
+      this.pageTitle = 'Dashboard';
+      this.isMainDashboard = true;
     }
   }
 
   toggleMenu(): void {
     this.menuOpen = !this.menuOpen;
+    this.updateBodyScroll();
+  }
+
+  closeMenu(): void {
+    // Nur auf kleinen Bildschirmen Menü schließen
+    if (this.screenWidth <= 768) {
+      this.menuOpen = false;
+      this.updateBodyScroll();
+    }
+  }
+
+  updateBodyScroll(): void {
+    // Nur auf kleinen Bildschirmen das Scrolling verhindern
+    if (this.screenWidth <= 768 && this.menuOpen) {
+      this.renderer.addClass(document.body, 'no-scroll');
+    } else {
+      this.renderer.removeClass(document.body, 'no-scroll');
+    }
   }
 
   openHelp(): void {

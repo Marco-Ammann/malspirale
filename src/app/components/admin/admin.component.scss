@@ -30,6 +30,7 @@
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+  
   &::-webkit-scrollbar {
     width: 6px;
   }
@@ -57,13 +58,13 @@
     }
 
     .menu-toggle {
+      display: none; // Standardmäßig ausblenden
       background: none;
       border: none;
       color: white;
       cursor: pointer;
       width: 36px;
       height: 36px;
-      display: flex;
       align-items: center;
       justify-content: center;
       border-radius: 50%;
@@ -161,6 +162,7 @@
     margin-bottom: 1.5rem;
 
     .menu-toggle {
+      display: none; // Standardmäßig ausblenden
       background: none;
       border: none;
       color: vars.$accent-color-dark;
@@ -169,7 +171,6 @@
       width: 40px;
       height: 40px;
       border-radius: 50%;
-      display: flex;
       align-items: center;
       justify-content: center;
       transition: background-color 0.3s ease;
@@ -386,16 +387,21 @@
 }
 
 // Mobile & Tablet Responsiveness
-@media (max-width: vars.$tablet) {
+@media (max-width: 768px) {
   .admin-sidebar {
     transform: translateX(-100%);
     width: 280px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
     opacity: 0;
+    z-index: 1001; // Höher als overlay
     
     &.open {
       transform: translateX(0);
       opacity: 1;
+    }
+    
+    .sidebar-header .menu-toggle {
+      display: flex; // Auf Mobilgeräten einblenden
     }
   }
   
@@ -403,26 +409,33 @@
     margin-left: 0;
     padding: 0.75rem;
     
-    .admin-header {
-      .menu-toggle {
-        display: flex;
-      }
+    .admin-header .menu-toggle {
+      display: flex; // Auf Mobilgeräten einblenden
     }
   }
-
-    // Animierte Sidebar-Einblendung
-    .sidebar-overlay {
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      
-      &.visible {
-        opacity: 1;
-      }
+  
+  // Backdrop overlay für Mobile
+  .sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    
+    &.visible {
+      opacity: 1;
+      visibility: visible;
     }
+  }
 }
 
 // Small Screen Optimizations
-@media (max-width: vars.$mobile) {
+@media (max-width: 480px) {
   .admin-sidebar {
     width: 100%;
   }
@@ -466,11 +479,16 @@
         }
       }
       
-      .stat-card {
-        padding: 1rem;
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
         
-        .stat-value {
-          font-size: 1.5rem;
+        .stat-card {
+          padding: 1rem;
+          
+          .stat-value {
+            font-size: 1.5rem;
+          }
         }
       }
       

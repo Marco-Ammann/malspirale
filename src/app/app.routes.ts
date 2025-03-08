@@ -92,7 +92,7 @@ export const routes: Routes = [
       import('./components/admin/admin.component').then((m) => m.AdminComponent),
     canActivate: [AdminGuard],
     children: [
-      { path: '', pathMatch: 'full', redirectTo: 'users' },
+      { path: '', pathMatch: 'full', redirectTo: '' },
       { path: 'users', loadComponent: () => import('./components/admin/admin-users/admin-users.component').then((m) => m.AdminUsersComponent) },
       { path: 'workshops', loadComponent: () => import('./components/admin/admin-workshops/admin-workshops.component').then((m) => m.AdminWorkshopsComponent) },
       { path: 'content', loadComponent: () => import('./components/admin/admin-content/admin-content.component').then((m) => m.AdminContentComponent) },
