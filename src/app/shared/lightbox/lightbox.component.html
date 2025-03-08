@@ -19,18 +19,12 @@
         
         <!-- Bild -->
         <img 
-          [src]="images[currentIndex].src" 
-          [alt]="images[currentIndex].alt || 'Bild'"
+          [src]="images[currentIndex]?.src" 
+          [alt]="images[currentIndex]?.alt || 'Bild'"
           (load)="onImageLoad()"
           class="lightbox-image"
           [class.loading]="loading"
         />
-        
-        <!-- Bildunterschrift -->
-        <div class="image-caption" *ngIf="images[currentIndex]?.caption || images[currentIndex]?.title">
-          <h3 *ngIf="images[currentIndex]?.title">{{ images[currentIndex].title }}</h3>
-          <p *ngIf="images[currentIndex]?.caption">{{ images[currentIndex].caption }}</p>
-        </div>
       </div>
       
       <!-- Navigation (rechts) -->
@@ -38,9 +32,16 @@
         <span class="material-icons">chevron_right</span>
       </button>
       
-      <!-- Bildnummerierung -->
-      <div class="image-counter" *ngIf="images.length > 1">
-        {{ currentIndex + 1 }} / {{ images.length }}
+      <!-- Bildnummerierung und Bildunterschrift in einem gemeinsamen Footer -->
+      <div class="lightbox-footer">
+        <div class="image-counter" *ngIf="images.length > 1">
+          {{ currentIndex + 1 }} / {{ images.length }}
+        </div>
+        
+        <div class="image-caption" *ngIf="images[currentIndex]?.caption || images[currentIndex]?.title">
+          <h3 *ngIf="images[currentIndex]?.title">{{ images[currentIndex]?.title }}</h3>
+          <p *ngIf="images[currentIndex]?.caption">{{ images[currentIndex]?.caption }}</p>
+        </div>
       </div>
     </div>
   </div>
