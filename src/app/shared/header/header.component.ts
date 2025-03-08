@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, HostListener, OnDestroy } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { StateService } from '../../core/services/state.service';
@@ -13,21 +13,27 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
-export class HeaderComponent implements OnDestroy {
+export class HeaderComponent implements OnInit, OnDestroy {
   mobileMenuOpen = false;
   philosophyDropdownOpen = false;
   userDropdownOpen = false;
   isLoggedIn = false;
   isAdmin = false;
   isScrolled = false;
-  closeMobileMenu(): void {
-    this.mobileMenuOpen = false;
-    this.closeDropdowns();
-  }
   
   private unsubscribe$ = new Subject<void>();
-
-  constructor(private authService: AuthService, private stateService: StateService) {
+  private previousScrollPosition = 0;
+  private scrollDelta = 5;
+  private scrollThreshold = 50;
+  
+  constructor(
+    private authService: AuthService, 
+    private stateService: StateService,
+    private renderer: Renderer2
+  ) {}
+  
+  ngOnInit(): void {
+    // Überwache Auth-Status
     this.authService.user$
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(user => {
@@ -39,18 +45,54 @@ export class HeaderComponent implements OnDestroy {
       .subscribe(role => {
         this.isAdmin = role === 'admin';
       });
+      
+    // Verhindere Scrollen, wenn Mobile-Menü geöffnet ist
+    this.updateBodyScroll();
+  }
+  
+  ngOnDestroy(): void {
+    // Räume Subscriptions auf
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+    
+    // Stelle sicher, dass Scrollen wieder möglich ist
+    this.renderer.removeClass(document.body, 'no-scroll');
   }
 
   @HostListener('document:click', ['$event'])
   onClickOutside(event: Event): void {
+    // Schließt Dropdowns, wenn außerhalb geklickt wird
     if (!(event.target as HTMLElement).closest('.dropdown, .menu-toggle')) {
       this.closeDropdowns();
     }
+  }
+  
+  @HostListener('window:keydown', ['$event'])
+  onKeyDown(event: KeyboardEvent): void {
+    // Tastatursteuerung
+    if (event.key === 'Escape') {
+      this.closeAllMenus();
+    }
+  }
+
+  @HostListener('window:scroll', [])
+  onWindowScroll() {
+    const currentScroll = window.scrollY;
+    
+    // Header-Styling bei Scrollen anpassen
+    if (currentScroll > this.scrollThreshold) {
+      this.isScrolled = true;
+    } else {
+      this.isScrolled = false;
+    }
+    
+    this.previousScrollPosition = currentScroll;
   }
 
   toggleMobileMenu(): void {
     this.mobileMenuOpen = !this.mobileMenuOpen;
     this.closeDropdowns();
+    this.updateBodyScroll();
   }
 
   toggleDropdown(menu: string): void {
@@ -66,6 +108,13 @@ export class HeaderComponent implements OnDestroy {
   closeAllMenus(): void {
     this.mobileMenuOpen = false;
     this.closeDropdowns();
+    this.updateBodyScroll();
+  }
+  
+  closeMobileMenu(): void {
+    this.mobileMenuOpen = false;
+    this.closeDropdowns();
+    this.updateBodyScroll();
   }
 
   logout(): void {
@@ -75,20 +124,17 @@ export class HeaderComponent implements OnDestroy {
     });
   }
 
-
-
   private closeDropdowns(): void {
     this.philosophyDropdownOpen = false;
     this.userDropdownOpen = false;
   }
-
-  ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
-  }
-
-  @HostListener('window:scroll', [])
-  onWindowScroll() {
-    this.isScrolled = window.scrollY > 50;
+  
+  private updateBodyScroll(): void {
+    // Verhindere Scrollen des Hintergrunds, wenn Mobile-Menü offen ist
+    if (this.mobileMenuOpen) {
+      this.renderer.addClass(document.body, 'no-scroll');
+    } else {
+      this.renderer.removeClass(document.body, 'no-scroll');
+    }
   }
 }

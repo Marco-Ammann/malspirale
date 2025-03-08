@@ -27,6 +27,21 @@
   bottom: 0;
   z-index: 1000;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+  }
 
   .sidebar-header {
     padding: 1.5rem;
@@ -374,10 +389,13 @@
 @media (max-width: vars.$tablet) {
   .admin-sidebar {
     transform: translateX(-100%);
-    width: 300px;
+    width: 280px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    opacity: 0;
     
     &.open {
       transform: translateX(0);
+      opacity: 1;
     }
   }
   
@@ -389,34 +407,18 @@
       .menu-toggle {
         display: flex;
       }
-      
-      .header-title h1 {
-        font-size: 1.2rem;
-      }
-      
-      .user-menu span:not(.user-icon) {
-        display: none;
-      }
-    }
-    
-    .dashboard {
-      .quick-actions {
-        padding: 1rem;
-        
-        .action-buttons {
-          .action-btn {
-            flex: 1;
-            min-width: 100px;
-          }
-        }
-      }
-      
-      .dashboard-grid {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-      }
     }
   }
+
+    // Animierte Sidebar-Einblendung
+    .sidebar-overlay {
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      
+      &.visible {
+        opacity: 1;
+      }
+    }
 }
 
 // Small Screen Optimizations

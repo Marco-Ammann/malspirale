@@ -198,3 +198,79 @@ a {
 
 
 
+
+// Verhindere Scrollen, wenn Mobile-Menü geöffnet ist
+body.no-scroll {
+  overflow: hidden;
+  height: 100vh;
+  position: fixed;
+  width: 100%;
+}
+
+// Grundlegende Transitions für alle interaktiven Elemente
+a, button, input, select, textarea, .dropdown, .btn {
+  transition: all 0.3s ease;
+}
+
+// Verbesserte Focus-Styles für Barrierefreiheit
+a:focus-visible, button:focus-visible, input:focus-visible,
+select:focus-visible, textarea:focus-visible, .dropdown:focus-visible {
+  outline: 2px solid vars.$accent-color;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(vars.$accent-color, 0.3);
+}
+
+// Smooth Scrolling für die gesamte Seite
+html {
+  scroll-behavior: smooth;
+}
+
+// Animations-Utilities
+.fade-in {
+  animation: fadeIn 0.5s ease forwards;
+}
+
+.slide-in-left {
+  animation: slideInLeft 0.5s ease forwards;
+}
+
+.slide-in-right {
+  animation: slideInRight 0.5s ease forwards;
+}
+
+.slide-in-up {
+  animation: slideInUp 0.5s ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideInLeft {
+  from { transform: translateX(-30px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideInRight {
+  from { transform: translateX(30px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideInUp {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+// Verbesserte mobile Darstellung für Touch-Geräte
+@media (max-width: vars.$mobile) {
+  input, select, textarea, button, a {
+    font-size: 16px !important; // Verhindert Zoom auf iOS
+    min-height: 44px; // Bessere Touch-Ziele
+  }
+  
+  button, a.btn, .action-btn {
+    padding: 10px 15px;
+    min-width: 44px;
+  }
+}

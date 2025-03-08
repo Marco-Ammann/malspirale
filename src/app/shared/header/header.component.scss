@@ -11,7 +11,9 @@
   height: vars.$header-height;
   
   &.scrolled .header-inner {
-    backdrop-filter: blur(8px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
   }
   
   .header-inner {
@@ -21,10 +23,10 @@
     height: vars.$header-height;
     padding: 0 vars.$padding-large;
     position: relative;
-    transition: background 0.3s ease-in-out, backdrop-filter 0.3s ease;
-    background: transparentize(vars.$background-color, 0.5);
-    backdrop-filter: blur(12px);
-    box-shadow: vars.$box-shadow;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     
     // --- Brand ---
     .brand {
@@ -34,6 +36,29 @@
         font-weight: vars.$font-weight-bold;
         letter-spacing: vars.$letter-spacing-large;
         color: vars.$accent-color-dark;
+        position: relative;
+        overflow: hidden;
+        
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 100%;
+          height: 2px;
+          background: linear-gradient(
+            90deg, 
+            vars.$accent-color, 
+            vars.$primary-color, 
+            transparent
+          );
+          transform: translateX(-100%);
+          transition: transform 0.4s ease;
+        }
+        
+        &:hover::after {
+          transform: translateX(0);
+        }
       }
     }
     
@@ -47,26 +72,38 @@
       a {
         color: vars.$accent-color;
         text-decoration: none;
-        transition: color 0.2s ease, transform 0.2s ease;
+        transition: all 0.3s ease;
         position: relative;
+        padding: 0.5rem 0;
+        
+        &::before {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 100%;
+          height: 2px;
+          background-color: vars.$accent-color;
+          transform: scaleX(0);
+          transform-origin: right;
+          transition: transform 0.3s ease;
+        }
         
         &:hover {
-          color: vars.$accent-color-light;
-          transform: translateY(-2px);
+          color: vars.$accent-color-dark;
+          
+          &::before {
+            transform: scaleX(1);
+            transform-origin: left;
+          }
         }
         
         &.active {
           color: vars.$accent-color-dark;
           
-          &::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background-color: vars.$accent-color;
-            border-radius: 1px;
+          &::before {
+            transform: scaleX(1);
+            transform-origin: left;
           }
         }
       }
@@ -77,11 +114,10 @@
 
         span {
           color: vars.$accent-color;
-          transition: color 0.2s ease, transform 0.2s ease;
+          transition: color 0.2s ease;
   
           &:hover {
             color: vars.$accent-color-light;
-            transform: translateY(-2px);
           }
         }
         
@@ -90,6 +126,26 @@
           display: flex;
           align-items: center;
           color: vars.$accent-color;
+          padding: 0.5rem 0;
+          position: relative;
+          
+          &::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: vars.$accent-color;
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.3s ease;
+          }
+          
+          &:hover::before {
+            transform: scaleX(1);
+            transform-origin: left;
+          }
           
           .material-icons {
             margin-left: 0.3rem;
@@ -99,62 +155,67 @@
           }
         }
         
-        &.open .dropdown-toggle .material-icons {
-          transform: rotate(180deg);
+        &.open .dropdown-toggle {
+          color: vars.$accent-color-dark;
+          
+          &::before {
+            transform: scaleX(1);
+            transform-origin: left;
+          }
+          
+          .material-icons {
+            transform: rotate(180deg);
+          }
         }
         
         .dropdown-menu {
           position: absolute;
-          top: 120%;
+          top: calc(100% + 0.5rem);
           left: 50%;
           transform: translateX(-50%);
           z-index: 10;
-          background: vars.$background-whiter;
-          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-          padding: vars.$padding-small;
+          background: rgba(255, 255, 255, 0.95);
+          backdrop-filter: blur(10px);
+          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+          padding: 0.5rem;
           border-radius: vars.$border-radius;
           width: max-content;
-          display: none;
-          animation: fadeInDown 0.3s ease;
-          
-          @keyframes fadeInDown {
-            from {
-              opacity: 0;
-              transform: translate(-50%, -10px);
-            }
-            to {
-              opacity: 1;
-              transform: translate(-50%, 0);
-            }
-          }
+          opacity: 0;
+          visibility: hidden;
+          transform: translate(-50%, 10px);
+          transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
           
           a {
             display: block;
-            padding: vars.$padding-small vars.$padding-medium;
+            padding: 0.75rem 1.25rem;
             border-radius: vars.$border-radius;
             text-decoration: none;
-            color: vars.$accent-color!important;
+            color: vars.$accent-color;
             transition: all 0.2s ease;
             text-shadow: none;
+            white-space: nowrap;
+            
+            &::before {
+              display: none;
+            }
             
             &:hover {
-              color: vars.$accent-color-light!important;
+              color: vars.$accent-color-dark;
               background-color: rgba(vars.$accent-color, 0.05);
               transform: translateX(3px);
             }
             
             &.active {
               background-color: rgba(vars.$accent-color, 0.1);
-              
-              &::after {
-                display: none;
-              }
+              color: vars.$accent-color-dark;
             }
           }
         }
         
         &.open .dropdown-menu {
-          display: block;
+          opacity: 1;
+          visibility: visible;
+          transform: translate(-50%, 0);
         }
       }
       
@@ -162,6 +223,11 @@
         .user-icon {
           font-size: vars.$font-size-xlarge !important;
           color: vars.$accent-color;
+          transition: transform 0.3s ease;
+          
+          &:hover {
+            transform: scale(1.1);
+          }
         }
       }
     }
@@ -178,7 +244,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: background-color 0.3s ease;
+      transition: all 0.3s ease;
       
       &:hover {
         background-color: rgba(vars.$accent-color, 0.1);
@@ -187,7 +253,11 @@
       .menu-icon {
         font-size: vars.$font-size-xxlarge;
         color: vars.$accent-color;
-        font-weight: vars.$font-weight-bold;
+        transition: transform 0.3s ease;
+        
+        &:hover {
+          transform: scale(1.1);
+        }
       }
     }
   }
@@ -202,7 +272,7 @@
     background: rgba(0, 0, 0, 0.5);
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
+    transition: all 0.3s ease;
     z-index: 998;
     
     &.open {
@@ -219,11 +289,12 @@
       height: 100vh;
       background: color.scale(vars.$background-color, $lightness: 10%);
       box-shadow: -2px 0 20px rgba(0, 0, 0, 0.2);
-      transition: right 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+      transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
       display: flex;
       flex-direction: column;
       padding: vars.$padding-large;
       z-index: 999;
+      overflow-y: auto;
       
       &.open {
         right: 0;
@@ -244,10 +315,11 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: background-color 0.3s ease;
+        transition: all 0.3s ease;
         
         &:hover {
           background-color: rgba(vars.$accent-color, 0.1);
+          transform: rotate(90deg);
         }
       }
       
@@ -264,23 +336,26 @@
           color: vars.$accent-color;
           text-decoration: none;
           font-size: vars.$font-size-large;
-          transition: color 0.2s ease, transform 0.2s ease;
+          transition: all 0.3s ease;
           display: flex;
           align-items: center;
-          padding: vars.$padding-small;
+          padding: 0.75rem 0.5rem;
           width: 100%;
           border-radius: vars.$border-radius-small;
+          border-left: 3px solid transparent;
           
           &:hover {
             color: vars.$accent-color-dark;
             background-color: rgba(vars.$accent-color, 0.05);
-            transform: translateX(3px);
+            transform: translateX(5px);
+            border-left-color: vars.$accent-color-light;
           }
           
           &.active {
             color: vars.$accent-color-dark;
             background-color: rgba(vars.$accent-color, 0.1);
             font-weight: vars.$font-weight-bold;
+            border-left-color: vars.$accent-color;
           }
         }
         
@@ -295,14 +370,17 @@
             justify-content: space-between;
             font-size: vars.$font-size-large;
             color: vars.$accent-color;
-            padding: vars.$padding-small;
+            padding: 0.75rem 0.5rem;
             width: 100%;
             border-radius: vars.$border-radius-small;
-            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+            transition: all 0.3s ease;
             
             &:hover {
               color: vars.$accent-color-dark;
               background-color: rgba(vars.$accent-color, 0.05);
+              transform: translateX(5px);
+              border-left-color: vars.$accent-color-light;
             }
             
             .material-icons {
@@ -312,53 +390,65 @@
             }
           }
           
-          &.open .dropdown-toggle .material-icons {
-            transform: rotate(180deg);
+          &.open .dropdown-toggle {
+            color: vars.$accent-color-dark;
+            background-color: rgba(vars.$accent-color, 0.08);
+            border-left-color: vars.$accent-color;
+            
+            .material-icons {
+              transform: rotate(180deg);
+            }
           }
           
           .dropdown-menu {
-            margin-top: vars.$padding-small;
-            background: rgba(255, 255, 255, 0.5);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            margin-top: 0.25rem;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(5px);
             border-radius: vars.$border-radius;
-            display: none;
-            animation: slideDown 0.3s ease;
-            padding: vars.$padding-small;
-            
-            @keyframes slideDown {
-              from {
-                opacity: 0;
-                transform: translateY(-10px);
-              }
-              to {
-                opacity: 1;
-                transform: translateY(0);
-              }
-            }
+            overflow: hidden;
+            max-height: 0;
+            opacity: 0;
+            transition: all 0.3s ease;
             
             a {
               display: block;
-              padding: vars.$padding-small vars.$padding-medium;
+              padding: 0.75rem 1rem;
               color: vars.$accent-color;
               border-radius: vars.$border-radius;
               text-decoration: none;
               font-size: vars.$font-size-base;
-              margin-left: vars.$padding-medium;
+              margin-left: 1rem;
+              transform: translateX(-10px);
+              opacity: 0;
+              transition: all 0.3s ease;
 
               &:hover {
                 background-color: rgba(vars.$accent-color, 0.05);
                 color: vars.$accent-color-dark;
+                transform: translateX(5px);
               }
               
               &.active {
                 background-color: rgba(vars.$accent-color, 0.1);
                 color: vars.$accent-color-dark;
+                border-left-color: vars.$accent-color;
               }
             }
           }
           
           &.open .dropdown-menu {
-            display: block;
+            max-height: 500px;
+            opacity: 1;
+            padding: 0.5rem;
+            
+            a {
+              transform: translateX(0);
+              opacity: 1;
+              
+              &:nth-child(1) { transition-delay: 0.05s; }
+              &:nth-child(2) { transition-delay: 0.1s; }
+              &:nth-child(3) { transition-delay: 0.15s; }
+            }
           }
         }
       }
