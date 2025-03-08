@@ -201,3 +201,72 @@
     font-size: vars.$font-size-base;
   }
 }
+
+/* Neue Styles für Hover-Effekte und bessere Interaktion */
+
+.gallery-grid .artwork,
+.masonry-grid .masonry-item {
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  }
+}
+
+/* Verbesserte Animations- und Hover-Effekte */
+.image-container, .masonry-item {
+  position: relative;
+  overflow: hidden;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(0,0,0,0) 70%, rgba(0,0,0,0.7) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+  
+  &:hover::after {
+    opacity: 1;
+  }
+  
+  img {
+    transition: transform 0.5s ease;
+  }
+  
+  &:hover img {
+    transform: scale(1.05);
+  }
+}
+
+.overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 12px;
+  color: white;
+  z-index: 1;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  
+  .text {
+    font-size: 16px;
+    font-weight: bold;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+  }
+}
+
+.image-container:hover .overlay {
+  opacity: 1;
+  transform: translateY(0);
+}

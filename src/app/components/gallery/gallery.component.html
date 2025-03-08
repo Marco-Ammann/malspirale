@@ -21,7 +21,7 @@
       <p>{{ errorMessage }}</p>
     </div>
     <div class="gallery-grid" *ngIf="!loading && artworks.length > 0">
-      <div *ngFor="let artwork of artworks" class="artwork">
+      <div *ngFor="let artwork of artworks; let i = index" class="artwork" (click)="openLightbox('main', i)">
         <div class="image-container">
           <img [src]="artwork.src" [alt]="artwork.alt" />
           <div class="overlay">
@@ -41,7 +41,7 @@
       Hier zeige ich zusätzliche Werke, die meinen kreativen Weg dokumentieren.
     </p>
     <div class="masonry-grid">
-      <div *ngFor="let subArtwork of subArtworks" class="masonry-item">
+      <div *ngFor="let subArtwork of subArtworks; let i = index" class="masonry-item" (click)="openLightbox('sub', i)">
         <img [src]="subArtwork.src" [alt]="subArtwork.alt" />
       </div>
     </div>
@@ -51,4 +51,12 @@
     <p>&copy; 2025 Isabel Kunz – Eine Plattform für echte Kunst.</p>
     <p>Bilder: Shiva Ludi</p>
   </footer>
+  
+  <!-- Lightbox -->
+  <app-lightbox 
+    *ngIf="showLightbox" 
+    [images]="lightboxImages" 
+    [currentIndex]="currentLightboxIndex" 
+    (close)="closeLightbox()">
+  </app-lightbox>
 </div>

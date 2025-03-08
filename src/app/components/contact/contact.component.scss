@@ -17,11 +17,13 @@
   text-align: center;
   border-radius: vars.$border-radius;
   box-shadow: vars.$box-shadow;
+  
   h2 {
     font-size: clamp(2rem, 5vw, 3rem);
     color: vars.$accent-color-dark;
     margin-bottom: vars.$padding-medium;
   }
+  
   p {
     font-size: clamp(1rem, 2.5vw, 1.5rem);
     color: vars.$text-color;
@@ -139,5 +141,71 @@
   .contact-header, .contact-form {
     padding: vars.$padding-small;
   }
+}
 
+/* Neue Styles */
+
+.sending-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  
+  .spinner {
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 0.8s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+}
+
+.error-input {
+  border-color: #F44336 !important;
+  background-color: rgba(244, 67, 54, 0.05);
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.privacy-policy {
+  margin-bottom: 1.5rem;
+  
+  .checkbox-wrapper {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    
+    input[type="checkbox"] {
+      margin-top: 0.3rem;
+    }
+    
+    label {
+      font-size: 0.9rem;
+      line-height: 1.4;
+      margin-bottom: 0;
+      
+      a {
+        color: vars.$accent-color;
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+button[disabled] {
+  opacity: 0.7;
+  cursor: not-allowed;
 }

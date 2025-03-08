@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { DataService } from '../../../core/services/data.service';
+import { WorkshopRequestService } from '../../../core/services/workshop-request.service';
 import { Workshop } from '../../../core/interfaces/interfaces';
 
 @Component({
@@ -17,6 +18,8 @@ export class WorkshopDetailComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private sanitizer = inject(DomSanitizer);
+  private workshopRequestService = inject(WorkshopRequestService);
+  
   imageLoaded = false;
   isPortraitImage = false;
   workshop!: Workshop;
@@ -97,6 +100,28 @@ export class WorkshopDetailComponent implements OnInit {
   }
 
   registerForWorkshop(): void {
-    this.router.navigate(['/register', this.workshop.id]);
+    if (!this.workshop) return;
+    
+    if (this.workshop.type === 'individuelleAnfrage') {
+      // Für individuelle Anfragen: zum Kontaktformular weiterleiten
+      const requestMessage = this.workshopRequestService.createRequestMessage(this.workshop);
+      
+      this.workshopRequestService.setRequestData({
+        workshopId: this.workshop.id,
+        workshopTitle: this.workshop.title,
+        workshopType: this.workshop.type,
+        message: requestMessage
+      });
+      
+      this.router.navigate(['/contact'], { 
+        queryParams: { 
+          type: 'workshop',
+          id: this.workshop.id 
+        }
+      });
+    } else {
+      // Für reguläre Workshops: Anmeldeformular anzeigen
+      this.router.navigate(['/workshop-registration', this.workshop.id]);
+    }
   }
 }
