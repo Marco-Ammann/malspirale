@@ -73,11 +73,16 @@
           }}
         </div>
 
-        <div class="card-image">
+        <div class="card-image" [class.loading]="!workshop.imageLoaded">
           <img
             [src]="workshop.imageUrl || 'assets/images/default-workshop.jpg'"
             [alt]="workshop.title"
+            (load)="workshop.imageLoaded = true"
+            [ngClass]="{ loaded: workshop.imageLoaded }"
           />
+          <div class="image-placeholder" *ngIf="!workshop.imageLoaded">
+            <span class="material-icons">image</span>
+          </div>
         </div>
 
         <div class="card-content">
@@ -187,5 +192,6 @@
   <app-workshop-wizard
     *ngIf="showWorkshopWizard"
     [workshopId]="selectedWorkshopId"
+    (saveComplete)="closeWorkshopWizard()"
   ></app-workshop-wizard>
 </div>

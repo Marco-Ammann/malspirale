@@ -1,5 +1,5 @@
-@use 'sass:color';
-@use 'variables' as vars;
+@use "sass:color";
+@use "variables" as vars;
 
 ::ng-deep.workshop-detail {
   max-width: 1000px;
@@ -10,17 +10,57 @@
   .hero-image {
     position: relative;
     width: 100%;
-    height: 300px;
+    height: 0;
+    padding-bottom: 56.25%; // 16:9 Verhältnis als Standard
     overflow: hidden;
     border-radius: vars.$border-radius;
     box-shadow: vars.$box-shadow;
     margin-bottom: vars.$padding-large;
+    background-color: #f8f9fa;
+
+    &.portrait {
+      padding-bottom: 80%; // Reduziert von 133.33% auf 80%
+      max-width: 50%; // Reduziert von 75% auf 50%
+      float: right; // Rechts vom Text fließen lassen
+      margin-left: vars.$padding-medium; // Abstand zum Text
+      margin-bottom: vars.$padding-medium;
+
+      @media (max-width: vars.$tablet) {
+        float: none; // Auf mobilen Geräten wieder normal
+        max-width: 70%; // Etwas breiter auf mobilen Geräten
+        margin: 0 auto vars.$padding-medium auto;
+      }
+    }
 
     img {
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
       height: 100%;
       object-fit: cover;
-      display: block;
+      transition: opacity 0.3s ease;
+      opacity: 0;
+
+      &.loaded {
+        opacity: 1;
+      }
+    }
+
+    .image-placeholder {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .material-icons {
+        font-size: 4rem;
+        color: #e9ecef;
+      }
     }
 
     .hero-overlay {
@@ -28,19 +68,16 @@
       bottom: 0;
       left: 0;
       right: 0;
-      background: linear-gradient(
-        0deg,
-        rgba(0, 0, 0, 0.7),
-        transparent
-      );
+      background: linear-gradient(0deg, rgba(0, 0, 0, 0.7), transparent);
       color: vars.$white;
       padding: vars.$padding-medium;
       display: flex;
       flex-direction: column;
       gap: vars.$padding-extra-small;
+      z-index: 1;
 
       h1 {
-        font-size: clamp(2rem, 4vw, 3rem);
+        font-size: clamp(1.5rem, 4vw, 2.5rem); // Etwas kleinere Überschrift
         margin: 0;
       }
       .hero-meta {
@@ -50,7 +87,11 @@
   }
 
   .detail-content {
-    background: linear-gradient(135deg, vars.$background-light, vars.$background-whiter);
+    background: linear-gradient(
+      135deg,
+      vars.$background-light,
+      vars.$background-whiter
+    );
     backdrop-filter: blur(6px);
     border-radius: vars.$border-radius;
     box-shadow: vars.$box-shadow;
@@ -74,28 +115,57 @@
       font-size: vars.$font-size-medium;
       line-height: 1.6;
       color: vars.$text-color;
-      
+
+      // Verbessertes Styling für das Markdown
+      h2 {
+        font-size: 1.5rem;
+        margin: 1.5rem 0 1rem;
+        color: vars.$accent-color-dark;
+      }
+
+      h3 {
+        font-size: 1.3rem;
+        margin: 1.2rem 0 0.8rem;
+        color: vars.$accent-color;
+      }
+
       strong {
         font-weight: bold;
-        margin-top: 8px;
+        color: vars.$text-dark;
       }
 
       em {
         font-style: italic;
       }
 
-      ul, ol {
+      blockquote {
+        border-left: 4px solid vars.$accent-color-light;
+        margin: 1rem 0;
+        padding: 0.5rem 0 0.5rem 1rem;
+        font-style: italic;
+        color: vars.$text-color-light;
+        background-color: rgba(vars.$accent-color, 0.05);
+      }
+
+      ul,
+      ol {
         margin: vars.$padding-small 0;
-        padding-left: vars.$padding-medium;
+        padding-left: vars.$padding-large;
+      }
+
+      li {
+        margin-bottom: 0.5rem;
       }
 
       p {
-        margin-bottom: 16px!important;
+        margin-bottom: 1rem !important;
       }
     }
 
     .detail-actions {
       text-align: center;
+      margin-top: vars.$padding-medium;
+
       button.btn-primary {
         padding: vars.$padding-medium vars.$padding-large;
         font-size: clamp(1rem, 2.5vw, 1.5rem);
@@ -109,7 +179,7 @@
         color: vars.$white;
         cursor: pointer;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
-        
+
         &:hover {
           transform: translateY(-3px);
           box-shadow: vars.$hover-shadow;
@@ -129,20 +199,11 @@
 @media (max-width: vars.$tablet) {
   .workshop-detail {
     padding: vars.$padding-medium;
-    .hero-image {
-      height: 200px;
-      .hero-overlay {
-        padding: vars.$padding-small;
-      }
-    }
   }
 }
 
 @media (max-width: 320px) {
   .workshop-detail {
     padding: vars.$padding-small;
-    .hero-image {
-      height: 180px;
-    }
   }
 }

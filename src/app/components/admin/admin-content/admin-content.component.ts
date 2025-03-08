@@ -41,12 +41,10 @@ export class AdminContentComponent implements OnInit {
     private dataService: DataService,
     private storageService: StorageService
   ) {}
-  
 
   ngOnInit(): void {
     this.loadSelectedContent();
   }
-
 
   loadSelectedContent(): void {
     this.loading = true;
@@ -86,11 +84,9 @@ export class AdminContentComponent implements OnInit {
       });
   }
 
-
   selectSection(index: number): void {
     this.currentSectionIndex = index;
   }
-
 
   addSection(): void {
     const newSection: ContentSection = {
@@ -102,7 +98,6 @@ export class AdminContentComponent implements OnInit {
     this.contentSections.push(newSection);
     this.selectSection(this.contentSections.length - 1);
   }
-
 
   deleteSection(index: number): void {
     if (confirm('Möchtest du diesen Abschnitt wirklich löschen?')) {
@@ -118,8 +113,7 @@ export class AdminContentComponent implements OnInit {
       }
     }
   }
-  
-  
+
   moveSection(index: number, direction: number): void {
     const newIndex = index + direction;
 
@@ -136,7 +130,6 @@ export class AdminContentComponent implements OnInit {
     // Aktualisiere den ausgewählten Index
     this.currentSectionIndex = newIndex;
   }
-
 
   onSectionTypeChange(): void {
     const section = this.contentSections[this.currentSectionIndex];
@@ -157,7 +150,6 @@ export class AdminContentComponent implements OnInit {
     }
   }
 
-
   async handleImageUpload(event: Event): Promise<void> {
     const input = event.target as HTMLInputElement;
     if (!input.files || input.files.length === 0) return;
@@ -172,11 +164,9 @@ export class AdminContentComponent implements OnInit {
     }
   }
 
-
   removeImage(): void {
     this.contentSections[this.currentSectionIndex].imageUrl = '';
   }
-
 
   async handleGalleryImageUpload(event: Event): Promise<void> {
     const input = event.target as HTMLInputElement;
@@ -202,7 +192,6 @@ export class AdminContentComponent implements OnInit {
     }
   }
 
-
   moveGalleryImage(index: number, direction: number): void {
     const galleryImages =
       this.contentSections[this.currentSectionIndex].galleryImages;
@@ -220,7 +209,6 @@ export class AdminContentComponent implements OnInit {
     ];
   }
 
-
   removeGalleryImage(index: number): void {
     const galleryImages =
       this.contentSections[this.currentSectionIndex].galleryImages;
@@ -228,7 +216,6 @@ export class AdminContentComponent implements OnInit {
 
     galleryImages.splice(index, 1);
   }
-
 
   async saveContent(): Promise<void> {
     this.saving = true;
@@ -238,12 +225,14 @@ export class AdminContentComponent implements OnInit {
       // Erstelle strukturiertes JSON für den Inhalt
       const pageContent: PageContent = {
         sections: this.contentSections,
-        lastUpdated: new Date().toISOString()
+        lastUpdated: new Date().toISOString(),
       };
 
       const contentJson = JSON.stringify(pageContent);
 
-      await this.dataService.updateContent(this.selectedPage, { text: contentJson });
+      await this.dataService.updateContent(this.selectedPage, {
+        text: contentJson,
+      });
 
       this.resetFormsAfterSave();
       this.saveSuccess = true;
@@ -264,81 +253,238 @@ export class AdminContentComponent implements OnInit {
     }
   }
 
-
   resetContent(): void {
     if (confirm('Möchtest du wirklich alle Änderungen verwerfen?')) {
       this.loadSelectedContent();
     }
   }
 
-
   applyFormat(format: string): void {
-    const textarea = document.querySelector(
-      '#editorTextarea'
-    ) as HTMLTextAreaElement;
+    const textarea = document.querySelector('#editorTextarea') as HTMLTextAreaElement;
     if (!textarea) return;
-
+  
     const start = textarea.selectionStart;
     const end = textarea.selectionEnd;
     const selectedText = textarea.value.substring(start, end);
     let formattedText = '';
-
-    switch (format) {
-      case 'bold':
-        formattedText = `**${selectedText}**`;
-        break;
-      case 'italic':
-        formattedText = `*${selectedText}*`;
-        break;
-      case 'underline':
-        formattedText = `<u>${selectedText}</u>`;
-        break;
-      case 'h2':
-        formattedText = `## ${selectedText}`;
-        break;
-      case 'h3':
-        formattedText = `### ${selectedText}`;
-        break;
-      case 'ul':
-        // Für jede Zeile im ausgewählten Text
-        formattedText = selectedText
-          .split('\n')
-          .map((line) => `- ${line}`)
-          .join('\n');
-        break;
-      case 'ol':
-        // Für jede Zeile im ausgewählten Text, nummerierte Liste
-        formattedText = selectedText
-          .split('\n')
-          .map((line, index) => `${index + 1}. ${line}`)
-          .join('\n');
-        break;
+    let cursorPos = 0;
+  
+    // Prüfen, ob bereits formatiert ist und ggf. Formatierung entfernen
+    if (selectedText) {
+      switch (format) {
+        case 'bold':
+          if (selectedText.startsWith('**') && selectedText.endsWith('**')) {
+            // Formatierung entfernen
+            formattedText = selectedText.substring(2, selectedText.length - 2);
+            cursorPos = start + formattedText.length;
+          } else {
+            // Formatierung hinzufügen
+            formattedText = `**${selectedText}**`;
+            cursorPos = start + formattedText.length;
+          }
+          break;
+        case 'italic':
+          if (selectedText.startsWith('*') && selectedText.endsWith('*')) {
+            // Formatierung entfernen
+            formattedText = selectedText.substring(1, selectedText.length - 1);
+            cursorPos = start + formattedText.length;
+          } else {
+            // Formatierung hinzufügen
+            formattedText = `*${selectedText}*`;
+            cursorPos = start + formattedText.length;
+          }
+          break;
+        case 'underline':
+          if (selectedText.startsWith('<u>') && selectedText.endsWith('</u>')) {
+            // Formatierung entfernen
+            formattedText = selectedText.substring(3, selectedText.length - 4);
+            cursorPos = start + formattedText.length;
+          } else {
+            // Formatierung hinzufügen
+            formattedText = `<u>${selectedText}</u>`;
+            cursorPos = start + formattedText.length;
+          }
+          break;
+        case 'h2':
+          // Überprüfen, ob die Zeile bereits mit ## beginnt
+          const beforeSelection = textarea.value.substring(0, start);
+          const lineStart = beforeSelection.lastIndexOf('\n') + 1;
+          const line = textarea.value.substring(lineStart, start) + selectedText;
+          
+          if (line.trim().startsWith('## ')) {
+            // Formatierung entfernen
+            const withoutH2 = line.replace(/^## /, '');
+            formattedText = withoutH2;
+            textarea.setRangeText(formattedText, lineStart, start + selectedText.length, 'select');
+            return;
+          } else {
+            // Prüfen, ob am Anfang einer Zeile
+            const isStartOfLine = start === 0 || beforeSelection.endsWith('\n');
+            if (isStartOfLine) {
+              formattedText = `## ${selectedText}`;
+            } else {
+              formattedText = `\n## ${selectedText}`;
+            }
+            cursorPos = start + formattedText.length;
+          }
+          break;
+        case 'h3':
+          // Ähnliche Logik wie für h2
+          const beforeH3 = textarea.value.substring(0, start);
+          const lineStartH3 = beforeH3.lastIndexOf('\n') + 1;
+          const lineH3 = textarea.value.substring(lineStartH3, start) + selectedText;
+          
+          if (lineH3.trim().startsWith('### ')) {
+            // Formatierung entfernen
+            const withoutH3 = lineH3.replace(/^### /, '');
+            formattedText = withoutH3;
+            textarea.setRangeText(formattedText, lineStartH3, start + selectedText.length, 'select');
+            return;
+          } else {
+            // Prüfen, ob am Anfang einer Zeile
+            const isStartOfLineH3 = start === 0 || beforeH3.endsWith('\n');
+            if (isStartOfLineH3) {
+              formattedText = `### ${selectedText}`;
+            } else {
+              formattedText = `\n### ${selectedText}`;
+            }
+            cursorPos = start + formattedText.length;
+          }
+          break;
+        case 'quote':
+          // Prüfen, ob bereits ein Zitat
+          const beforeQuote = textarea.value.substring(0, start);
+          const lineStartQuote = beforeQuote.lastIndexOf('\n') + 1;
+          const lineQuote = textarea.value.substring(lineStartQuote, start) + selectedText;
+          
+          if (lineQuote.trim().startsWith('> ')) {
+            // Formatierung entfernen
+            const withoutQuote = lineQuote.replace(/^> /, '');
+            formattedText = withoutQuote;
+            textarea.setRangeText(formattedText, lineStartQuote, start + selectedText.length, 'select');
+            return;
+          } else {
+            // Zitat hinzufügen
+            const isStartOfLineQuote = start === 0 || beforeQuote.endsWith('\n');
+            if (isStartOfLineQuote) {
+              formattedText = `> ${selectedText}`;
+            } else {
+              formattedText = `\n> ${selectedText}`;
+            }
+            cursorPos = start + formattedText.length;
+          }
+          break;
+        case 'ul':
+          // Aufzählungszeichen für jede Zeile
+          const lines = selectedText.split('\n');
+          const formattedLines = lines.map(line => {
+            // Überprüfen, ob bereits eine Liste
+            if (line.trim().startsWith('- ')) {
+              return line.replace(/^(\s*)- /, '$1');
+            } else if (line.trim()) {
+              return `- ${line}`;
+            }
+            return line;
+          });
+          formattedText = formattedLines.join('\n');
+          cursorPos = start + formattedText.length;
+          break;
+        case 'ol':
+          // Nummerierte Liste
+          const olLines = selectedText.split('\n');
+          const formattedOlLines = olLines.map((line, index) => {
+            // Entferne bestehende Nummerierung
+            if (/^\d+\.\s/.test(line.trim())) {
+              return line.replace(/^\s*\d+\.\s/, '');
+            } else if (line.trim()) {
+              return `${index + 1}. ${line}`;
+            }
+            return line;
+          });
+          formattedText = formattedOlLines.join('\n');
+          cursorPos = start + formattedText.length;
+          break;
+      }
+    } else {
+      // Wenn kein Text ausgewählt ist, füge Platzhalter ein
+      switch (format) {
+        case 'bold':
+          formattedText = '**Fettschrift**';
+          cursorPos = start + 2; // Position nach ersten **
+          break;
+        case 'italic':
+          formattedText = '*Kursiv*';
+          cursorPos = start + 1; // Position nach erstem *
+          break;
+        case 'underline':
+          formattedText = '<u>Unterstrichen</u>';
+          cursorPos = start + 3; // Position nach <u>
+          break;
+        case 'h2':
+          const beforeEmptyH2 = textarea.value.substring(0, start);
+          const isStartOfLineEmptyH2 = start === 0 || beforeEmptyH2.endsWith('\n');
+          if (isStartOfLineEmptyH2) {
+            formattedText = '## Überschrift 2';
+          } else {
+            formattedText = '\n## Überschrift 2';
+          }
+          cursorPos = start + formattedText.length - 'Überschrift 2'.length;
+          break;
+        case 'h3':
+          const beforeEmptyH3 = textarea.value.substring(0, start);
+          const isStartOfLineEmptyH3 = start === 0 || beforeEmptyH3.endsWith('\n');
+          if (isStartOfLineEmptyH3) {
+            formattedText = '### Überschrift 3';
+          } else {
+            formattedText = '\n### Überschrift 3';
+          }
+          cursorPos = start + formattedText.length - 'Überschrift 3'.length;
+          break;
+        case 'quote':
+          const beforeEmptyQuote = textarea.value.substring(0, start);
+          const isStartOfLineEmptyQuote = start === 0 || beforeEmptyQuote.endsWith('\n');
+          if (isStartOfLineEmptyQuote) {
+            formattedText = '> Zitat';
+          } else {
+            formattedText = '\n> Zitat';
+          }
+          cursorPos = start + formattedText.length - 'Zitat'.length;
+          break;
+        case 'ul':
+          formattedText = '- Listenpunkt';
+          cursorPos = start + formattedText.length - 'Listenpunkt'.length;
+          break;
+        case 'ol':
+          formattedText = '1. Nummerierter Punkt';
+          cursorPos = start + formattedText.length - 'Nummerierter Punkt'.length;
+          break;
+      }
     }
-
-    // Ersetze den ausgewählten Text mit formatiertem Text
+  
+    // Ersetze den ausgewählten Text mit dem formatierten Text
     textarea.setRangeText(formattedText, start, end, 'select');
+    
+    // Setze Cursor an die richtige Position
+    textarea.setSelectionRange(cursorPos, cursorPos);
+    
     // Fokussiere zurück auf das Textarea
     textarea.focus();
-
+  
     // Aktualisiere die Formulardaten
     if (this.currentSectionIndex !== -1) {
       this.contentSections[this.currentSectionIndex].content = textarea.value;
     }
   }
 
-  // Formulare zurücksetzen nach dem Speichern
   resetFormsAfterSave(): void {
-    // Optional: Formulare zurücksetzen
-    this.contentSections = [];
-    this.currentSectionIndex = -1;
-    // Wenn wir komplettes Zurücksetzen wollen:
-    // this.loadSelectedContent();
+    // Inhalte nach dem Speichern neu laden
+    this.loadSelectedContent();
 
-    // Oder nur eine Erfolgsmeldung zeigen, ohne Formulare zurückzusetzen
+    // Erfolgsmeldung anzeigen
     this.saveSuccess = true;
     this.saveMessage = 'Inhalt erfolgreich gespeichert!';
 
-    // Blende die Nachricht nach 3 Sekunden aus
+    // Meldung nach 3 Sekunden ausblenden
     setTimeout(() => {
       this.saveMessage = '';
     }, 3000);

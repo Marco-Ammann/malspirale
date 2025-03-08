@@ -7,45 +7,54 @@
         <span class="material-icons">menu</span>
       </button>
     </div>
-    
+
     <nav class="nav-menu">
-      <a routerLink="/admin" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-item">
+      <a
+        routerLink="/admin"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="nav-item"
+      >
         <span class="material-icons">dashboard</span>
         <span class="nav-label">Dashboard</span>
       </a>
-      
+
       <a routerLink="/admin/content" routerLinkActive="active" class="nav-item">
         <span class="material-icons">text_fields</span>
         <span class="nav-label">Inhalte</span>
       </a>
-      
-      <a routerLink="/admin/workshops" routerLinkActive="active" class="nav-item">
+
+      <a
+        routerLink="/admin/workshops"
+        routerLinkActive="active"
+        class="nav-item"
+      >
         <span class="material-icons">event</span>
         <span class="nav-label">Workshops</span>
       </a>
-      
+
       <a routerLink="/admin/gallery" routerLinkActive="active" class="nav-item">
         <span class="material-icons">photo_library</span>
         <span class="nav-label">Galerie</span>
       </a>
-      
+
       <a routerLink="/admin/users" routerLinkActive="active" class="nav-item">
         <span class="material-icons">people</span>
         <span class="nav-label">Benutzer</span>
       </a>
-      
+
       <a routerLink="/admin/reports" routerLinkActive="active" class="nav-item">
         <span class="material-icons">bar_chart</span>
         <span class="nav-label">Berichte</span>
       </a>
     </nav>
-    
+
     <div class="sidebar-footer">
       <button class="help-btn" (click)="openHelp()">
         <span class="material-icons">help</span>
         <span>Hilfe</span>
       </button>
-      
+
       <button class="logout-btn" (click)="logout()">
         <span class="material-icons">exit_to_app</span>
         <span>Abmelden</span>
@@ -59,82 +68,103 @@
       <button class="menu-toggle" (click)="toggleMenu()" [hidden]="menuOpen">
         <span class="material-icons">menu</span>
       </button>
-      
+
       <div class="header-title">
         <h1>{{ pageTitle }}</h1>
       </div>
-      
+
       <div class="user-menu">
-        <span>{{ userRole$ | async }}</span>
+        <span
+          >{{ userName$ | async }} ({{
+            (userRole$ | async)?.toLowerCase()
+          }})</span
+        >
         <span class="material-icons user-icon">account_circle</span>
       </div>
     </header>
 
     <!-- Dashboard für die Hauptseite -->
     <section *ngIf="isMainDashboard; else contentOutlet" class="dashboard">
+      <h2 class="dashboard-h2__userName">
+        Willkommen zurück,
+        {{ getFirstNameOfFullName((userName$ | async) || "") }}!
+      </h2>
+
       <div class="quick-actions">
         <h2>Schnellzugriff</h2>
         <div class="action-buttons">
-          <button class="action-btn" routerLink="/admin/workshops" [queryParams]="{action: 'new'}">
+          <button
+            class="action-btn"
+            routerLink="/admin/workshops"
+            [queryParams]="{ action: 'new' }"
+          >
             <span class="material-icons">add_circle</span>
             <span>Neuer Workshop</span>
           </button>
-          
-          <button class="action-btn" routerLink="/admin/gallery" [queryParams]="{action: 'upload'}">
+
+          <button
+            class="action-btn"
+            routerLink="/admin/gallery"
+            [queryParams]="{ action: 'upload' }"
+          >
             <span class="material-icons">cloud_upload</span>
             <span>Bilder hochladen</span>
           </button>
-          
+
           <button class="action-btn" routerLink="/admin/content">
             <span class="material-icons">edit</span>
             <span>Inhalte bearbeiten</span>
           </button>
         </div>
       </div>
-      
+
       <div class="dashboard-grid">
         <div class="stat-card">
           <h3>Workshops</h3>
           <div class="stat-value">{{ workshopCount$ | async }}</div>
           <a routerLink="/admin/workshops">Alle anzeigen</a>
         </div>
-        
+
         <div class="stat-card">
           <h3>Besucher</h3>
           <div class="stat-value">{{ visitorCount }}</div>
           <span class="stat-period">letzte 30 Tage</span>
         </div>
-        
+
         <div class="stat-card">
           <h3>Anfragen</h3>
           <div class="stat-value">{{ messageCount }}</div>
           <a routerLink="/admin/messages">Alle anzeigen</a>
         </div>
       </div>
-      
+
       <div class="activity-section">
         <h2>Letzte Aktivitäten</h2>
         <div class="activity-list">
           <div *ngFor="let activity of recentActivities" class="activity-item">
-            <span class="material-icons" [ngClass]="activity.icon">{{ activity.icon }}</span>
+            <span class="material-icons" [ngClass]="activity.icon">{{
+              activity.icon
+            }}</span>
             <div class="activity-details">
               <div class="activity-title">{{ activity.title }}</div>
-              <div class="activity-time">{{ activity.time | date:'short' }}</div>
+              <div class="activity-time">
+                {{ activity.time | date : "short" }}
+              </div>
             </div>
           </div>
-          
+
           <div *ngIf="recentActivities.length === 0" class="no-activities">
             Keine kürzlichen Aktivitäten
           </div>
         </div>
       </div>
     </section>
-    
+
     <ng-template #contentOutlet>
       <router-outlet></router-outlet>
     </ng-template>
   </main>
-  
+
   <!-- Hilfe-Panel, ausgeblendet standardmäßig -->
   <aside *ngIf="showHelp" class="help-panel">
     <div class="help-header">
@@ -143,27 +173,33 @@
         <span class="material-icons">close</span>
       </button>
     </div>
-    
+
     <div class="help-content">
       <div [ngSwitch]="currentRoute">
         <div *ngSwitchCase="'/'">
           <h3>Dashboard</h3>
-          <p>Hier findest du eine Übersicht deiner Website. Nutze die Schnellzugriff-Buttons für häufige Aufgaben.</p>
+          <p>
+            Hier findest du eine Übersicht deiner Website. Nutze die
+            Schnellzugriff-Buttons für häufige Aufgaben.
+          </p>
         </div>
-        
+
         <div *ngSwitchCase="'/admin/workshops'">
           <h3>Workshop-Verwaltung</h3>
-          <p>Hier kannst du deine Workshops erstellen, bearbeiten und verwalten. Klicke auf "Neuer Workshop" um zu beginnen.</p>
+          <p>
+            Hier kannst du deine Workshops erstellen, bearbeiten und verwalten.
+            Klicke auf "Neuer Workshop" um zu beginnen.
+          </p>
         </div>
-        
+
         <!-- Weitere Hilfetexte für andere Routen -->
-        
+
         <div *ngSwitchDefault>
           <h3>Malspirale Admin</h3>
           <p>Wähle links einen Bereich aus, den du verwalten möchtest.</p>
         </div>
       </div>
-      
+
       <div class="video-tutorial">
         <h3>Video-Anleitung</h3>
         <button class="tutorial-btn">

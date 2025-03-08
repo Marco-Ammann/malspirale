@@ -1,5 +1,5 @@
-@use 'sass:color';
-@use 'variables' as vars;
+@use "sass:color";
+@use "variables" as vars;
 
 .workshop-container {
   max-width: vars.$container-max-width-lg; // z.B. 960px
@@ -25,14 +25,18 @@
 }
 
 .workshop-header {
-  background: linear-gradient(135deg, rgba(255,255,255,0.8), rgba(255,255,255,0.6));
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.8),
+    rgba(255, 255, 255, 0.6)
+  );
   backdrop-filter: blur(10px);
   padding: vars.$padding-large;
   text-align: center;
   border-radius: vars.$border-radius;
   box-shadow: vars.$box-shadow;
   margin-bottom: vars.$padding-large;
-  
+
   h2 {
     font-size: clamp(2rem, 5vw, 3rem);
     color: vars.$accent-color-dark;
@@ -51,56 +55,117 @@
 }
 
 .workshop-card {
-  display: inline-block;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   width: 100%;
   margin-bottom: vars.$padding-medium;
   break-inside: avoid;
-  background: linear-gradient(135deg, rgba(255,255,255,0.8), rgba(255,255,255,0.6));
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.8),
+    rgba(255, 255, 255, 0.6)
+  );
   backdrop-filter: blur(6px);
   border-radius: vars.$border-radius;
   box-shadow: vars.$box-shadow;
   cursor: pointer;
   transition: transform 0.2s ease;
-  
+
   &:hover {
     transform: translateY(-2px);
   }
-  
+
   .workshop-image {
-    max-height: 200px;
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 66.67%;
     overflow: hidden;
+    background-color: #f8f9fa;
+
+    &.loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
     img {
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
       height: 100%;
-      object-fit: contain;
-      display: block;
+      object-fit: cover; // Wichtig für unterschiedliche Bildformate
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      opacity: 0;
+
+      &.loaded {
+        opacity: 1;
+      }
+
+      &:hover {
+        transform: scale(1.05);
+      }
+    }
+
+    .image-placeholder {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .material-icons {
+        font-size: 3rem;
+        color: #e9ecef;
+      }
+    }
+
+    &.portrait:after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 50%;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.5), transparent);
+      z-index: 1;
     }
   }
-  
+
   .workshop-info {
+    flex: 1; // Nimmt den verfügbaren Platz ein
+    display: flex;
+    flex-direction: column;
     padding: vars.$padding-small;
-    
+
     h3 {
       margin: 0 0 vars.$padding-extra-small 0;
       font-size: clamp(1.1rem, 2vw, 1.4rem);
       color: vars.$accent-color-dark;
     }
-    
+
     .meta-info {
       font-size: 0.85rem;
       color: vars.$text-color;
       margin-bottom: vars.$padding-extra-small;
     }
-    
+
     .workshop-short-description {
       font-size: 0.85rem;
       color: vars.$text-color;
     }
   }
-  
+
   .workshop-actions {
     text-align: center;
-    padding: vars.$padding-extra-small;
+    padding: vars.$padding-extra-small vars.$padding-small vars.$padding-small;
+    margin-top: auto; // Drückt den Button ans Ende der Card
+    
     button.btn-primary {
       padding: vars.$padding-extra-small vars.$padding-small;
       font-size: clamp(0.85rem, 1.8vw, 0.95rem);
@@ -120,6 +185,57 @@
       }
     }
   }
+}
+
+// Keine Workshops gefunden Styling
+.no-workshops {
+  margin: vars.$padding-large 0;
+  
+  .no-workshops-message {
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.8),
+      rgba(255, 255, 255, 0.6)
+    );
+    backdrop-filter: blur(6px);
+    padding: vars.$padding-large;
+    border-radius: vars.$border-radius;
+    box-shadow: vars.$box-shadow;
+    text-align: center;
+    
+    .material-icons {
+      font-size: 4rem;
+      color: vars.$accent-color-light;
+      margin-bottom: vars.$padding-medium;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      color: vars.$accent-color-dark;
+      margin-bottom: vars.$padding-small;
+    }
+    
+    p {
+      color: vars.$text-color;
+    }
+  }
+}
+
+.loading, .error {
+  text-align: center;
+  padding: vars.$padding-medium;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.8),
+    rgba(255, 255, 255, 0.6)
+  );
+  backdrop-filter: blur(6px);
+  border-radius: vars.$border-radius;
+  box-shadow: vars.$box-shadow;
+}
+
+.error {
+  color: vars.$danger-color;
 }
 
 @media (max-width: vars.$desktop) {

@@ -94,6 +94,8 @@
               <span class="toolbar-separator"></span>
               <button type="button" class="toolbar-btn" (click)="applyFormat('ul')">•</button>
               <button type="button" class="toolbar-btn" (click)="applyFormat('ol')">1.</button>
+              <span class="toolbar-separator"></span>
+              <button type="button" class="toolbar-btn" (click)="applyFormat('quote')">"</button>
             </div>
             <textarea id="editorTextarea" [(ngModel)]="contentSections[currentSectionIndex].content"
               placeholder="Gib hier deinen Text ein..."></textarea>

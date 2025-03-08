@@ -118,8 +118,15 @@ export class AdminWorkshopsComponent implements OnInit {
     const duplicatedWorkshop: Workshop = { ...workshop };
     delete duplicatedWorkshop.id;
 
-    // Füge "(Kopie)" zum Titel hinzu
-    duplicatedWorkshop.title = `${duplicatedWorkshop.title} (Kopie)`;
+    // Füge ein klares "(Kopie)" zum Titel hinzu
+    const timestamp = new Date().toLocaleTimeString('de-DE', {
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+    duplicatedWorkshop.title = `${duplicatedWorkshop.title} (Kopie ${timestamp})`;
+
+    // Als Entwurf speichern
+    duplicatedWorkshop.status = 'draft';
 
     // Speichere als neuen Workshop
     this.dataService.saveWorkshop(duplicatedWorkshop).then((newId) => {
@@ -165,5 +172,11 @@ export class AdminWorkshopsComponent implements OnInit {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     return workshopDate < today;
+  }
+
+  closeWorkshopWizard(): void {
+    this.showWorkshopWizard = false;
+    this.selectedWorkshopId = null;
+    this.loadWorkshops(); // Neu laden, um Änderungen zu sehen
   }
 }

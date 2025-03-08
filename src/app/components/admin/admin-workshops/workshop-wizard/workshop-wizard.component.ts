@@ -1,4 +1,11 @@
-import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  Input,
+  Output,
+  EventEmitter,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormsModule,
@@ -24,6 +31,8 @@ export class WorkshopWizardComponent implements OnInit, OnDestroy {
   currentStep = 1;
   totalSteps = 4;
   @Input() workshopId: string | null = null;
+  @Output() saveComplete = new EventEmitter<void>();
+
   isEditMode = false;
   // Formulargruppen für verschiedene Schritte
   basicInfoForm: FormGroup;
@@ -83,15 +92,23 @@ export class WorkshopWizardComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    // Prüfe auf Edit-Modus und Workshop-ID
-    this.workshopId = this.route.snapshot.paramMap.get('id');
+    // Check if we're in edit mode by checking if we have a workshopId
     this.isEditMode = !!this.workshopId;
 
     if (this.isEditMode && this.workshopId) {
+      // Load workshop data
       this.loadWorkshop(this.workshopId);
+    } else {
+      // Check URL parameters as a fallback
+      const routeId = this.route.snapshot.paramMap.get('id');
+      if (routeId) {
+        this.workshopId = routeId;
+        this.isEditMode = true;
+        this.loadWorkshop(routeId);
+      }
     }
 
-    // Überwache den Typ für dynamische Formularanpassungen
+    // Monitor type changes for dynamic form validation
     this.subscriptions.add(
       this.basicInfoForm.get('type')!.valueChanges.subscribe((type) => {
         this.selectedType = type;
@@ -106,22 +123,26 @@ export class WorkshopWizardComponent implements OnInit, OnDestroy {
 
   loadWorkshop(id: string): void {
     this.loading = true;
+    console.log('Loading workshop with ID:', id); // Debugging
+
     this.dataService.getWorkshop(id).subscribe({
       next: (workshop) => {
-        console.log('Geladener Workshop:', workshop); // Debugging
+        console.log('Loaded workshop data:', workshop); // Debugging
 
-        // Typ richtig setzen
+        // Set the type first
         this.selectedType = workshop.type || 'workshop';
-
-        // Grundinformationen
         this.basicInfoForm.patchValue({
-          type: workshop.type || 'workshop',
+          type: this.selectedType,
+        });
+
+        // Basic information
+        this.basicInfoForm.patchValue({
           title: workshop.title || '',
           shortDescription: workshop.shortDescription || '',
           location: workshop.location || '',
         });
 
-        // Details basierend auf Typ
+        // Details based on type
         const detailsData: any = {};
         if (workshop.date) detailsData.date = workshop.date;
         if (workshop.startTime) detailsData.startTime = workshop.startTime;
@@ -135,28 +156,29 @@ export class WorkshopWizardComponent implements OnInit, OnDestroy {
         if (workshop.contactEmail)
           detailsData.contactEmail = workshop.contactEmail;
 
+        console.log('Patching details form with:', detailsData); // Debugging
         this.detailsForm.patchValue(detailsData);
 
-        // Beschreibung und Bild
+        // Description and image
         this.descriptionForm.patchValue({
           description: workshop.description || '',
           imageUrl: workshop.imageUrl || '',
         });
 
-        // Status-Informationen
+        // Status information
         this.publishForm.patchValue({
           status: workshop.status || 'published',
         });
 
-        // Aktualisiere Validatoren für den ausgewählten Typ
+        // Update validators for the selected type
         this.updateDetailsFormValidators();
 
         this.loading = false;
       },
       error: (error) => {
-        console.error('Fehler beim Laden des Workshops:', error);
+        console.error('Error loading workshop:', error);
         this.errorMessage =
-          'Workshop konnte nicht geladen werden: ' + (error.message || error);
+          'Workshop could not be loaded: ' + (error.message || error);
         this.loading = false;
       },
     });
@@ -251,7 +273,7 @@ export class WorkshopWizardComponent implements OnInit, OnDestroy {
 
   async saveWorkshop(): Promise<void> {
     this.loading = true;
-    
+
     try {
       // Sammle alle Daten aus den Formularen
       const workshopData: Workshop = {
@@ -259,17 +281,17 @@ export class WorkshopWizardComponent implements OnInit, OnDestroy {
         ...this.detailsForm.value,
         ...this.descriptionForm.value,
         ...this.publishForm.value,
-        type: this.selectedType
+        type: this.selectedType,
       };
-      
+
       // Entferne leere Felder
-      Object.keys(workshopData as Record<string, any>).forEach(key => {
+      Object.keys(workshopData as Record<string, any>).forEach((key) => {
         const value = (workshopData as Record<string, any>)[key];
         if (value === '' || value === null) {
           delete (workshopData as Record<string, any>)[key];
         }
       });
-      
+
       if (this.isEditMode && this.workshopId) {
         // Update existierenden Workshop
         workshopData.id = this.workshopId;
@@ -280,17 +302,17 @@ export class WorkshopWizardComponent implements OnInit, OnDestroy {
         const newId = await this.dataService.saveWorkshop(workshopData);
         this.successMessage = 'Workshop erfolgreich erstellt.';
       }
-      
-      // Kurz die Erfolgsmeldung anzeigen, dann zurück zur Übersicht
-      setTimeout(() => {
-        this.router.navigate(['/admin/workshops']);
-      }, 1500);
+
+      // Statt zu navigieren, emittieren wir ein Event
+      this.saveComplete.emit();
     } catch (error) {
       if (error instanceof Error) {
-        this.errorMessage = 'Fehler beim Speichern des Workshops: ' + error.message;
+        this.errorMessage =
+          'Fehler beim Speichern des Workshops: ' + error.message;
       } else {
         this.errorMessage = 'Fehler beim Speichern des Workshops';
-      }      console.error("Speicherfehler:", error);
+      }
+      console.error('Speicherfehler:', error);
     } finally {
       this.loading = false;
     }
@@ -298,5 +320,46 @@ export class WorkshopWizardComponent implements OnInit, OnDestroy {
 
   cancelWorkshop(): void {
     this.router.navigate(['/admin/workshops']);
+  }
+
+  applyFormat(format: string): void {
+    const textarea = document.querySelector(
+      '#description'
+    ) as HTMLTextAreaElement;
+    if (!textarea) return;
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selectedText = textarea.value.substring(start, end);
+    let formattedText = '';
+
+    switch (format) {
+      case 'bold':
+        formattedText = `**${selectedText}**`;
+        break;
+      case 'italic':
+        formattedText = `*${selectedText}*`;
+        break;
+      case 'h2':
+        formattedText = `\n## ${selectedText}`;
+        break;
+      case 'ul':
+        formattedText = `\n- ${selectedText}`;
+        break;
+      case 'underline':
+        formattedText = `<u>${selectedText}</u>`;
+        break;
+    }
+
+    // Ersetze den ausgewählten Text mit formatiertem Text
+    textarea.setRangeText(formattedText, start, end, 'select');
+
+    // Fokussiere zurück auf das Textarea
+    textarea.focus();
+
+    // Aktualisiere das Formular
+    this.descriptionForm.patchValue({
+      description: textarea.value,
+    });
   }
 }

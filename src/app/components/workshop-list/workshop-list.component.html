@@ -23,17 +23,30 @@
         class="workshop-card animate-in"
         (click)="goToDetail(workshop)"
       >
-        <div class="workshop-image">
+        <div
+          class="workshop-image"
+          [class.loading]="!workshop.imageLoaded"
+          [class.portrait]="isPortraitImage(workshop)"
+        >
           <img
             [src]="workshop.imageUrl || 'assets/images/default-workshop.jpg'"
             alt="Workshop Bild"
+            (load)="onImageLoad(workshop, $event)"
+            [ngClass]="{ loaded: workshop.imageLoaded }"
           />
+          <div class="image-placeholder" *ngIf="!workshop.imageLoaded">
+            <span class="material-icons">image</span>
+          </div>
         </div>
+
         <div class="workshop-info">
           <h3>{{ workshop.title }}</h3>
-          <p class="meta-info">
-            📅 {{ workshop.date | date:'dd.MM.yyyy' }} | 💰 
-            {{ workshop.price ? (workshop.price | currency:'CHF') : 'Kostenlos' }}
+          <p class="meta-info" *ngIf="workshop.date">
+            📅 {{ workshop.date | date : "dd.MM.yyyy" }} 
+            <span *ngIf="workshop.price !== undefined">| 💰
+            {{
+              workshop.price ? (workshop.price | currency : "CHF") : "Kostenlos"
+            }}</span>
           </p>
           <p class="workshop-short-description">
             {{ workshop.shortDescription }}
@@ -49,7 +62,10 @@
   <section *ngIf="malateliers.length > 0">
     <div class="workshop-header">
       <h2>Malatelier</h2>
-      <p>Unsere wiederkehrenden Malateliers finden regelmässig statt. Schau vorbei!</p>
+      <p>
+        Unsere wiederkehrenden Malateliers finden regelmässig statt. Schau
+        vorbei!
+      </p>
     </div>
     <div class="workshops-grid">
       <div
@@ -57,14 +73,26 @@
         class="workshop-card animate-in"
         (click)="goToDetail(workshop)"
       >
-        <div class="workshop-image">
+        <div 
+          class="workshop-image"
+          [class.loading]="!workshop.imageLoaded"
+          [class.portrait]="isPortraitImage(workshop)"
+        >
           <img
             [src]="workshop.imageUrl || 'assets/images/default-workshop.jpg'"
             alt="Malatelier Bild"
+            (load)="onImageLoad(workshop, $event)"
+            [ngClass]="{ loaded: workshop.imageLoaded }"
           />
+          <div class="image-placeholder" *ngIf="!workshop.imageLoaded">
+            <span class="material-icons">image</span>
+          </div>
         </div>
         <div class="workshop-info">
           <h3>{{ workshop.title }}</h3>
+          <p class="meta-info" *ngIf="workshop.frequency">
+            🔄 {{ workshop.frequency }}
+          </p>
           <p class="workshop-short-description">
             {{ workshop.shortDescription }}
           </p>
@@ -80,7 +108,8 @@
     <div class="workshop-header">
       <h2>Individuelle Anfragen</h2>
       <p>
-        Für besondere Anlässe wie Hochzeiten, Teamevents oder Geburtstage – kontaktieren Sie uns für ein maßgeschneidertes Angebot.
+        Für besondere Anlässe wie Hochzeiten, Teamevents oder Geburtstage –
+        kontaktieren Sie uns für ein maßgeschneidertes Angebot.
       </p>
     </div>
     <div class="workshops-grid">
@@ -89,11 +118,20 @@
         class="workshop-card animate-in"
         (click)="goToDetail(workshop)"
       >
-        <div class="workshop-image">
+        <div 
+          class="workshop-image"
+          [class.loading]="!workshop.imageLoaded"
+          [class.portrait]="isPortraitImage(workshop)"
+        >
           <img
             [src]="workshop.imageUrl || 'assets/images/default-workshop.jpg'"
             alt="Individuelle Anfrage Bild"
+            (load)="onImageLoad(workshop, $event)"
+            [ngClass]="{ loaded: workshop.imageLoaded }"
           />
+          <div class="image-placeholder" *ngIf="!workshop.imageLoaded">
+            <span class="material-icons">image</span>
+          </div>
         </div>
         <div class="workshop-info">
           <h3>{{ workshop.title }}</h3>
@@ -107,4 +145,14 @@
       </div>
     </div>
   </section>
+  
+  <!-- Keine Workshops gefunden -->
+  <div *ngIf="!loading && regularWorkshops.length === 0 && malateliers.length === 0 && individuelleAnfragen.length === 0" class="no-workshops">
+    <div class="no-workshops-message">
+      <span class="material-icons">search_off</span>
+      <h3>Keine Workshops gefunden</h3>
+      <p *ngIf="searchTerm">Leider wurden keine Workshops für "{{ searchTerm }}" gefunden.</p>
+      <p *ngIf="!searchTerm">Derzeit sind keine veröffentlichten Workshops verfügbar.</p>
+    </div>
+  </div>
 </div>

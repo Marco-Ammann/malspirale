@@ -8,8 +8,23 @@ import { from, Observable } from 'rxjs';
 export class DataService {
   private db = getFirestore();
   private workshopsCollection = collection(this.db, 'workshops');
+  private contentCollection = collection(this.db, 'content');
+  private usersCollection = collection(this.db, 'users');
 
   constructor() {}
+
+  getUser(userId: string): Observable<any> {
+    const docRef = doc(this.db, 'users', userId);
+    return from(
+      getDoc(docRef).then(docSnap => {
+        if (docSnap.exists()) {
+          return docSnap.data();
+        } else {
+          throw new Error('Benutzer nicht gefunden');
+        }
+      })
+    );    
+  }
 
   // Alle Angebote abrufen
   getWorkshops(): Observable<Workshop[]> {
@@ -81,6 +96,8 @@ export class DataService {
     }
   }
 }
+
+
 function query(contentCollection: CollectionReference<DocumentData, DocumentData>, arg1: any, arg2: any): import("@firebase/firestore").Query<unknown, import("@firebase/firestore").DocumentData> {
   throw new Error('Function not implemented.');
 }

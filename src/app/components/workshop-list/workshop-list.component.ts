@@ -11,7 +11,7 @@ import { DataService } from '../../core/services/data.service';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './workshop-list.component.html',
-  styleUrls: ['./workshop-list.component.scss']
+  styleUrls: ['./workshop-list.component.scss'],
 })
 export class WorkshopListComponent implements OnInit {
   private dataService = inject(DataService);
@@ -24,35 +24,77 @@ export class WorkshopListComponent implements OnInit {
   malateliers: Workshop[] = [];
   individuelleAnfragen: Workshop[] = [];
 
+  imageRatios: {[id: string]: number} = {};
+  
+  constructor() {}
+
   ngOnInit(): void {
     this.loading = true;
     this.dataService.getWorkshops().subscribe({
       next: (workshops: Workshop[]) => {
-        this.regularWorkshops = workshops.filter(w => w.type === 'workshop');
-        this.malateliers = workshops.filter(w => w.type === 'malatelier');
-        this.individuelleAnfragen = workshops.filter(w => w.type === 'individuelleAnfrage');
+        // Filter nur veröffentlichte Workshops
+        const publishedWorkshops = workshops.filter(w => 
+          w.status === 'published' || w.status === undefined);
+        
+        this.regularWorkshops = publishedWorkshops.filter((w) => w.type === 'workshop');
+        this.malateliers = publishedWorkshops.filter((w) => w.type === 'malatelier');
+        this.individuelleAnfragen = publishedWorkshops.filter(
+          (w) => w.type === 'individuelleAnfrage'
+        );
         this.loading = false;
       },
       error: (err: any) => {
         this.errorMessage = 'Fehler beim Laden der Workshops.';
         this.loading = false;
-      }
+      },
     });
   }
 
   filterWorkshops(): void {
     this.dataService.getWorkshops().subscribe((workshops: Workshop[]) => {
-      const filtered = workshops.filter(w =>
-        w.title.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        w.shortDescription.toLowerCase().includes(this.searchTerm.toLowerCase())
+      // Filter nur veröffentlichte Workshops
+      const publishedWorkshops = workshops.filter(w => 
+        w.status === 'published' || w.status === undefined);
+        
+      const filtered = publishedWorkshops.filter(
+        (w) =>
+          w.title.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+          (w.shortDescription && w.shortDescription
+            .toLowerCase()
+            .includes(this.searchTerm.toLowerCase()))
       );
-      this.regularWorkshops = filtered.filter(w => w.type === 'workshop');
-      this.malateliers = filtered.filter(w => w.type === 'malatelier');
-      this.individuelleAnfragen = filtered.filter(w => w.type === 'individuelleAnfrage');
+      
+      this.regularWorkshops = filtered.filter((w) => w.type === 'workshop');
+      this.malateliers = filtered.filter((w) => w.type === 'malatelier');
+      this.individuelleAnfragen = filtered.filter(
+        (w) => w.type === 'individuelleAnfrage'
+      );
     });
   }
 
   goToDetail(workshop: Workshop): void {
     this.router.navigate(['/workshop', workshop.id]);
+  }
+
+  // Wird beim Laden des Bildes aufgerufen
+  onImageLoad(workshop: Workshop, event: Event): void {
+    workshop.imageLoaded = true;
+    
+    // Bildverhältnis speichern
+    const img = event.target as HTMLImageElement;
+    if (img.naturalWidth && img.naturalHeight) {
+      const ratio = img.naturalWidth / img.naturalHeight;
+      if (workshop.id) {
+        this.imageRatios[workshop.id] = ratio;
+      }
+    }
+  }
+
+  // Prüft, ob ein Bild im Portrait-Format ist
+  isPortraitImage(workshop: Workshop): boolean {
+    if (workshop.id && this.imageRatios[workshop.id]) {
+      return this.imageRatios[workshop.id] < 0.8; // Ratio kleiner als 0.8 = Portrait
+    }
+    return false; // Standardmäßig Landscape annehmen
   }
 }

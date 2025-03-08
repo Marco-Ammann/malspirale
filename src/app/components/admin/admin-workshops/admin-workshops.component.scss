@@ -182,14 +182,43 @@
       }
 
       .card-image {
+        position: relative;
         height: 170px;
         overflow: hidden;
+        background-color: #f8f9fa;
+
+        &.loading {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
 
         img {
           width: 100%;
           height: 100%;
           object-fit: cover;
-          transition: transform 0.3s ease;
+          transition: transform 0.3s ease, opacity 0.3s ease;
+          opacity: 0;
+
+          &.loaded {
+            opacity: 1;
+          }
+        }
+
+        .image-placeholder {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          .material-icons {
+            font-size: 3rem;
+            color: #e9ecef;
+          }
         }
       }
 

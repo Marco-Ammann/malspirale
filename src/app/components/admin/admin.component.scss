@@ -1,5 +1,5 @@
-@use 'sass:color';
-@use 'variables' as vars;
+@use "sass:color";
+@use "variables" as vars;
 
 .admin-layout {
   display: flex;
@@ -12,7 +12,11 @@
 // ===== Sidebar =====
 .admin-sidebar {
   width: 260px;
-  background: linear-gradient(135deg, vars.$accent-color-dark, darken(vars.$accent-color-dark, 10%));
+  background: linear-gradient(
+    135deg,
+    vars.$accent-color-dark,
+    darken(vars.$accent-color-dark, 10%)
+  );
   color: white;
   display: flex;
   flex-direction: column;
@@ -23,46 +27,46 @@
   bottom: 0;
   z-index: 1000;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-  
+
   @media (max-width: vars.$tablet) {
     transform: translateX(-100%);
-    
+
     &.open {
       transform: translateX(0);
     }
   }
-  
+
   .sidebar-header {
     padding: 1.5rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    
+
     h2 {
       font-size: 1.25rem;
       margin: 0;
       font-weight: 500;
     }
-    
+
     .menu-toggle {
       background: none;
       border: none;
       color: white;
       cursor: pointer;
       display: none;
-      
+
       @media (max-width: vars.$tablet) {
         display: block;
       }
     }
   }
-  
+
   .nav-menu {
     flex: 1;
     padding: 1rem 0;
     overflow-y: auto;
-    
+
     .nav-item {
       display: flex;
       align-items: center;
@@ -70,25 +74,26 @@
       color: rgba(255, 255, 255, 0.8);
       text-decoration: none;
       transition: all 0.2s ease;
-      
-      &:hover, &.active {
+
+      &:hover,
+      &.active {
         background-color: rgba(255, 255, 255, 0.1);
         color: white;
       }
-      
+
       .material-icons {
         margin-right: 0.75rem;
       }
     }
   }
-  
+
   .sidebar-footer {
     padding: 1rem 1.5rem;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    
+
     button {
       display: flex;
       align-items: center;
@@ -98,19 +103,19 @@
       cursor: pointer;
       padding: 0.5rem;
       transition: color 0.2s ease;
-      
+
       &:hover {
         color: white;
       }
-      
+
       .material-icons {
         margin-right: 0.5rem;
       }
     }
-    
+
     .logout-btn {
       color: #ff8a8a;
-      
+
       &:hover {
         color: #ff6666;
       }
@@ -124,11 +129,11 @@
   margin-left: 260px;
   padding: 1rem;
   transition: margin 0.3s ease;
-  
+
   @media (max-width: vars.$tablet) {
     margin-left: 0;
   }
-  
+
   .admin-header {
     display: flex;
     align-items: center;
@@ -136,7 +141,7 @@
     padding: 0.5rem 0 1.5rem 0;
     border-bottom: 1px solid #e9ecef;
     margin-bottom: 1.5rem;
-    
+
     .menu-toggle {
       background: none;
       border: none;
@@ -144,52 +149,59 @@
       cursor: pointer;
       margin-right: 1rem;
       display: none;
-      
+
       @media (max-width: vars.$tablet) {
         display: block;
       }
     }
-    
+
     .header-title h1 {
       font-size: 1.5rem;
       margin: 0;
       color: vars.$accent-color-dark;
     }
-    
+
     .user-menu {
       display: flex;
       align-items: center;
       gap: 0.5rem;
       color: vars.$text-color;
-      
+
       .user-icon {
         font-size: 2rem;
         color: vars.$accent-color;
       }
     }
   }
-  
+
   // Dashboard specific styles
   .dashboard {
+    .dashboard-h2__userName {
+      font-size: 1.5rem;
+      margin: 0;
+      color: vars.$accent-color-dark;
+      margin-bottom: 1.5rem;
+    }
+
     .quick-actions {
       background-color: white;
       border-radius: 8px;
       padding: 1.5rem;
       margin-bottom: 1.5rem;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-      
+
       h2 {
         font-size: 1.2rem;
         margin-top: 0;
         margin-bottom: 1rem;
         color: vars.$accent-color-dark;
       }
-      
+
       .action-buttons {
         display: flex;
         gap: 1rem;
         flex-wrap: wrap;
-        
+
         .action-btn {
           display: flex;
           flex-direction: column;
@@ -202,13 +214,13 @@
           min-width: 120px;
           cursor: pointer;
           transition: all 0.2s ease;
-          
+
           &:hover {
             background-color: vars.$accent-color-light;
             color: white;
             border-color: vars.$accent-color;
           }
-          
+
           .material-icons {
             font-size: 2rem;
             margin-bottom: 0.5rem;
@@ -216,13 +228,13 @@
         }
       }
     }
-    
+
     .dashboard-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
       gap: 1.5rem;
       margin-bottom: 1.5rem;
-      
+
       .stat-card {
         background-color: white;
         border-radius: 8px;
@@ -230,94 +242,94 @@
         display: flex;
         flex-direction: column;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        
+
         h3 {
           font-size: 1rem;
           margin-top: 0;
           margin-bottom: 0.5rem;
           color: vars.$text-color;
         }
-        
+
         .stat-value {
           font-size: 2rem;
           font-weight: 700;
           color: vars.$accent-color-dark;
           margin-bottom: 0.5rem;
         }
-        
+
         .stat-period {
           font-size: 0.85rem;
           color: vars.$text-color-light;
         }
-        
+
         a {
           margin-top: auto;
           padding-top: 0.5rem;
           color: vars.$accent-color;
           text-decoration: none;
           font-size: 0.9rem;
-          
+
           &:hover {
             text-decoration: underline;
           }
         }
       }
     }
-    
+
     .activity-section {
       background-color: white;
       border-radius: 8px;
       padding: 1.5rem;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-      
+
       h2 {
         font-size: 1.2rem;
         margin-top: 0;
         margin-bottom: 1rem;
         color: vars.$accent-color-dark;
       }
-      
+
       .activity-list {
         display: flex;
         flex-direction: column;
         gap: 1rem;
-        
+
         .activity-item {
           display: flex;
           align-items: center;
           padding: 0.75rem;
           border-radius: 4px;
           background-color: #f8f9fa;
-          
+
           .material-icons {
             margin-right: 1rem;
             color: vars.$accent-color;
-            
+
             &.edit {
               color: vars.$accent-color;
             }
-            
+
             &.add_circle {
               color: vars.$success-color;
             }
-            
+
             &.delete {
               color: vars.$danger-color;
             }
           }
-          
+
           .activity-details {
             .activity-title {
               font-weight: 500;
             }
-            
+
             .activity-time {
               font-size: 0.85rem;
               color: vars.$text-color-light;
             }
           }
         }
-        
+
         .no-activities {
           padding: 1rem;
           text-align: center;
@@ -341,58 +353,58 @@
   z-index: 1100;
   transform: translateX(100%);
   transition: transform 0.3s ease;
-  
+
   &.show {
     transform: translateX(0);
   }
-  
+
   .help-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 1rem 1.5rem;
     border-bottom: 1px solid #e9ecef;
-    
+
     h2 {
       margin: 0;
       font-size: 1.2rem;
       color: vars.$accent-color-dark;
     }
-    
+
     .close-btn {
       background: none;
       border: none;
       color: vars.$text-color;
       cursor: pointer;
       padding: 0.5rem;
-      
+
       &:hover {
         color: vars.$accent-color-dark;
       }
     }
   }
-  
+
   .help-content {
     padding: 1.5rem;
     overflow-y: auto;
     height: calc(100vh - 4rem);
-    
+
     h3 {
       font-size: 1.1rem;
       margin-top: 0;
       color: vars.$accent-color-dark;
     }
-    
+
     p {
       color: vars.$text-color;
       line-height: 1.5;
     }
-    
+
     .video-tutorial {
       margin-top: 2rem;
       padding-top: 1.5rem;
       border-top: 1px solid #e9ecef;
-      
+
       .tutorial-btn {
         display: flex;
         align-items: center;
@@ -405,11 +417,11 @@
         border-radius: 4px;
         cursor: pointer;
         transition: background-color 0.2s ease;
-        
+
         &:hover {
           background-color: vars.$accent-color-dark;
         }
-        
+
         .material-icons {
           margin-right: 0.5rem;
         }

@@ -1,304 +1,571 @@
 <div class="workshop-wizard">
-    <div class="wizard-header">
-      <div class="back-button">
-        <button class="btn btn-link" (click)="cancelWorkshop()">
-          <span class="material-icons">arrow_back</span> Zurück zur Übersicht
-        </button>
-      </div>
-      <h2>{{ isEditMode ? 'Workshop bearbeiten' : 'Neuen Workshop erstellen' }}</h2>
-      <div class="progress-steps">
-        <div class="step" [class.active]="currentStep >= 1" [class.completed]="currentStep > 1">
-          <div class="step-number">1</div>
-          <div class="step-label">Grundinfo</div>
-        </div>
-        <div class="step-line" [class.filled]="currentStep > 1"></div>
-        
-        <div class="step" [class.active]="currentStep >= 2" [class.completed]="currentStep > 2">
-          <div class="step-number">2</div>
-          <div class="step-label">Details</div>
-        </div>
-        <div class="step-line" [class.filled]="currentStep > 2"></div>
-        
-        <div class="step" [class.active]="currentStep >= 3" [class.completed]="currentStep > 3">
-          <div class="step-number">3</div>
-          <div class="step-label">Beschreibung</div>
-        </div>
-        <div class="step-line" [class.filled]="currentStep > 3"></div>
-        
-        <div class="step" [class.active]="currentStep >= 4">
-          <div class="step-number">4</div>
-          <div class="step-label">Veröffentlichen</div>
-        </div>
-      </div>
+  <div class="wizard-header">
+    <div class="back-button">
+      <button class="btn btn-link" (click)="cancelWorkshop()">
+        <span class="material-icons">arrow_back</span> Zurück zur Übersicht
+      </button>
     </div>
-    
-    <div class="wizard-content">
-      <!-- Schritt 1: Grundinformationen -->
-      <div *ngIf="currentStep === 1" class="step-content">
-        <form [formGroup]="basicInfoForm">
-          <div class="form-group">
-            <label for="type">Art des Angebots</label>
-            <div class="type-selection">
-              <div *ngFor="let type of workshopTypes" class="type-option">
-                <input type="radio" [id]="type.id" formControlName="type" [value]="type.id">
-                <label [for]="type.id">
-                  <span class="type-icon" [ngClass]="type.id">
-                    <span class="material-icons">
-                      {{ type.id === 'workshop' ? 'event' : type.id === 'malatelier' ? 'brush' : 'mail' }}
-                    </span>
-                  </span>
-                  <span class="type-label">{{ type.label }}</span>
-                </label>
-              </div>
-            </div>
-          </div>
-          
-          <div class="form-group">
-            <label for="title">Titel *</label>
-            <input type="text" id="title" formControlName="title" placeholder="z.B. Intuitives Malen für Anfänger">
-            <div *ngIf="basicInfoForm.get('title')?.invalid && basicInfoForm.get('title')?.touched" class="error-message">
-              Bitte gib einen Titel ein.
-            </div>
-          </div>
-          
-          <div class="form-group">
-            <label for="shortDescription">Kurzbeschreibung *</label>
-            <textarea id="shortDescription" formControlName="shortDescription" placeholder="Kurze Beschreibung des Angebots (max. 150 Zeichen)" maxlength="150"></textarea>
-            <div class="char-counter">{{ basicInfoForm.get('shortDescription')?.value?.length || 0 }}/150</div>
-            <div *ngIf="basicInfoForm.get('shortDescription')?.invalid && basicInfoForm.get('shortDescription')?.touched" class="error-message">
-              Bitte gib eine kurze Beschreibung ein.
-            </div>
-          </div>
-          
-          <div class="form-group">
-            <label for="location">Ort *</label>
-            <input type="text" id="location" formControlName="location" placeholder="z.B. Atelier Malspirale, Riggisberg">
-            <div *ngIf="basicInfoForm.get('location')?.invalid && basicInfoForm.get('location')?.touched" class="error-message">
-              Bitte gib einen Ort ein.
-            </div>
-          </div>
-        </form>
+    <h2>
+      <h2>
+        {{
+          isEditMode
+            ? 'Workshop "' +
+              (basicInfoForm.get("title")?.value || "...") +
+              '" bearbeiten'
+            : "Neuen Workshop erstellen"
+        }}
+      </h2>
+    </h2>
+    <div class="progress-steps">
+      <div
+        class="step"
+        [class.active]="currentStep >= 1"
+        [class.completed]="currentStep > 1"
+      >
+        <div class="step-number">1</div>
+        <div class="step-label">Grundinfo</div>
       </div>
-      
-      <!-- Schritt 2: Details (dynamisch je nach Typ) -->
-      <div *ngIf="currentStep === 2" class="step-content">
-        <form [formGroup]="detailsForm">
-          <!-- Einzeltermin Workshop -->
-          <div *ngIf="selectedType === 'workshop'">
-            <div class="form-group">
-              <label for="date">Datum *</label>
-              <input type="date" id="date" formControlName="date">
-              <div *ngIf="detailsForm.get('date')?.invalid && detailsForm.get('date')?.touched" class="error-message">
-                Bitte wähle ein Datum.
-              </div>
-            </div>
-            
-            <div class="form-row">
-              <div class="form-group half">
-                <label for="startTime">Beginn</label>
-                <input type="time" id="startTime" formControlName="startTime">
-              </div>
-              <div class="form-group half">
-                <label for="endTime">Ende</label>
-                <input type="time" id="endTime" formControlName="endTime">
-              </div>
-            </div>
-            
-            <div class="form-group">
-              <label for="price">Preis (CHF) *</label>
-              <input type="number" id="price" formControlName="price" min="0" step="0.01">
-              <div *ngIf="detailsForm.get('price')?.invalid && detailsForm.get('price')?.touched" class="error-message">
-                Bitte gib einen gültigen Preis ein.
-              </div>
-            </div>
-            
-            <div class="form-row">
-              <div class="form-group half">
-                <label for="maxParticipants">Maximale Teilnehmerzahl</label>
-                <input type="number" id="maxParticipants" formControlName="maxParticipants" min="1">
-              </div>
-              <div class="form-group half">
-                <label for="availableSlots">Verfügbare Plätze</label>
-                <input type="number" id="availableSlots" formControlName="availableSlots" min="0">
-              </div>
-            </div>
-          </div>
-          
-          <!-- Regelmäßiges Malatelier -->
-          <div *ngIf="selectedType === 'malatelier'">
-            <div class="form-group">
-              <label for="frequency">Häufigkeit *</label>
-              <input type="text" id="frequency" formControlName="frequency" placeholder="z.B. Jeden 1. Montag im Monat">
-              <div *ngIf="detailsForm.get('frequency')?.invalid && detailsForm.get('frequency')?.touched" class="error-message">
-                Bitte gib die Häufigkeit ein.
-              </div>
-            </div>
-            
-            <div class="form-group">
-              <label for="price">Preis pro Termin (CHF)</label>
-              <input type="number" id="price" formControlName="price" min="0" step="0.01">
-            </div>
-            
-            <div class="form-row">
-              <div class="form-group half">
-                <label for="maxParticipants">Maximale Teilnehmerzahl</label>
-                <input type="number" id="maxParticipants" formControlName="maxParticipants" min="1">
-              </div>
-              <div class="form-group half">
-                <label for="availableSlots">Verfügbare Plätze</label>
-                <input type="number" id="availableSlots" formControlName="availableSlots" min="0">
-              </div>
-            </div>
-          </div>
-          
-          <!-- Individuelle Anfrage -->
-          <div *ngIf="selectedType === 'individuelleAnfrage'">
-            <div class="form-group">
-              <label for="contactEmail">Kontakt E-Mail *</label>
-              <input type="email" id="contactEmail" formControlName="contactEmail" placeholder="z.B. kontakt@malspirale.ch">
-              <div *ngIf="detailsForm.get('contactEmail')?.invalid && detailsForm.get('contactEmail')?.touched" class="error-message">
-                Bitte gib eine gültige E-Mail-Adresse ein.
-              </div>
-            </div>
-            
-            <div class="form-group">
-              <label for="price">Preis-Information (optional)</label>
-              <input type="text" id="priceInfo" placeholder="z.B. 'Preis auf Anfrage' oder 'ab 120 CHF'">
-            </div>
-          </div>
-        </form>
+      <div class="step-line" [class.filled]="currentStep > 1"></div>
+
+      <div
+        class="step"
+        [class.active]="currentStep >= 2"
+        [class.completed]="currentStep > 2"
+      >
+        <div class="step-number">2</div>
+        <div class="step-label">Details</div>
       </div>
-      
-      <!-- Schritt 3: Beschreibung und Bilder -->
-      <div *ngIf="currentStep === 3" class="step-content">
-        <form [formGroup]="descriptionForm">
-          <div class="form-group">
-            <label for="description">Ausführliche Beschreibung *</label>
-            <div class="editor-toolbar">
-              <button type="button" class="toolbar-btn">B</button>
-              <button type="button" class="toolbar-btn"><i>I</i></button>
-              <button type="button" class="toolbar-btn"><u>U</u></button>
-              <button type="button" class="toolbar-btn">H2</button>
-              <button type="button" class="toolbar-btn">•</button>
-            </div>
-            <textarea id="description" formControlName="description" rows="10" placeholder="Detaillierte Beschreibung deines Workshops..."></textarea>
-            <div *ngIf="descriptionForm.get('description')?.invalid && descriptionForm.get('description')?.touched" class="error-message">
-              Bitte gib eine Beschreibung ein.
-            </div>
-          </div>
-          
-          <div class="form-group">
-            <label>Workshop-Bild</label>
-            <div class="image-upload">
-              <div class="upload-preview" *ngIf="descriptionForm.get('imageUrl')?.value">
-                <img [src]="descriptionForm.get('imageUrl')?.value" alt="Workshop-Vorschau">
-                <button type="button" class="remove-image" (click)="descriptionForm.patchValue({imageUrl: ''})">×</button>
-              </div>
-              <div class="upload-area" *ngIf="!descriptionForm.get('imageUrl')?.value">
-                <input type="file" id="imageUpload" (change)="handleImageUpload($event)" accept="image/*" hidden>
-                <label for="imageUpload" class="upload-label">
-                  <span class="material-icons">cloud_upload</span>
-                  <span>Bild hochladen</span>
-                </label>
-              </div>
-            </div>
-          </div>
-        </form>
+      <div class="step-line" [class.filled]="currentStep > 2"></div>
+
+      <div
+        class="step"
+        [class.active]="currentStep >= 3"
+        [class.completed]="currentStep > 3"
+      >
+        <div class="step-number">3</div>
+        <div class="step-label">Beschreibung</div>
       </div>
-      
-      <!-- Schritt 4: Vorschau und Veröffentlichung -->
-      <div *ngIf="currentStep === 4" class="step-content">
-        <div class="preview-section">
-          <h3>Vorschau</h3>
-          <div class="workshop-preview">
-            <div class="preview-image" *ngIf="descriptionForm.get('imageUrl')?.value">
-              <img [src]="descriptionForm.get('imageUrl')?.value" alt="Workshop-Vorschau">
-            </div>
-            <div class="preview-image placeholder" *ngIf="!descriptionForm.get('imageUrl')?.value">
-              <span class="material-icons">image</span>
-              <span>Kein Bild</span>
-            </div>
-            
-            <div class="preview-content">
-              <h4>{{ basicInfoForm.get('title')?.value }}</h4>
-              <p class="preview-type">
-                {{ selectedType === 'workshop' ? 'Einzeltermin' : 
-                   selectedType === 'malatelier' ? 'Regelmäßiges Angebot' : 'Individuelle Anfrage' }}
-              </p>
-              <p class="preview-description">{{ basicInfoForm.get('shortDescription')?.value }}</p>
-              
-              <div class="preview-details">
-                <p *ngIf="detailsForm.get('date')?.value">
-                  <span class="material-icons">event</span>
-                  {{ detailsForm.get('date')?.value | date:'dd.MM.yyyy' }}
-                </p>
-                <p *ngIf="detailsForm.get('frequency')?.value">
-                  <span class="material-icons">repeat</span>
-                  {{ detailsForm.get('frequency')?.value }}
-                </p>
-                <p *ngIf="basicInfoForm.get('location')?.value">
-                  <span class="material-icons">location_on</span>
-                  {{ basicInfoForm.get('location')?.value }}
-                </p>
-                <p *ngIf="detailsForm.get('price')?.value || detailsForm.get('price')?.value === 0">
-                  <span class="material-icons">paid</span>
-                  {{ detailsForm.get('price')?.value }} CHF
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <form [formGroup]="publishForm">
-          <div class="form-group">
-            <label>Veröffentlichungsstatus</label>
-            <div class="radio-options">
-              <div class="radio-option">
-                <input type="radio" id="status-published" formControlName="status" value="published">
-                <label for="status-published">Sofort veröffentlichen</label>
-              </div>
-              <div class="radio-option">
-                <input type="radio" id="status-draft" formControlName="status" value="draft">
-                <label for="status-draft">Als Entwurf speichern</label>
-              </div>
-            </div>
-          </div>
-        </form>
+      <div class="step-line" [class.filled]="currentStep > 3"></div>
+
+      <div class="step" [class.active]="currentStep >= 4">
+        <div class="step-number">4</div>
+        <div class="step-label">Veröffentlichen</div>
       </div>
-    </div>
-    
-    <div class="wizard-actions">
-      <button type="button" class="btn btn-secondary" (click)="cancelWorkshop()">Abbrechen</button>
-      
-      <div class="navigation-buttons">
-        <button *ngIf="currentStep > 1" type="button" class="btn btn-outline" (click)="previousStep()">
-          <span class="material-icons">arrow_back</span> Zurück
-        </button>
-        
-        <button *ngIf="currentStep < totalSteps" type="button" class="btn btn-primary" (click)="nextStep()">
-          Weiter <span class="material-icons">arrow_forward</span>
-        </button>
-        
-        <button *ngIf="currentStep === totalSteps" type="button" class="btn btn-success" (click)="saveWorkshop()">
-          <span class="material-icons">save</span> {{ isEditMode ? 'Aktualisieren' : 'Veröffentlichen' }}
-        </button>
-      </div>
-    </div>
-    
-    <!-- Meldungen -->
-    <div *ngIf="errorMessage" class="message error-message">
-      <span class="material-icons">error</span>
-      {{ errorMessage }}
-    </div>
-    
-    <div *ngIf="successMessage" class="message success-message">
-      <span class="material-icons">check_circle</span>
-      {{ successMessage }}
-    </div>
-    
-    <!-- Ladeindikator -->
-    <div *ngIf="loading" class="loading-overlay">
-      <div class="spinner"></div>
-      <span>Wird geladen...</span>
     </div>
   </div>
+
+  <div class="wizard-content">
+    <!-- Schritt 1: Grundinformationen -->
+    <div *ngIf="currentStep === 1" class="step-content">
+      <form [formGroup]="basicInfoForm">
+        <div class="form-group">
+          <label for="type">Art des Angebots</label>
+          <div class="type-selection">
+            <div *ngFor="let type of workshopTypes" class="type-option">
+              <input
+                type="radio"
+                [id]="type.id"
+                formControlName="type"
+                [value]="type.id"
+              />
+              <label [for]="type.id">
+                <span class="type-icon" [ngClass]="type.id">
+                  <span class="material-icons">
+                    {{
+                      type.id === "workshop"
+                        ? "event"
+                        : type.id === "malatelier"
+                        ? "brush"
+                        : "mail"
+                    }}
+                  </span>
+                </span>
+                <span class="type-label">{{ type.label }}</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Example for the title field -->
+        <div class="form-group">
+          <label for="title">Titel *</label>
+          <input
+            type="text"
+            id="title"
+            formControlName="title"
+            placeholder="z.B. Intuitives Malen für Anfänger"
+          />
+          <div class="field-help">
+            Der Titel wird in Übersichten und Listen angezeigt.
+          </div>
+          <div
+            *ngIf="
+              basicInfoForm.get('title')?.invalid &&
+              basicInfoForm.get('title')?.touched
+            "
+            class="error-message"
+          >
+            Bitte gib einen Titel ein.
+          </div>
+        </div>
+
+        <!-- Example for the shortDescription field -->
+        <div class="form-group">
+          <label for="shortDescription">Kurzbeschreibung *</label>
+          <textarea
+            id="shortDescription"
+            formControlName="shortDescription"
+            placeholder="Kurze Beschreibung des Angebots (max. 150 Zeichen)"
+            maxlength="150"
+          ></textarea>
+          <div class="field-help">
+            Diese kurze Beschreibung wird in der Übersicht angezeigt.
+          </div>
+          <div class="char-counter">
+            {{ basicInfoForm.get("shortDescription")?.value?.length || 0 }}/150
+          </div>
+          <div
+            *ngIf="
+              basicInfoForm.get('shortDescription')?.invalid &&
+              basicInfoForm.get('shortDescription')?.touched
+            "
+            class="error-message"
+          >
+            Bitte gib eine kurze Beschreibung ein.
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="location">Ort *</label>
+          <input
+            type="text"
+            id="location"
+            formControlName="location"
+            placeholder="z.B. Atelier Malspirale, Riggisberg"
+          />
+          <div
+            *ngIf="
+              basicInfoForm.get('location')?.invalid &&
+              basicInfoForm.get('location')?.touched
+            "
+            class="error-message"
+          >
+            Bitte gib einen Ort ein.
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Schritt 2: Details (dynamisch je nach Typ) -->
+    <div *ngIf="currentStep === 2" class="step-content">
+      <form [formGroup]="detailsForm">
+        <!-- Einzeltermin Workshop -->
+        <div *ngIf="selectedType === 'workshop'">
+          <div class="form-group">
+            <label for="date">Datum *</label>
+            <input type="date" id="date" formControlName="date" />
+            <div
+              *ngIf="
+                detailsForm.get('date')?.invalid &&
+                detailsForm.get('date')?.touched
+              "
+              class="error-message"
+            >
+              Bitte wähle ein Datum.
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group half">
+              <label for="startTime">Beginn</label>
+              <input type="time" id="startTime" formControlName="startTime" />
+            </div>
+            <div class="form-group half">
+              <label for="endTime">Ende</label>
+              <input type="time" id="endTime" formControlName="endTime" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="price">Preis (CHF) *</label>
+            <input
+              type="number"
+              id="price"
+              formControlName="price"
+              min="0"
+              step="0.01"
+            />
+            <div
+              *ngIf="
+                detailsForm.get('price')?.invalid &&
+                detailsForm.get('price')?.touched
+              "
+              class="error-message"
+            >
+              Bitte gib einen gültigen Preis ein.
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group half">
+              <label for="maxParticipants">Maximale Teilnehmerzahl</label>
+              <input
+                type="number"
+                id="maxParticipants"
+                formControlName="maxParticipants"
+                min="1"
+              />
+            </div>
+            <div class="form-group half">
+              <label for="availableSlots">Verfügbare Plätze</label>
+              <input
+                type="number"
+                id="availableSlots"
+                formControlName="availableSlots"
+                min="0"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Regelmäßiges Malatelier -->
+        <div *ngIf="selectedType === 'malatelier'">
+          <div class="form-group">
+            <label for="frequency">Häufigkeit *</label>
+            <input
+              type="text"
+              id="frequency"
+              formControlName="frequency"
+              placeholder="z.B. Jeden 1. Montag im Monat"
+            />
+            <div
+              *ngIf="
+                detailsForm.get('frequency')?.invalid &&
+                detailsForm.get('frequency')?.touched
+              "
+              class="error-message"
+            >
+              Bitte gib die Häufigkeit ein.
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="price">Preis pro Termin (CHF)</label>
+            <input
+              type="number"
+              id="price"
+              formControlName="price"
+              min="0"
+              step="0.01"
+            />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group half">
+              <label for="maxParticipants">Maximale Teilnehmerzahl</label>
+              <input
+                type="number"
+                id="maxParticipants"
+                formControlName="maxParticipants"
+                min="1"
+              />
+            </div>
+            <div class="form-group half">
+              <label for="availableSlots">Verfügbare Plätze</label>
+              <input
+                type="number"
+                id="availableSlots"
+                formControlName="availableSlots"
+                min="0"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Individuelle Anfrage -->
+        <div *ngIf="selectedType === 'individuelleAnfrage'">
+          <div class="form-group">
+            <label for="contactEmail">Kontakt E-Mail *</label>
+            <input
+              type="email"
+              id="contactEmail"
+              formControlName="contactEmail"
+              placeholder="z.B. kontakt@malspirale.ch"
+            />
+            <div
+              *ngIf="
+                detailsForm.get('contactEmail')?.invalid &&
+                detailsForm.get('contactEmail')?.touched
+              "
+              class="error-message"
+            >
+              Bitte gib eine gültige E-Mail-Adresse ein.
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="price">Preis-Information (optional)</label>
+            <input
+              type="text"
+              id="priceInfo"
+              placeholder="z.B. 'Preis auf Anfrage' oder 'ab 120 CHF'"
+            />
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Schritt 3: Beschreibung und Bilder -->
+    <div *ngIf="currentStep === 3" class="step-content">
+      <form [formGroup]="descriptionForm">
+        <div class="form-group">
+          <label for="description">Ausführliche Beschreibung *</label>
+          <div class="editor-toolbar">
+            <button
+              type="button"
+              class="toolbar-btn"
+              (click)="applyFormat('bold')"
+            >
+              <b>B</b>
+            </button>
+            <button
+              type="button"
+              class="toolbar-btn"
+              (click)="applyFormat('italic')"
+            >
+              <i>I</i>
+            </button>
+            <button
+              type="button"
+              class="toolbar-btn"
+              (click)="applyFormat('underline')"
+            >
+              <u>U</u>
+            </button>
+            <button
+              type="button"
+              class="toolbar-btn"
+              (click)="applyFormat('h2')"
+            >
+              H2
+            </button>
+            <button
+              type="button"
+              class="toolbar-btn"
+              (click)="applyFormat('ul')"
+            >
+              •
+            </button>
+          </div>
+          <textarea
+            id="description"
+            formControlName="description"
+            rows="10"
+            placeholder="Detaillierte Beschreibung deines Workshops..."
+          ></textarea>
+          <div
+            *ngIf="
+              descriptionForm.get('description')?.invalid &&
+              descriptionForm.get('description')?.touched
+            "
+            class="error-message"
+          >
+            Bitte gib eine Beschreibung ein.
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Workshop-Bild</label>
+          <div class="image-upload">
+            <div
+              class="upload-preview"
+              *ngIf="descriptionForm.get('imageUrl')?.value"
+            >
+              <img
+                [src]="descriptionForm.get('imageUrl')?.value"
+                alt="Workshop-Vorschau"
+              />
+              <button
+                type="button"
+                class="remove-image"
+                (click)="descriptionForm.patchValue({ imageUrl: '' })"
+              >
+                ×
+              </button>
+            </div>
+            <div
+              class="upload-area"
+              *ngIf="!descriptionForm.get('imageUrl')?.value"
+            >
+              <input
+                type="file"
+                id="imageUpload"
+                (change)="handleImageUpload($event)"
+                accept="image/*"
+                hidden
+              />
+              <label for="imageUpload" class="upload-label">
+                <span class="material-icons">cloud_upload</span>
+                <span>Bild hochladen</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Schritt 4: Vorschau und Veröffentlichung -->
+    <div *ngIf="currentStep === 4" class="step-content">
+      <div class="preview-section">
+        <h3>Vorschau</h3>
+        <div class="workshop-preview">
+          <div
+            class="preview-image"
+            *ngIf="descriptionForm.get('imageUrl')?.value"
+          >
+            <img
+              [src]="descriptionForm.get('imageUrl')?.value"
+              alt="Workshop-Vorschau"
+            />
+          </div>
+          <div
+            class="preview-image placeholder"
+            *ngIf="!descriptionForm.get('imageUrl')?.value"
+          >
+            <span class="material-icons">image</span>
+            <span>Kein Bild</span>
+          </div>
+
+          <div class="preview-content">
+            <h4>{{ basicInfoForm.get("title")?.value }}</h4>
+            <p class="preview-type">
+              {{
+                selectedType === "workshop"
+                  ? "Einzeltermin"
+                  : selectedType === "malatelier"
+                  ? "Regelmäßiges Angebot"
+                  : "Individuelle Anfrage"
+              }}
+            </p>
+            <p class="preview-description">
+              {{ basicInfoForm.get("shortDescription")?.value }}
+            </p>
+
+            <div class="preview-details">
+              <p *ngIf="detailsForm.get('date')?.value">
+                <span class="material-icons">event</span>
+                {{ detailsForm.get("date")?.value | date : "dd.MM.yyyy" }}
+              </p>
+              <p *ngIf="detailsForm.get('frequency')?.value">
+                <span class="material-icons">repeat</span>
+                {{ detailsForm.get("frequency")?.value }}
+              </p>
+              <p *ngIf="basicInfoForm.get('location')?.value">
+                <span class="material-icons">location_on</span>
+                {{ basicInfoForm.get("location")?.value }}
+              </p>
+              <p
+                *ngIf="
+                  detailsForm.get('price')?.value ||
+                  detailsForm.get('price')?.value === 0
+                "
+              >
+                <span class="material-icons">paid</span>
+                {{ detailsForm.get("price")?.value }} CHF
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <form [formGroup]="publishForm">
+        <div class="form-group">
+          <label>Veröffentlichungsstatus</label>
+          <div class="radio-options">
+            <div class="radio-option">
+              <input
+                type="radio"
+                id="status-published"
+                formControlName="status"
+                value="published"
+              />
+              <label for="status-published">Sofort veröffentlichen</label>
+            </div>
+            <div class="radio-option">
+              <input
+                type="radio"
+                id="status-draft"
+                formControlName="status"
+                value="draft"
+              />
+              <label for="status-draft">Als Entwurf speichern</label>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="wizard-actions">
+    <button type="button" class="btn btn-secondary" (click)="cancelWorkshop()">
+      Abbrechen
+    </button>
+
+    <div class="navigation-buttons">
+      <button
+        *ngIf="currentStep > 1"
+        type="button"
+        class="btn btn-outline"
+        (click)="previousStep()"
+      >
+        <span class="material-icons">arrow_back</span> Zurück
+      </button>
+
+      <button
+        *ngIf="currentStep < totalSteps"
+        type="button"
+        class="btn btn-primary"
+        (click)="nextStep()"
+      >
+        Weiter <span class="material-icons">arrow_forward</span>
+      </button>
+
+      <button
+        *ngIf="currentStep === totalSteps"
+        type="button"
+        [class]="
+          publishForm.get('status')?.value === 'draft'
+            ? 'btn btn-outline'
+            : 'btn btn-success'
+        "
+        (click)="saveWorkshop()"
+      >
+        <span class="material-icons">save</span>
+        {{
+          isEditMode
+            ? "Aktualisieren"
+            : publishForm.get("status")?.value === "draft"
+            ? "Als Entwurf speichern"
+            : "Veröffentlichen"
+        }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Meldungen -->
+  <div *ngIf="errorMessage" class="message error-message">
+    <span class="material-icons">error</span>
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="successMessage" class="message success-message">
+    <span class="material-icons">check_circle</span>
+    {{ successMessage }}
+  </div>
+
+  <!-- Ladeindikator -->
+  <div *ngIf="loading" class="loading-overlay">
+    <div class="spinner"></div>
+    <span>Wird geladen...</span>
+  </div>
+</div>
