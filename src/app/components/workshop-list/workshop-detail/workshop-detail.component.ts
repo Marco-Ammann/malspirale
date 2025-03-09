@@ -19,7 +19,7 @@ export class WorkshopDetailComponent implements OnInit {
   private router = inject(Router);
   private sanitizer = inject(DomSanitizer);
   private workshopRequestService = inject(WorkshopRequestService);
-  
+
   imageLoaded = false;
   isPortraitImage = false;
   workshop!: Workshop;
@@ -36,7 +36,7 @@ export class WorkshopDetailComponent implements OnInit {
             this.router.navigate(['/workshops']);
             return;
           }
-          
+
           this.workshop = data;
           // Markdown in HTML konvertieren
           if (this.workshop.description) {
@@ -50,30 +50,27 @@ export class WorkshopDetailComponent implements OnInit {
               .replace(/\*(.*?)\*/g, '<em>$1</em>')
               // Zitate
               .replace(/^> (.*$)/gim, '<blockquote>$1</blockquote>')
-              // Listen (verbessert für mehrere Einträge)
-              .replace(/^\- (.*$)/gim, '<li>$1</li>')
-              .replace(/^\d+\. (.*$)/gim, '<li>$1</li>')
-              // Unterstrichen (bereits als HTML)
-              // Absätze
-              .replace(/\n\s*\n/g, '</p><p>')
-              // Listen zusammenfassen
-              .replace(/<li>(.*?)<\/li>/g, function(match) {
-                return match.replace(/\n/g, '');
+              // Ungeordnete Listen
+              .replace(/^[\*\-] (.*)$/gim, '<li>$1</li>')
+              .replace(/(?:^<li>.*<\/li>$(\n)?)+/gm, function (match) {
+                return '<ul>' + match + '</ul>';
               })
-              // Listen mit entsprechenden ul/ol-Tags umgeben
-              .replace(/(<li>.*?<\/li>)(?!\s*<li>)/gs, '<ul>$1</ul>')
-              // Umschließe alles in Absätze
-              .replace(/^(.+)$/gim, function(match) {
-                if (!match.startsWith('<h') && !match.startsWith('<ul') && 
-                    !match.startsWith('<li>') && !match.startsWith('<blockquote')) {
-                  return '<p>' + match + '</p>';
+              // Geordnete Listen
+              .replace(/^\d+\. (.*)$/gim, '<li>$1</li>')
+              .replace(/(?:^<li>.*<\/li>$(\n)?)+/gm, function (match) {
+                if (!match.startsWith('<ul>')) {
+                  return '<ol>' + match + '</ol>';
                 }
                 return match;
               })
-              // Bereinige überzählige Tags
-              .replace(/<\/p><p><\/p><p>/g, '</p><p>')
-              .replace(/<\/ul><p>/g, '</ul>')
-              .replace(/<p><ul>/g, '<ul>');
+              // Links
+              .replace(
+                /\[([^\]]+)\]\(([^)]+)\)/g,
+                '<a href="$2" target="_blank">$1</a>'
+              )
+              // Absätze (muss am Ende stehen)
+              .replace(/^(?!<[hou][l1-5]|<blockquote|<p)(.+)$/gim, '<p>$1</p>')
+              .replace(/\n{2,}/g, '</p><p>');
 
             // Als sicheren HTML-Inhalt markieren
             this.parsedDescription =
@@ -91,7 +88,7 @@ export class WorkshopDetailComponent implements OnInit {
   onImageLoad(event: Event): void {
     const img = event.target as HTMLImageElement;
     this.imageLoaded = true;
-    
+
     // Bildformat bestimmen
     if (img.naturalWidth && img.naturalHeight) {
       const ratio = img.naturalWidth / img.naturalHeight;
@@ -101,23 +98,25 @@ export class WorkshopDetailComponent implements OnInit {
 
   registerForWorkshop(): void {
     if (!this.workshop) return;
-    
+
     if (this.workshop.type === 'individuelleAnfrage') {
       // Für individuelle Anfragen: zum Kontaktformular weiterleiten
-      const requestMessage = this.workshopRequestService.createRequestMessage(this.workshop);
-      
+      const requestMessage = this.workshopRequestService.createRequestMessage(
+        this.workshop
+      );
+
       this.workshopRequestService.setRequestData({
         workshopId: this.workshop.id,
         workshopTitle: this.workshop.title,
         workshopType: this.workshop.type,
-        message: requestMessage
+        message: requestMessage,
       });
-      
-      this.router.navigate(['/contact'], { 
-        queryParams: { 
+
+      this.router.navigate(['/contact'], {
+        queryParams: {
           type: 'workshop',
-          id: this.workshop.id 
-        }
+          id: this.workshop.id,
+        },
       });
     } else {
       // Für reguläre Workshops: Anmeldeformular anzeigen

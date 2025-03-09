@@ -1,6 +1,6 @@
 export const environment = {
     production: false,
-    apiUrl: 'http://localhost:8080', // Lokale Entwicklungs-API
+    apiUrl: 'https://malspirale.ch', // Lokale Entwicklungs-API
     firebaseConfig: {
       apiKey: "AIzaSyBFr48lghf1NfhDO0Og2QoDZyaPlrka6vc",
       authDomain: "malspirale-244e6.firebaseapp.com",

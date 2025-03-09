@@ -26,7 +26,7 @@ export const routes: Routes = [
       import('./components/workshop-list/workshop-list.component').then((m) => m.WorkshopListComponent),
   },
   {
-    path: 'workshop/:id',  // ⬅️ Hier von 'workshops/:id' zu 'workshop/:id' ändern
+    path: 'workshop/:id',  // Wichtig: 'workshop' statt 'workshops'
     loadComponent: () =>
       import('./components/workshop-list/workshop-detail/workshop-detail.component')
         .then((m) => m.WorkshopDetailComponent),

@@ -64,6 +64,7 @@ export class AdminComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.checkAdminAccess();
     this.loadUserCount();
     this.loadWorkshopCount();
     this.loadUserRole();
@@ -133,6 +134,19 @@ export class AdminComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
     // Stelle sicher, dass Scrollen beim Verlassen der Komponente wieder aktiviert wird
     this.renderer.removeClass(document.body, 'no-scroll');
+  }
+
+  private async checkAdminAccess(): Promise<void> {
+    try {
+      const isAdmin = await this.authService.isAdmin();
+      if (!isAdmin) {
+        console.warn('Kein Admin-Zugriff! Leite zur Startseite weiter...');
+        this.router.navigate(['/']);
+      }
+    } catch (error) {
+      console.error('Fehler bei der Admin-Zugriffsprüfung:', error);
+      this.router.navigate(['/login']);
+    }
   }
 
   loadUserCount(): void {

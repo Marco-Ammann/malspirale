@@ -1,47 +1,68 @@
 <div class="lightbox-backdrop" (click)="closeLightbox()" [@fadeIn]>
-    <div class="lightbox-container" (click)="stopPropagation($event)" [@slideIn]>
-      <!-- Schließen-Button -->
-      <button class="close-btn" (click)="closeLightbox()">
-        <span class="material-icons">close</span>
-      </button>
-      
-      <!-- Navigation (links) -->
-      <button class="nav-btn prev-btn" (click)="prevImage()" *ngIf="images.length > 1">
-        <span class="material-icons">chevron_left</span>
-      </button>
-      
-      <!-- Bildcontainer -->
-      <div class="image-container">
-        <!-- Ladeindikator -->
-        <div class="loading-indicator" *ngIf="loading">
-          <div class="spinner"></div>
-        </div>
-        
-        <!-- Bild -->
-        <img 
-          [src]="images[currentIndex]?.src" 
-          [alt]="images[currentIndex]?.alt || 'Bild'"
-          (load)="onImageLoad()"
-          class="lightbox-image"
-          [class.loading]="loading"
-        />
+  <div
+    class="lightbox-container"
+    (click)="stopPropagation($event)"
+    (touchstart)="onTouchStart($event)"
+    (touchend)="onTouchEnd($event)"
+    [@slideIn]
+  >
+    <!-- Schließen-Button -->
+    <button class="close-btn" (click)="closeLightbox()">
+      <span class="material-icons">close</span>
+    </button>
+
+    <!-- Navigation (links) -->
+    <button
+      class="nav-btn prev-btn"
+      (click)="prevImage()"
+      *ngIf="images.length > 1"
+    >
+      <span class="material-icons">chevron_left</span>
+    </button>
+
+    <!-- Bildcontainer -->
+    <div class="image-container">
+      <!-- Ladeindikator -->
+      <div class="loading-indicator" *ngIf="loading">
+        <div class="spinner"></div>
       </div>
-      
-      <!-- Navigation (rechts) -->
-      <button class="nav-btn next-btn" (click)="nextImage()" *ngIf="images.length > 1">
-        <span class="material-icons">chevron_right</span>
-      </button>
-      
-      <!-- Bildnummerierung und Bildunterschrift in einem gemeinsamen Footer -->
-      <div class="lightbox-footer">
-        <div class="image-counter" *ngIf="images.length > 1">
-          {{ currentIndex + 1 }} / {{ images.length }}
-        </div>
-        
-        <div class="image-caption" *ngIf="images[currentIndex]?.caption || images[currentIndex]?.title">
-          <h3 *ngIf="images[currentIndex]?.title">{{ images[currentIndex]?.title }}</h3>
-          <p *ngIf="images[currentIndex]?.caption">{{ images[currentIndex]?.caption }}</p>
-        </div>
+
+      <!-- Bild -->
+      <img
+        [src]="images[currentIndex]?.src"
+        [alt]="images[currentIndex]?.alt || 'Bild'"
+        (load)="onImageLoad()"
+        class="lightbox-image"
+        [class.loading]="loading"
+      />
+    </div>
+
+    <!-- Navigation (rechts) -->
+    <button
+      class="nav-btn next-btn"
+      (click)="nextImage()"
+      *ngIf="images.length > 1"
+    >
+      <span class="material-icons">chevron_right</span>
+    </button>
+
+    <!-- Bildnummerierung und Bildunterschrift in einem gemeinsamen Footer -->
+    <div class="lightbox-footer">
+      <div class="image-counter" *ngIf="images.length > 1">
+        {{ currentIndex + 1 }} / {{ images.length }}
+      </div>
+
+      <div
+        class="image-caption"
+        *ngIf="images[currentIndex]?.caption || images[currentIndex]?.title"
+      >
+        <h3 *ngIf="images[currentIndex]?.title">
+          {{ images[currentIndex]?.title }}
+        </h3>
+        <p *ngIf="images[currentIndex]?.caption">
+          {{ images[currentIndex]?.caption }}
+        </p>
       </div>
     </div>
   </div>
+</div>
