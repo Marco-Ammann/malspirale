@@ -1,42 +1,171 @@
+@use 'sass:color';
 @use 'variables' as vars;
 @use 'mixins' as mix;
 
-.register-container {
-  text-align: center;
-  padding: vars.$padding-large;
-  background: vars.$background-color;
-  border-radius: vars.$border-radius;
-  box-shadow: vars.$shadow;
-  max-width: 400px;
-  margin: auto;
-
-  h2 {
-    @include mix.text-style(vars.$primary-color, 1.8rem, bold);
-    margin-bottom: vars.$padding-medium;
+// Ergänzungen zu den bestehenden Styles
+.password-input-wrapper {
+  position: relative;
+  width: 100%;
+  
+  input {
+    width: 100%;
+    padding-right: 40px;
   }
-
-  form {
+  
+  .password-toggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: vars.$text-color-light;
     display: flex;
-    flex-direction: column;
-    gap: vars.$padding-small;
-
-    input {
-      width: 100%;
-      padding: vars.$padding-small;
-      border: 1px solid vars.$secondary-color;
-      border-radius: vars.$border-radius;
-      font-size: vars.$font-size-base;
+    align-items: center;
+    justify-content: center;
+    
+    &:hover {
+      color: vars.$accent-color;
     }
-
-    button {
-      @include mix.button-style(vars.$primary-color, #fff);
-      margin-top: vars.$padding-medium;
-      font-size: vars.$font-size-large;
+    
+    .material-icons {
+      font-size: 20px;
     }
+  }
+}
 
-    .error {
-      color: red;
-      font-size: vars.$font-size-base;
+.password-strength {
+  margin-top: 5px;
+  
+  .strength-bar {
+    height: 5px;
+    background-color: #f0f0f0;
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 5px;
+    
+    .strength-progress {
+      height: 100%;
+      transition: width 0.3s ease, background-color 0.3s ease;
     }
+  }
+  
+  .strength-text {
+    font-size: 0.8rem;
+  }
+}
+
+.checkbox-group {
+  margin-bottom: vars.$padding-medium;
+  
+  .checkbox-wrapper {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    
+    input[type="checkbox"] {
+      width: auto;
+      margin-top: 4px;
+    }
+    
+    label {
+      font-size: 0.9rem;
+      
+      a {
+        color: vars.$accent-color;
+        text-decoration: none;
+        
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}
+
+.error-message-box {
+  background-color: rgba(vars.$danger-color, 0.1);
+  color: vars.$danger-color;
+  padding: vars.$padding-small;
+  border-radius: vars.$border-radius;
+  margin-bottom: vars.$padding-medium;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.success-message {
+  background-color: rgba(vars.$success-color, 0.1);
+  color: vars.$success-color;
+  padding: vars.$padding-medium;
+  border-radius: vars.$border-radius;
+  margin-bottom: vars.$padding-medium;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  
+  .material-icons {
+    font-size: 40px;
+  }
+  
+  p {
+    margin: 0;
+  }
+}
+
+.error-message {
+  color: vars.$danger-color;
+  font-size: 0.85rem;
+  margin-top: 5px;
+}
+
+.error-input {
+  border-color: vars.$danger-color !important;
+  background-color: rgba(vars.$danger-color, 0.05);
+}
+
+.spinner-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  
+  .spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 0.8s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+}
+
+.login-link {
+  text-align: center;
+  margin-top: vars.$padding-medium;
+  font-size: 0.9rem;
+  
+  a {
+    color: vars.$accent-color;
+    text-decoration: none;
+    
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.form-group {
+  label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
   }
 }

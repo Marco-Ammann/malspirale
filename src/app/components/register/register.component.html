@@ -1,17 +1,133 @@
 <div class="register-container">
   <h2>Registrieren</h2>
-  <form (submit)="register(); $event.preventDefault()">
+  
+  <div *ngIf="registrationSuccess" class="success-message">
+    <span class="material-icons">check_circle</span>
+    <p>Registrierung erfolgreich! Du wirst zur Anmeldeseite weitergeleitet.</p>
+  </div>
+  
+  <form *ngIf="!registrationSuccess" [formGroup]="registerForm" (submit)="register()" novalidate>
+    <div class="form-group">
+      <label for="fullName">Name *</label>
+      <input 
+        type="text" 
+        id="fullName" 
+        formControlName="fullName" 
+        placeholder="Dein vollständiger Name" 
+        [class.error-input]="registerForm.get('fullName')?.invalid && registerForm.get('fullName')?.touched"
+      />
+      <div class="error-message" *ngIf="registerForm.get('fullName')?.invalid && registerForm.get('fullName')?.touched">
+        <span *ngIf="registerForm.get('fullName')?.errors?.['required']">Name ist erforderlich.</span>
+        <span *ngIf="registerForm.get('fullName')?.errors?.['minlength']">Name muss mindestens 3 Zeichen lang sein.</span>
+      </div>
+    </div>
     
-    <input type="text" [(ngModel)]="fullName" name="fullName" placeholder="Voller Name" required />
-
-    <input type="email" [(ngModel)]="email" name="email" placeholder="Email" required />
-
-    <input type="password" [(ngModel)]="password" name="password" placeholder="Passwort" required />
-
-    <input type="tel" [(ngModel)]="phoneNumber" name="phoneNumber" placeholder="Telefonnummer (optional)" />
-
-    <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+    <div class="form-group">
+      <label for="email">E-Mail *</label>
+      <input 
+        type="email" 
+        id="email" 
+        formControlName="email" 
+        placeholder="Deine E-Mail-Adresse" 
+        [class.error-input]="registerForm.get('email')?.invalid && registerForm.get('email')?.touched"
+      />
+      <div class="error-message" *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched">
+        <span *ngIf="registerForm.get('email')?.errors?.['required']">E-Mail ist erforderlich.</span>
+        <span *ngIf="registerForm.get('email')?.errors?.['email']">Bitte gib eine gültige E-Mail-Adresse ein.</span>
+      </div>
+    </div>
     
-    <button type="submit">Registrieren</button>
+    <div class="form-group">
+      <label for="phoneNumber">Telefonnummer (optional)</label>
+      <input 
+        type="tel" 
+        id="phoneNumber" 
+        formControlName="phoneNumber" 
+        placeholder="Deine Telefonnummer"
+      />
+    </div>
+    
+    <div class="form-group">
+      <label for="password">Passwort *</label>
+      <div class="password-input-wrapper">
+        <input 
+          [type]="showPassword ? 'text' : 'password'" 
+          id="password" 
+          formControlName="password" 
+          placeholder="Wähle ein sicheres Passwort"
+          [class.error-input]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched"
+        />
+        <button type="button" class="password-toggle" (click)="togglePasswordVisibility('password')">
+          <span class="material-icons">{{ showPassword ? 'visibility_off' : 'visibility' }}</span>
+        </button>
+      </div>
+      
+      <div class="password-strength" *ngIf="registerForm.get('password')?.value">
+        <div class="strength-bar">
+          <div 
+            class="strength-progress" 
+            [style.width.%]="getPasswordStrength().strength * 20"
+            [style.background-color]="getPasswordStrength().color"
+          ></div>
+        </div>
+        <span class="strength-text" [style.color]="getPasswordStrength().color">{{ getPasswordStrength().text }}</span>
+      </div>
+      
+      <div class="error-message" *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
+        <span *ngIf="registerForm.get('password')?.errors?.['required']">Passwort ist erforderlich.</span>
+        <span *ngIf="registerForm.get('password')?.errors?.['minlength']">Passwort muss mindestens 8 Zeichen lang sein.</span>
+        <span *ngIf="registerForm.get('password')?.errors?.['passwordStrength']">
+          Passwort muss Groß- und Kleinbuchstaben, Zahlen und Sonderzeichen enthalten.
+        </span>
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label for="confirmPassword">Passwort bestätigen *</label>
+      <div class="password-input-wrapper">
+        <input 
+          [type]="showConfirmPassword ? 'text' : 'password'" 
+          id="confirmPassword" 
+          formControlName="confirmPassword" 
+          placeholder="Passwort wiederholen"
+          [class.error-input]="(registerForm.get('confirmPassword')?.invalid || registerForm.hasError('passwordMismatch')) && registerForm.get('confirmPassword')?.touched"
+        />
+        <button type="button" class="password-toggle" (click)="togglePasswordVisibility('confirmPassword')">
+          <span class="material-icons">{{ showConfirmPassword ? 'visibility_off' : 'visibility' }}</span>
+        </button>
+      </div>
+      <div class="error-message" *ngIf="(registerForm.get('confirmPassword')?.invalid || registerForm.get('confirmPassword')?.errors?.['mismatch']) && registerForm.get('confirmPassword')?.touched">
+        <span *ngIf="registerForm.get('confirmPassword')?.errors?.['required']">Passwortbestätigung ist erforderlich.</span>
+        <span *ngIf="registerForm.get('confirmPassword')?.errors?.['mismatch']">Passwörter stimmen nicht überein.</span>
+      </div>
+    </div>
+    
+    <div class="form-group checkbox-group">
+      <div class="checkbox-wrapper">
+        <input type="checkbox" id="agreeTerms" formControlName="agreeTerms">
+        <label for="agreeTerms">
+          Ich akzeptiere die <a routerLink="/datenschutz" target="_blank">Datenschutzbestimmungen</a> *
+        </label>
+      </div>
+      <div class="error-message" *ngIf="registerForm.get('agreeTerms')?.invalid && registerForm.get('agreeTerms')?.touched">
+        Du musst den Datenschutzbestimmungen zustimmen.
+      </div>
+    </div>
+    
+    <div *ngIf="errorMessage" class="error-message-box">
+      {{ errorMessage }}
+    </div>
+    
+    <button type="submit" [disabled]="isLoading" class="btn-cta">
+      <span *ngIf="!isLoading">Registrieren</span>
+      <span *ngIf="isLoading" class="spinner-container">
+        <span class="spinner"></span>
+        <span>Registrierung...</span>
+      </span>
+    </button>
+    
+    <div class="login-link">
+      <p>Bereits registriert? <a routerLink="/login">Jetzt einloggen</a></p>
+    </div>
   </form>
 </div>

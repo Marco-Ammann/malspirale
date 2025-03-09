@@ -1,21 +1,63 @@
 <div class="login-container">
-    <h2>Login</h2>
-    <form (submit)="login(); $event.preventDefault()">
+  <h2>Login</h2>
+  <form [formGroup]="loginForm" (submit)="login()" novalidate>
+    <div class="form-group">
+      <label for="email">E-Mail</label>
       <input
         type="email"
-        [(ngModel)]="email"
-        name="email"
-        placeholder="Email"
-        required
+        id="email"
+        formControlName="email"
+        placeholder="Deine E-Mail-Adresse"
+        [class.error-input]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
       />
-      <input
-        type="password"
-        [(ngModel)]="password"
-        name="password"
-        placeholder="Passwort"
-        required
-      />
-      <button type="submit">Einloggen</button>
-    </form>
-  </div>
-  
+      <div class="error-message" *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+        <span *ngIf="loginForm.get('email')?.errors?.['required']">E-Mail ist erforderlich.</span>
+        <span *ngIf="loginForm.get('email')?.errors?.['email']">Bitte gib eine gültige E-Mail-Adresse ein.</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="password">Passwort</label>
+      <div class="password-input-wrapper">
+        <input
+          [type]="showPassword ? 'text' : 'password'"
+          id="password"
+          formControlName="password"
+          placeholder="Dein Passwort"
+          [class.error-input]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+        />
+        <button type="button" class="password-toggle" (click)="togglePasswordVisibility()">
+          <span class="material-icons">{{ showPassword ? 'visibility_off' : 'visibility' }}</span>
+        </button>
+      </div>
+      <div class="error-message" *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+        <span *ngIf="loginForm.get('password')?.errors?.['required']">Passwort ist erforderlich.</span>
+        <span *ngIf="loginForm.get('password')?.errors?.['minlength']">Passwort muss mindestens 6 Zeichen lang sein.</span>
+      </div>
+    </div>
+
+    <div class="form-options">
+      <div class="remember-me">
+        <input type="checkbox" id="rememberMe" formControlName="rememberMe">
+        <label for="rememberMe">Angemeldet bleiben</label>
+      </div>
+      <a routerLink="/forgot-password" class="forgot-password">Passwort vergessen?</a>
+    </div>
+
+    <div *ngIf="errorMessage" class="error-message-box">
+      {{ errorMessage }}
+    </div>
+
+    <button type="submit" [disabled]="isLoading" class="btn-cta">
+      <span *ngIf="!isLoading">Einloggen</span>
+      <span *ngIf="isLoading" class="spinner-container">
+        <span class="spinner"></span>
+        <span>Anmeldung...</span>
+      </span>
+    </button>
+
+    <div class="register-link">
+      <p>Noch kein Konto? <a routerLink="/register">Jetzt registrieren</a></p>
+    </div>
+  </form>
+</div>

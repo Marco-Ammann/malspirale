@@ -1,51 +1,71 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { doc, setDoc } from 'firebase/firestore';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
-import { Router, RouterLink } from '@angular/router';
 
 @Component({
-  selector: 'app-register',
+  selector: 'app-reset-password',
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink],
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss'],
+  templateUrl: './reset-password.component.html',
+  styleUrls: ['./reset-password.component.scss']
 })
-export class RegisterComponent {
-  registerForm: FormGroup;
+export class ResetPasswordComponent implements OnInit {
+  resetPasswordForm: FormGroup;
   isLoading = false;
   errorMessage = '';
+  successMessage = '';
   showPassword = false;
   showConfirmPassword = false;
-  registrationSuccess = false;
+  resetComplete = false;
+  actionCode = '';
+  email = '';
 
   constructor(
     private authService: AuthService, 
+    private route: ActivatedRoute,
     private router: Router,
     private fb: FormBuilder
   ) {
-    this.registerForm = this.fb.group({
-      fullName: ['', [Validators.required, Validators.minLength(3)]],
-      email: ['', [Validators.required, Validators.email]],
-      phoneNumber: [''],
+    this.resetPasswordForm = this.fb.group({
       password: ['', [
         Validators.required, 
         Validators.minLength(8),
         this.passwordStrengthValidator
       ]],
-      confirmPassword: ['', Validators.required],
-      agreeTerms: [false, Validators.requiredTrue],
-      role: ['user']
+      confirmPassword: ['', Validators.required]
     }, { 
       validators: this.passwordMatchValidator 
     });
   }
 
-  async register() {
-    if (this.registerForm.invalid) {
-      this.markFormGroupTouched(this.registerForm);
+  ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      if (params['oobCode']) {
+        this.actionCode = params['oobCode'];
+        this.verifyActionCode();
+      } else {
+        this.errorMessage = 'Ungültiger oder abgelaufener Link. Bitte fordere einen neuen Link an.';
+      }
+    });
+  }
+
+  async verifyActionCode(): Promise<void> {
+    try {
+      this.isLoading = true;
+      this.email = await this.authService.verifyPasswordResetCode(this.actionCode);
+    } catch (error: any) {
+      console.error('Code verification error:', error);
+      this.errorMessage = 'Dieser Link ist ungültig oder abgelaufen. Bitte fordere einen neuen Link an.';
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
+  async resetPassword(): Promise<void> {
+    if (this.resetPasswordForm.invalid) {
+      this.markFormGroupTouched(this.resetPasswordForm);
       return;
     }
 
@@ -53,39 +73,26 @@ export class RegisterComponent {
     this.errorMessage = '';
 
     try {
-      const { fullName, email, phoneNumber, password, role } = this.registerForm.value;
-      const userCredential = await createUserWithEmailAndPassword(
-        this.authService.getAuthInstance(),
-        email,
-        password
-      );
-
-      const user = userCredential.user;
-
-      await setDoc(doc(this.authService.db, 'users', user.uid), {
-        fullName,
-        email: user.email,
-        phoneNumber: phoneNumber || null,
-        role,
-        createdAt: new Date(),
-      });
-
-      this.registrationSuccess = true;
+      const { password } = this.resetPasswordForm.value;
+      await this.authService.confirmPasswordReset(this.actionCode, password);
+      
+      this.resetComplete = true;
+      this.successMessage = 'Dein Passwort wurde erfolgreich zurückgesetzt. Du kannst dich jetzt mit deinem neuen Passwort anmelden.';
       
       // Kurze Verzögerung, damit der Benutzer die Erfolgsmeldung sehen kann
       setTimeout(() => {
         this.router.navigate(['/login']);
-      }, 2000);
+      }, 3000);
       
     } catch (error: any) {
-      console.error('Registration Error:', error);
-      this.handleRegistrationError(error);
+      console.error('Password reset error:', error);
+      this.handleResetError(error);
     } finally {
       this.isLoading = false;
     }
   }
 
-  togglePasswordVisibility(field: 'password' | 'confirmPassword') {
+  togglePasswordVisibility(field: 'password' | 'confirmPassword'): void {
     if (field === 'password') {
       this.showPassword = !this.showPassword;
     } else {
@@ -93,7 +100,7 @@ export class RegisterComponent {
     }
   }
 
-  private markFormGroupTouched(formGroup: FormGroup) {
+  private markFormGroupTouched(formGroup: FormGroup): void {
     Object.values(formGroup.controls).forEach(control => {
       control.markAsTouched();
       if (control instanceof FormGroup) {
@@ -131,24 +138,27 @@ export class RegisterComponent {
     return !passwordValid ? { passwordStrength: true } : null;
   }
 
-  private handleRegistrationError(error: any) {
+  private handleResetError(error: any): void {
     switch(error.code) {
-      case 'auth/email-already-in-use':
-        this.errorMessage = 'E-Mail-Adresse wird bereits verwendet.';
+      case 'auth/invalid-action-code':
+        this.errorMessage = 'Dieser Link ist ungültig oder abgelaufen. Bitte fordere einen neuen Link an.';
         break;
-      case 'auth/invalid-email':
-        this.errorMessage = 'Ungültige E-Mail-Adresse.';
+      case 'auth/expired-action-code':
+        this.errorMessage = 'Dieser Link ist abgelaufen. Bitte fordere einen neuen Link an.';
         break;
-      case 'auth/weak-password':
-        this.errorMessage = 'Das Passwort ist zu schwach.';
+      case 'auth/user-disabled':
+        this.errorMessage = 'Dieses Konto wurde deaktiviert. Bitte kontaktiere den Support.';
+        break;
+      case 'auth/user-not-found':
+        this.errorMessage = 'Kein Konto mit dieser E-Mail-Adresse gefunden.';
         break;
       default:
-        this.errorMessage = `Registrierung fehlgeschlagen: ${error.message}`;
+        this.errorMessage = `Fehler beim Zurücksetzen des Passworts: ${error.message}`;
     }
   }
 
   getPasswordStrength(): { strength: number, text: string, color: string } {
-    const password = this.registerForm.get('password')?.value || '';
+    const password = this.resetPasswordForm.get('password')?.value || '';
     
     if (!password) {
       return { strength: 0, text: 'Sehr schwach', color: '#ff4d4d' };

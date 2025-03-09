@@ -5,7 +5,13 @@ import {
   createUserWithEmailAndPassword,
   signOut,
   User,
-  onAuthStateChanged
+  onAuthStateChanged,
+  sendPasswordResetEmail,
+  setPersistence,
+  browserSessionPersistence,
+  browserLocalPersistence,
+  confirmPasswordReset,
+  verifyPasswordResetCode
 } from 'firebase/auth';
 import {
   getFirestore,
@@ -70,7 +76,12 @@ export class AuthService {
     return snapshot.size;
   }
 
-  async login(email: string, password: string): Promise<void> {
+  async login(email: string, password: string, rememberMe: boolean = false): Promise<void> {
+    // Wähle die Persistenz-Option basierend auf rememberMe
+    const persistenceType = rememberMe ? browserLocalPersistence : browserSessionPersistence;
+    
+    await setPersistence(this.auth, persistenceType);
+    
     const userCredential = await signInWithEmailAndPassword(this.auth, email, password);
     this.userSubject.next(userCredential.user);
     const userDoc = await getDoc(doc(this.db, 'users', userCredential.user.uid));
@@ -112,5 +123,17 @@ export class AuthService {
 
   getCurrentUser(): User | null {
     return this.auth.currentUser;
+  }
+  
+  async forgotPassword(email: string): Promise<void> {
+    return sendPasswordResetEmail(this.auth, email);
+  }
+  
+  async verifyPasswordResetCode(code: string): Promise<string> {
+    return verifyPasswordResetCode(this.auth, code);
+  }
+  
+  async confirmPasswordReset(code: string, newPassword: string): Promise<void> {
+    return confirmPasswordReset(this.auth, code, newPassword);
   }
 }
