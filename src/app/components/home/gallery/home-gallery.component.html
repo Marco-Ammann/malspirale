@@ -1,10 +1,37 @@
 <section class="gallery" data-aos="fade-in">
-    <h2>Galerie</h2>
+  <div class="gallery-container">
+    <div class="gallery-header">
+      <h2>Galerie</h2>
+      <div class="accent-line"></div>
+      <p class="section-description">Entdecke eine Auswahl meiner Kunstwerke</p>
+    </div>
+    
     <div class="gallery-grid">
-      <div data-aos="fade-in" data-aos-delay="400" *ngFor="let artwork of artworks" class="gallery-item">
-        <img [src]="artwork.src" [alt]="artwork.alt" (load)="artwork.imageLoaded = true" [ngClass]="{'loading': !artwork.imageLoaded}" />
+      <div 
+        *ngFor="let artwork of artworks; let i = index" 
+        class="gallery-item" 
+        [ngClass]="{'loading': !artwork.imageLoaded}"
+        (click)="navigateToGallery()"
+      >
+        <div class="gallery-image">
+          <img 
+            [src]="artwork.src" 
+            [alt]="artwork.alt" 
+            (load)="onImageLoad(artwork)" 
+            [ngClass]="{'loaded': artwork.imageLoaded}" 
+          />
+          <div class="gallery-overlay">
+            <span class="material-icons">visibility</span>
+          </div>
+        </div>
       </div>
     </div>
-    <button (click)="navigateToGallery()" class="brk-btn" aria-label="Zur Galerie">Zur Galerie</button>
-  </section>
-  
+    
+    <div class="gallery-action">
+      <button (click)="navigateToGallery()" class="btn-primary">
+        <span>Zur vollständigen Galerie</span>
+        <span class="material-icons">arrow_forward</span>
+      </button>
+    </div>
+  </div>
+</section>

@@ -22,4 +22,8 @@ export class HomeGalleryComponent {
   navigateToGallery(): void {
     this.router.navigate(['/gallery']);
   }
+  
+  onImageLoad(artwork: any): void {
+    artwork.imageLoaded = true;
+  }
 }

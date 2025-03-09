@@ -17,17 +17,20 @@ export class HomeComponent implements AfterViewInit {
   constructor(private el: ElementRef) {}
 
   ngAfterViewInit(): void {
+    // Verbesserte Performance mit optimierten Threshold-Werten
+    const observerOptions = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.15 // Erhöht für bessere Sensitivität
+    };
+
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('visible');
-        } else {
-          entry.target.classList.remove('visible');
         }
       });
-    }, {
-      threshold: 0.1
-    });
+    }, observerOptions);
 
     const elements = this.el.nativeElement.querySelectorAll('.scroll-effect');
     elements.forEach((element: HTMLElement) => observer.observe(element));

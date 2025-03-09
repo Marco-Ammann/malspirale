@@ -2,70 +2,184 @@
 @use 'variables' as vars;
 @use 'mixins' as mix;
 
-h2 {
-  font-size: vars.$font-size-xxlarge;
-  margin-bottom: vars.$padding-medium;
-  text-align: left;
-  color: vars.$accent-color-dark;
+.workshops-teaser {
+  padding: vars.$padding-extra-large 0;
+  position: relative;
+  background-color: rgba(vars.$background-color, 0.6);
 }
 
-h3 {
-  font-size: vars.$font-size-xlarge;
-  margin-bottom: vars.$padding-extra-small;
-  text-align: left;
-  color: vars.$accent-color-dark;
+.workshops-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 vars.$padding-medium;
 }
 
-p {
-  font-size: vars.$font-size-base;
-  line-height: vars.$line-height;
-  margin-bottom: vars.$padding-small;
-  text-align: left;
+.workshops-card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
+  border-radius: vars.$border-radius-large;
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  padding: vars.$padding-large;
+  overflow: hidden;
 }
 
-.link-to {
-  cursor: pointer;
-  text-decoration: underline;
-
-  &:hover {
-    color: color.adjust(vars.$primary-color, $lightness: 10%);
+.workshops-header {
+  text-align: center;
+  margin-bottom: vars.$padding-large;
+  
+  h2 {
+    font-size: vars.$font-size-xxlarge;
+    color: vars.$accent-color-dark;
+    margin-bottom: vars.$padding-small;
+  }
+  
+  .accent-line {
+    width: 80px;
+    height: 3px;
+    background: linear-gradient(to right, vars.$accent-color, vars.$primary-color);
+    margin: 0 auto vars.$padding-medium;
+    border-radius: 2px;
   }
 }
 
-.workshops-teaser {
+.section-description {
+  font-size: vars.$font-size-medium;
+  line-height: 1.6;
+  color: vars.$text-color;
+  margin-bottom: vars.$padding-large;
   text-align: center;
-  background: linear-gradient(135deg, rgba(255,255,255,0.8), rgba(255,255,255,0.6));
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.workshops-showcase {
+  display: flex;
+  gap: vars.$padding-large;
+  align-items: center;
+}
+
+.workshop-image {
+  flex: 0 0 45%;
+  position: relative;
   border-radius: vars.$border-radius;
-  box-shadow: vars.$box-shadow-deep;
-  padding: vars.$padding-large;
-  margin: vars.$container-gap-large auto;
-
-  .workshops-teaser-content {
-    max-width: 800px;
-    margin: vars.$padding-extra-large auto;
-
-    .workshops-teaser-extra {
-      margin: vars.$padding-medium 0;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: vars.$padding-small;
-      text-align: left;
-
-      img {
-        max-width: 100%;
-        border-radius: vars.$border-radius;
-        box-shadow: vars.$box-shadow;
-      }
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transform: perspective(1000px) rotateY(0);
+  transition: transform 0.6s ease;
+  
+  &:hover {
+    transform: perspective(1000px) rotateY(5deg);
+  }
+  
+  img {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: transform 0.6s ease;
+    
+    &:hover {
+      transform: scale(1.05);
     }
+  }
+}
 
-    .ask-for-workshop-div {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: flex-start;
-      gap: vars.$padding-medium;
-      margin-top: vars.$padding-extra-large;
+.workshop-details {
+  flex: 1;
+  
+  p {
+    font-size: vars.$font-size-base;
+    line-height: 1.6;
+    color: vars.$text-color;
+    margin-bottom: vars.$padding-medium;
+  }
+}
+
+.workshop-actions {
+  display: flex;
+  gap: vars.$padding-small;
+  flex-wrap: wrap;
+  
+  .btn-primary, .btn-outline {
+    padding: vars.$padding-small vars.$padding-large;
+    border-radius: vars.$border-radius;
+    font-size: vars.$font-size-base;
+    font-weight: vars.$font-weight-bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .btn-primary {
+    background: linear-gradient(45deg, vars.$accent-color, vars.$accent-color-dark);
+    color: white;
+    border: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    }
+  }
+  
+  .btn-outline {
+    background: transparent;
+    color: vars.$accent-color;
+    border: 2px solid vars.$accent-color;
+    
+    &:hover {
+      background: rgba(vars.$accent-color, 0.1);
+      transform: translateY(-3px);
+    }
+  }
+}
+
+// Responsive Anpassungen
+@media (max-width: vars.$tablet) {
+  .workshops-showcase {
+    flex-direction: column;
+  }
+  
+  .workshop-image {
+    flex: 0 0 auto;
+    width: 100%;
+    margin-bottom: vars.$padding-medium;
+  }
+  
+  .workshop-actions {
+    justify-content: center;
+  }
+}
+
+@media (max-width: vars.$mobile) {
+  .workshops-teaser {
+    padding: vars.$padding-large 0;
+  }
+  
+  .workshops-container {
+    padding: 0 vars.$padding-small;
+  }
+  
+  .workshops-card {
+    padding: vars.$padding-medium;
+  }
+  
+  .workshops-header {
+    h2 {
+      font-size: vars.$font-size-xlarge;
+    }
+  }
+  
+  .section-description {
+    font-size: vars.$font-size-base;
+  }
+  
+  .workshop-actions {
+    flex-direction: column;
+    
+    .btn-primary, .btn-outline {
+      width: 100%;
+      text-align: center;
     }
   }
 }

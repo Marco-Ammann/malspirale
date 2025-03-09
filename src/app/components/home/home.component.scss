@@ -1,23 +1,60 @@
 @use 'sass:color';
-@use 'sass:math';
 @use 'variables' as vars;
 @use 'mixins' as mix;
 
 :host {
   display: flex;
   flex-direction: column;
-  gap: vars.$container-gap-large;
   background-color: vars.$background-color;
 }
 
-
 .scroll-effect {
   opacity: 0;
-  transform: translateY(80px);
-  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  transform: translateY(50px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  
+  &.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.scroll-effect.visible {
-  opacity: 1;
-  transform: translateY(0);
+section {
+  margin: 0;
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+  
+  &:not(:first-child) {
+    margin-top: -2rem;
+    padding-top: 4rem;
+    z-index: 1;
+  }
+}
+
+// Verbesserte Animation für bessere Performance
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Responsive Anpassungen
+@media (max-width: vars.$tablet) {
+  section:not(:first-child) {
+    margin-top: -1rem;
+    padding-top: 2rem;
+  }
+}
+
+@media (max-width: vars.$mobile) {
+  section:not(:first-child) {
+    margin-top: 0;
+    padding-top: 1rem;
+  }
 }

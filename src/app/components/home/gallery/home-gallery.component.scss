@@ -2,51 +2,192 @@
 @use 'variables' as vars;
 
 .gallery {
-  text-align: center;
-  padding: vars.$padding-large 0;
-  background: linear-gradient(135deg, rgba(255,255,255,0.8), rgba(255,255,255,0.6));
+  padding: vars.$padding-extra-large 0;
+  position: relative;
+  background-color: rgba(vars.$tertiary-color, 0.1);
+}
 
+.gallery-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 vars.$padding-medium;
+}
+
+.gallery-header {
+  text-align: center;
+  margin-bottom: vars.$padding-large;
+  
   h2 {
     font-size: vars.$font-size-xxlarge;
-    margin-bottom: vars.$padding-small;
     color: vars.$accent-color-dark;
+    margin-bottom: vars.$padding-small;
+  }
+  
+  .accent-line {
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(to right, vars.$accent-color, vars.$primary-color);
+    margin: 0 auto vars.$padding-medium;
+    border-radius: 2px;
+  }
+  
+  .section-description {
+    font-size: vars.$font-size-medium;
+    color: vars.$text-color;
+  }
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: vars.$padding-medium;
+  margin-bottom: vars.$padding-large;
+}
+
+.gallery-item {
+  border-radius: vars.$border-radius;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  background-color: rgba(255, 255, 255, 0.85);
+  transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  cursor: pointer;
+  
+  &:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.12);
+    
+    .gallery-overlay {
+      opacity: 1;
+    }
+    
+    img {
+      transform: scale(1.1);
+    }
+  }
+  
+  &.loading {
+    .gallery-image {
+      min-height: 200px;
+      background: linear-gradient(90deg, #f0f0f0 25%, #f8f8f8 50%, #f0f0f0 75%);
+      background-size: 200% 100%;
+      animation: loading-shine 1.5s infinite;
+    }
+  }
+}
+
+@keyframes loading-shine {
+  0% { background-position: -100% 0; }
+  100% { background-position: 100% 0; }
+}
+
+.gallery-image {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 3/2;
+  
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+    opacity: 0;
+    
+    &.loaded {
+      opacity: 1;
+    }
+  }
+  
+  .gallery-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(vars.$accent-color-dark, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    
+    .material-icons {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.9);
+      color: vars.$accent-color-dark;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      transform: scale(0.8);
+      transition: transform 0.3s ease;
+    }
+    
+    &:hover .material-icons {
+      transform: scale(1);
+    }
+  }
+}
+
+.gallery-action {
+  text-align: center;
+  
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: vars.$padding-small vars.$padding-large;
+    background: linear-gradient(45deg, vars.$accent-color, vars.$accent-color-dark);
+    color: white;
+    border: none;
+    border-radius: vars.$border-radius;
+    font-size: vars.$font-size-base;
+    font-weight: vars.$font-weight-bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+      
+      .material-icons {
+        transform: translateX(3px);
+      }
+    }
+    
+    .material-icons {
+      transition: transform 0.3s ease;
+    }
+  }
+}
+
+// Responsive Anpassungen
+@media (max-width: vars.$tablet) {
+  .gallery {
+    padding: vars.$padding-large 0;
+  }
+  
+  .gallery-container {
+    padding: 0 vars.$padding-small;
   }
   
   .gallery-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: vars.$padding-small;
-    max-width: 1000px;
-    margin: 0 auto;
-    justify-items: center;
   }
-  
-  .gallery-item {
-    position: relative;
-    overflow: hidden;
-    border-radius: vars.$border-radius;
-    box-shadow: vars.$shadow;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    width: 100%;
-    max-width: 280px;
-    height: 320px;
-    &:hover {
-      transform: scale(1.05);
-      box-shadow: vars.$hover-shadow;
+}
+
+@media (max-width: vars.$mobile) {
+  .gallery-header {
+    .section-title {
+      font-size: vars.$font-size-xlarge;
     }
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: vars.$border-radius;
-      transition: opacity 0.3s ease;
+    
+    .section-description {
+      font-size: vars.$font-size-base;
     }
   }
   
-  button {
-    margin-top: vars.$padding-medium;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
+  .gallery-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   }
 }
