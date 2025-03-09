@@ -72,21 +72,37 @@ export const routes: Routes = [
     path: 'login',
     loadComponent: () =>
       import('./components/login/login.component').then((m) => m.LoginComponent),
+    data: {
+      reuse: false,
+      skipLocationChange: false
+    }
   },
   {
     path: 'register',
     loadComponent: () =>
       import('./components/register/register.component').then((m) => m.RegisterComponent),
+    data: { 
+      reuse: false,
+      skipLocationChange: false
+    }
   },
   {
     path: 'forgot-password',
     loadComponent: () =>
       import('./components/forgot-password/forgot-password.component').then((m) => m.ForgotPasswordComponent),
+    data: {
+      reuse: false,
+      skipLocationChange: false
+    }
   },
   {
     path: 'reset-password',
     loadComponent: () =>
       import('./components/reset-password/reset-password.component').then((m) => m.ResetPasswordComponent),
+    data: {
+      reuse: false,
+      skipLocationChange: false
+    }
   },
   {
     path: 'user-dashboard',

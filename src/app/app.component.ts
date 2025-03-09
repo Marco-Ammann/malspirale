@@ -1,5 +1,5 @@
 import { Component, HostListener } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FooterComponent } from './shared/footer/footer.component';
 import { HeaderComponent } from './shared/header/header.component';
@@ -31,10 +31,15 @@ import {
 export class AppComponent {
   loading = true;
 
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService, private router: Router) {
     this.authService.user$.subscribe(() => {
       this.loading = false;
     });
+  }
+
+  ngOnInit() {
+    // Starte die Navigation manuell
+    this.router.navigate(['/']); // oder this.router.initialNavigation();
   }
 
 }
