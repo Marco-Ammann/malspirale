@@ -1,10 +1,25 @@
 User-agent: *
+# Admin Bereich nicht indizieren
 Disallow: /admin/
-Disallow: /private/
+Disallow: /admin
+# Benutzerkonten nicht indizieren
+Disallow: /user-dashboard/
+Disallow: /user-dashboard
+# Auth-Seiten nicht indizieren
 Disallow: /login/
+Disallow: /login
 Disallow: /register/
-Disallow: /profile/
+Disallow: /register
+Disallow: /forgot-password/
+Disallow: /forgot-password
+Disallow: /reset-password/
+Disallow: /reset-password
 
+# Alle anderen Seiten erlauben
 Allow: /
 
+# Sitemap
 Sitemap: https://www.malspirale.ch/sitemap.xml
+
+# Crawl-Rate reduzieren (für bessere Serverperformance)
+Crawl-delay: 5

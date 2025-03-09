@@ -28,6 +28,21 @@
                 "glob": "**/*",
                 "input": "src/assets",
                 "output": "assets"
+              },
+              {
+                "glob": "robots.txt",
+                "input": "./",
+                "output": "./"
+              },
+              {
+                "glob": "sitemap.xml",
+                "input": "./",
+                "output": "./"
+              },
+              {
+                "glob": ".htaccess",
+                "input": "./",
+                "output": "./"
               }
             ],
             "styles": [
@@ -49,8 +64,8 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "16kB",
-                  "maximumError": "24kB"
+                  "maximumWarning": "20kB",
+                  "maximumError": "28kB"
                 }
               ],
               "outputHashing": "all",
@@ -74,8 +89,7 @@
               "buildTarget": "malspirale:build:development"
             }
           },
-          "options": {
-          },
+          "options": {},
           "defaultConfiguration": "development"
         },
         "extract-i18n": {
@@ -92,6 +106,21 @@
                 "glob": "**/*",
                 "input": "src/assets",
                 "output": "assets"
+              },
+              {
+                "glob": "robots.txt",
+                "input": "./",
+                "output": "./"
+              },
+              {
+                "glob": "sitemap.xml",
+                "input": "./",
+                "output": "./"
+              },
+              {
+                "glob": ".htaccess",
+                "input": "./",
+                "output": "./"
               }
             ],
             "styles": [
