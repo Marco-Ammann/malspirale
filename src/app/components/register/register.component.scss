@@ -2,170 +2,263 @@
 @use 'variables' as vars;
 @use 'mixins' as mix;
 
-// Ergänzungen zu den bestehenden Styles
-.password-input-wrapper {
-  position: relative;
-  width: 100%;
+.register-container {
+  max-width: 550px;
+  margin: 3rem auto;
+  padding: 2rem;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
+  backdrop-filter: blur(10px);
+  border-radius: vars.$border-radius;
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
   
-  input {
-    width: 100%;
-    padding-right: 40px;
+  h2 {
+    color: vars.$accent-color-dark;
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    position: relative;
+    
+    &:after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(to right, vars.$accent-color, vars.$primary-color);
+      border-radius: 2px;
+    }
   }
   
-  .password-toggle {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: vars.$text-color-light;
+  form {
     display: flex;
-    align-items: center;
-    justify-content: center;
+    flex-direction: column;
+    gap: 1.2rem;
     
-    &:hover {
-      color: vars.$accent-color;
-    }
-    
-    .material-icons {
-      font-size: 20px;
-    }
-  }
-}
-
-.password-strength {
-  margin-top: 5px;
-  
-  .strength-bar {
-    height: 5px;
-    background-color: #f0f0f0;
-    border-radius: 2px;
-    overflow: hidden;
-    margin-bottom: 5px;
-    
-    .strength-progress {
-      height: 100%;
-      transition: width 0.3s ease, background-color 0.3s ease;
-    }
-  }
-  
-  .strength-text {
-    font-size: 0.8rem;
-  }
-}
-
-.checkbox-group {
-  margin-bottom: vars.$padding-medium;
-  
-  .checkbox-wrapper {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    
-    input[type="checkbox"] {
-      width: auto;
-      margin-top: 4px;
-    }
-    
-    label {
-      font-size: 0.9rem;
+    .form-group {
+      position: relative;
       
-      a {
-        color: vars.$accent-color;
-        text-decoration: none;
+      label {
+        display: block;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+        color: vars.$text-color;
+        font-size: 0.95rem;
+      }
+      
+      input {
+        width: 100%;
+        padding: 0.8rem 1rem;
+        border: 1px solid rgba(vars.$accent-color, 0.3);
+        border-radius: vars.$border-radius;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background-color: rgba(255, 255, 255, 0.8);
         
-        &:hover {
-          text-decoration: underline;
+        &:focus {
+          outline: none;
+          border-color: vars.$accent-color;
+          box-shadow: 0 0 0 3px rgba(vars.$accent-color, 0.2);
+        }
+        
+        &.error-input {
+          border-color: vars.$danger-color;
+          background-color: rgba(vars.$danger-color, 0.05);
         }
       }
     }
-  }
-}
-
-.error-message-box {
-  background-color: rgba(vars.$danger-color, 0.1);
-  color: vars.$danger-color;
-  padding: vars.$padding-small;
-  border-radius: vars.$border-radius;
-  margin-bottom: vars.$padding-medium;
-  font-size: 0.9rem;
-  text-align: center;
-}
-
-.success-message {
-  background-color: rgba(vars.$success-color, 0.1);
-  color: vars.$success-color;
-  padding: vars.$padding-medium;
-  border-radius: vars.$border-radius;
-  margin-bottom: vars.$padding-medium;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  
-  .material-icons {
-    font-size: 40px;
-  }
-  
-  p {
-    margin: 0;
-  }
-}
-
-.error-message {
-  color: vars.$danger-color;
-  font-size: 0.85rem;
-  margin-top: 5px;
-}
-
-.error-input {
-  border-color: vars.$danger-color !important;
-  background-color: rgba(vars.$danger-color, 0.05);
-}
-
-.spinner-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  
-  .spinner {
-    width: 16px;
-    height: 16px;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    border-radius: 50%;
-    border-top-color: #fff;
-    animation: spin 0.8s linear infinite;
-  }
-  
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-}
-
-.login-link {
-  text-align: center;
-  margin-top: vars.$padding-medium;
-  font-size: 0.9rem;
-  
-  a {
-    color: vars.$accent-color;
-    text-decoration: none;
     
-    &:hover {
-      text-decoration: underline;
+    .password-input-wrapper {
+      position: relative;
+      
+      .password-toggle {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: vars.$text-color-light;
+        cursor: pointer;
+        padding: 0.5rem;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        
+        &:hover {
+          color: vars.$accent-color;
+        }
+      }
+    }
+    
+    .password-strength {
+      margin-top: 0.5rem;
+      
+      .strength-bar {
+        height: 5px;
+        background-color: #f0f0f0;
+        border-radius: 2px;
+        overflow: hidden;
+        
+        .strength-progress {
+          height: 100%;
+          transition: width 0.3s ease, background-color 0.3s ease;
+        }
+      }
+      
+      .strength-text {
+        font-size: 0.8rem;
+        margin-top: 0.3rem;
+        text-align: right;
+      }
+    }
+    
+    .checkbox-group {
+      margin: 0.5rem 0;
+      
+      .checkbox-wrapper {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        
+        input[type="checkbox"] {
+          width: auto;
+          margin-top: 0.2rem;
+          cursor: pointer;
+        }
+        
+        label {
+          margin-bottom: 0;
+          font-size: 0.9rem;
+          line-height: 1.4;
+          
+          a {
+            color: vars.$accent-color;
+            text-decoration: none;
+            font-weight: 500;
+            
+            &:hover {
+              text-decoration: underline;
+            }
+          }
+        }
+      }
+    }
+    
+    .error-message {
+      color: vars.$danger-color;
+      font-size: 0.85rem;
+      margin-top: 0.3rem;
+    }
+    
+    .error-message-box {
+      background-color: rgba(vars.$danger-color, 0.1);
+      color: vars.$danger-color;
+      padding: 0.8rem;
+      border-radius: vars.$border-radius;
+      margin: 0.5rem 0;
+      font-size: 0.9rem;
+      text-align: center;
+      border-left: 3px solid vars.$danger-color;
+    }
+    
+    .success-message {
+      background-color: rgba(vars.$success-color, 0.1);
+      color: vars.$success-color;
+      padding: 1.5rem;
+      border-radius: vars.$border-radius;
+      margin: 1rem 0;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.8rem;
+      border-left: 3px solid vars.$success-color;
+      
+      .material-icons {
+        font-size: 2.5rem;
+      }
+    }
+    
+    button {
+      margin-top: 1rem;
+      padding: 0.8rem 1.5rem;
+      background: linear-gradient(45deg, vars.$accent-color, vars.$primary-color);
+      color: white;
+      border: none;
+      border-radius: vars.$border-radius;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      
+      &:hover:not(:disabled) {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+      
+      &:active:not(:disabled) {
+        transform: translateY(-1px);
+      }
+      
+      &:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+      }
+    }
+  }
+  
+  .login-link {
+    margin-top: 1.5rem;
+    text-align: center;
+    font-size: 0.95rem;
+    
+    a {
+      color: vars.$accent-color;
+      text-decoration: none;
+      font-weight: 500;
+      
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+  
+  .spinner-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    
+    .spinner {
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 0.8s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
   }
 }
 
-.form-group {
-  label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: 500;
+// Responsiveness
+@media (max-width: vars.$mobile) {
+  .register-container {
+    margin: 1.5rem;
+    padding: 1.5rem;
+    
+    h2 {
+      font-size: 1.5rem;
+    }
   }
 }
