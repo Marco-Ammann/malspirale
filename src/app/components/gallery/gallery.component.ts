@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { getFirestore, collection, getDocs } from 'firebase/firestore';
 import { firebaseApp } from '../../../firebase-config';
 import { LightboxComponent, LightboxImage } from '../../shared/lightbox/lightbox.component';
@@ -16,7 +17,7 @@ interface Artwork {
   templateUrl: './gallery.component.html',
   styleUrls: ['./gallery.component.scss'],
   standalone: true,
-  imports: [CommonModule, LightboxComponent],
+  imports: [CommonModule, LightboxComponent, RouterLink],
 })
 export class GalleryComponent implements OnInit {
   artworks: Artwork[] = [];
@@ -32,7 +33,7 @@ export class GalleryComponent implements OnInit {
   currentLightboxIndex: number = 0;
 
   constructor() {
-    for (let i = 1; i <= 21; i++) {
+    for (let i = 1; i <= 10; i++) {
       this.artworks_default.push({
         id: i.toString(),
         src: `assets/images/art${i}.webp`,
@@ -41,7 +42,7 @@ export class GalleryComponent implements OnInit {
       });
     }
 
-    for (let i = 1; i <= 10; i++) {
+    for (let i = 11; i <= 20; i++) {
       this.subArtworks_default.push({
         id: `sub${i}`,
         src: `assets/images/art${i}.webp`,

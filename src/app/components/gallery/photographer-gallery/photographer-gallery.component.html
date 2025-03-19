@@ -1,0 +1,93 @@
+<div class="photographer-gallery-page">
+  <header class="gallery-header">
+    <h2>Die Welt durch Shivas Augen</h2>
+    <p>
+      Hier zeige ich eine Sammlung eigener Fotografien meines Sohns Shiva Ludi – ein Blick auf die Welt, wie er sie sieht und auf Bildern festhält.
+    </p>
+    <div class="nav-links">
+      <a [routerLink]="['/gallery']" class="btn-link">Zurück zur Hauptgalerie</a>
+    </div>
+  </header>
+
+  <div class="photographer-info">
+    <div class="photographer-profile">
+      <div class="camera-icon">
+        <span class="material-icons">camera</span>
+      </div>
+      <div class="profile-content">
+        <h3>Shiva Ludi</h3>
+        <p>
+          Geboren 1992, lebt in der Nähe von Bern und hat sich nach seiner Ausbildung zum orthopädischen Schuhmacher beruflich neu orientiert. Er arbeitet heute freiberuflich als Künstler und Kreativschaffender im Bereich Fotografie. Besonders am Herzen liegt es ihm, mit seinen Bildern die Menschen zu berühren und authentische Momente festzuhalten.
+        </p>
+        <div class="social-links">
+          <a href="https://www.instagram.com/ludiphotography11/" target="_blank" class="instagram-link">
+            <span class="material-icons">photo_camera</span>
+            &#64;ludiphotography11
+          </a>
+          <a href="mailto:ludi_11@icloud.com" class="contact-button">
+            <span class="material-icons">email</span>
+            Kontakt aufnehmen
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="category-filters">
+    <div class="category-buttons">
+      <button 
+        *ngFor="let category of categories" 
+        (click)="setCategory(category)"
+        [class.active]="activeCategory === category"
+        class="category-button"
+      >
+        {{ category === 'all' ? 'Alle' : 
+           category === 'natur' ? 'Natur' : 
+           category === 'portraits' ? 'Portraits' : 
+           category === 'reisen' ? 'Reisen' : 
+           category === 'kunst' ? 'Kunst' : category }}
+      </button>
+    </div>
+  </div>
+
+  <section class="photographer-gallery">
+    <div *ngIf="loading" class="loading">
+      <div class="skeleton-grid">
+        <div class="skeleton-item" *ngFor="let i of [1,2,3,4,5,6]">
+          <div class="skeleton-image"></div>
+        </div>
+      </div>
+    </div>
+    
+    <div *ngIf="errorMessage" class="error-message">
+      <p>{{ errorMessage }}</p>
+    </div>
+    
+    <div class="gallery-grid" *ngIf="!loading && filteredArtworks.length > 0">
+      <div *ngFor="let artwork of filteredArtworks; let i = index" class="artwork" (click)="openLightbox(i)">
+        <div class="image-container">
+          <img [src]="artwork.src" [alt]="artwork.alt" />
+          <div class="overlay">
+            <div class="text">{{ artwork.title }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div *ngIf="!loading && photographerArtworks.length === 0" class="no-artworks">
+      <p>Zurzeit sind keine Fotografien verfügbar.</p>
+    </div>
+
+    <div *ngIf="!loading && photographerArtworks.length > 0 && filteredArtworks.length === 0" class="no-artworks">
+      <p>Keine Bilder in der gewählten Kategorie verfügbar.</p>
+    </div>
+  </section>
+  
+  <!-- Lightbox -->
+  <app-lightbox 
+    *ngIf="showLightbox" 
+    [images]="lightboxImages" 
+    [currentIndex]="currentLightboxIndex" 
+    (close)="closeLightbox()">
+  </app-lightbox>
+</div>

@@ -1,0 +1,11 @@
+// Z-index variables for consistent stacking
+$z-header: 1000;
+$z-dropdown: 1005;
+$z-mobile-menu: 999;
+$z-modal: 2000;
+$z-tooltip: 1500;
+$z-overlay: 1900;
+
+// Usage examples:
+// .header { z-index: $z-header; }
+// .dropdown { z-index: $z-dropdown; }

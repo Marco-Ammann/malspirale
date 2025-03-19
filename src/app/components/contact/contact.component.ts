@@ -1,11 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule, HttpErrorResponse } from '@angular/common/http';
 import { RouterLink, ActivatedRoute } from '@angular/router';
 import { environment } from '../../../environments/environment';
 import { WorkshopRequestService } from '../../core/services/workshop-request.service';
-import { Subscription } from 'rxjs';
+import { Subscription, catchError, throwError, timeout, TimeoutError } from 'rxjs';
 
 @Component({
   selector: 'app-contact',
@@ -81,10 +81,45 @@ export class ContactComponent implements OnInit, OnDestroy {
         contactData.message = `Workshop-Anfrage: ${this.workshopTitle}\n\n${contactData.message}`;
       }
       
+      // Build the URL - use absolute path for production
+      const apiUrl = environment.production
+        ? '/sendMail.php'  // Use relative path in production
+        : `${environment.apiUrl}/sendMail.php`;  // Use environment.apiUrl in development
+      
+      console.log(`Sending to: ${apiUrl}`);
+      
       this.http
-        .post(`${environment.apiUrl}/sendMail.php`, contactData, {
+        .post(apiUrl, contactData, {
           responseType: 'text',
+          headers: {
+            'Content-Type': 'application/json'
+          }
         })
+        .pipe(
+          timeout(20000), // 20 second timeout
+          catchError((error: HttpErrorResponse | TimeoutError) => {
+            console.log('Error details:', error);
+            let errorMsg = 'Fehler beim Senden der Nachricht.';
+            
+            if (error instanceof HttpErrorResponse) {
+              if (error.status === 0) {
+                errorMsg = 'Keine Verbindung zum Server möglich. Bitte überprüfe, ob der Server erreichbar ist oder kontaktiere uns direkt per E-Mail.';
+              } else if (error.status === 400) {
+                errorMsg = 'Ungültige Eingaben. Bitte überprüfe alle Felder.';
+              } else if (error.status === 500) {
+                errorMsg = 'Server-Fehler beim Senden. Bitte versuche es später erneut.';
+              } else if (error.status === 405) {
+                errorMsg = 'Diese Anfragemethode ist nicht erlaubt.';
+              } else if (error.status === 429) {
+                errorMsg = 'Zu viele Anfragen. Bitte versuche es später erneut.';
+              }
+            } else if (error instanceof TimeoutError) {
+              errorMsg = 'Die Anfrage hat zu lange gedauert. Bitte versuche es später erneut.';
+            }
+            
+            return throwError(() => new Error(errorMsg));
+          })
+        )
         .subscribe({
           next: (res) => {
             this.successMessage = this.isWorkshopRequest 
@@ -113,7 +148,7 @@ export class ContactComponent implements OnInit, OnDestroy {
           },
           error: (err) => {
             console.error('Fehler beim Senden:', err);
-            this.errorMessage = 'Fehler beim Senden der Nachricht. Bitte versuche es später erneut oder kontaktiere uns direkt per E-Mail.';
+            this.errorMessage = err.message || 'Fehler beim Senden der Nachricht. Bitte versuche es später erneut oder kontaktiere uns direkt per E-Mail.';
             this.successMessage = '';
             this.sending = false;
           },

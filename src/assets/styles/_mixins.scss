@@ -55,6 +55,61 @@
   }
 }
 
+// Button Mixins
+@mixin primary-button {
+  display: inline-block;
+  background-color: vars.$accent-color;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: vars.$border-radius;
+  font-weight: vars.$font-weight-bold;
+  text-decoration: none;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  
+  &:hover {
+    background-color: vars.$accent-color-dark;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+}
+
+@mixin category-button {
+  background: none;
+  border: 1px solid vars.$accent-color;
+  color: vars.$accent-color;
+  font-weight: vars.$font-weight-normal;
+  font-size: 0.95rem;
+  padding: 0.5rem 1.2rem;
+  border-radius: vars.$border-radius;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background-color: rgba(vars.$accent-color, 0.1);
+  }
+  
+  &.active {
+    background-color: vars.$accent-color;
+    color: white;
+  }
+}
+
+@mixin nav-button {
+  font-size: clamp(0.9rem, 2vw, 1.2rem);
+  color: vars.$accent-color-dark;
+  text-decoration: none;
+  border: 2px solid vars.$accent-color-dark;
+  padding: vars.$padding-small vars.$padding-medium;
+  border-radius: vars.$border-radius;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+}
+
 // Container-Style für Boxen
 @mixin container-box {
   background-color: vars.$background-color;

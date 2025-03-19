@@ -7,33 +7,45 @@
     <!-- Desktop Navigation -->
     <nav class="desktop-nav" aria-label="Hauptnavigation">
       <a routerLink="/home" routerLinkActive="active" (click)="closeAllMenus()">Home</a>
-      <a routerLink="/gallery" routerLinkActive="active" (click)="closeAllMenus()">Galerie</a>
+      
+      <!-- Gallery Dropdown -->
+      <div class="dropdown">
+        <button class="dropdown-toggle" (click)="toggleDropdown('gallery')" [attr.aria-expanded]="galleryDropdownOpen">
+          Galerie <span class="material-icons">arrow_drop_down</span>
+        </button>
+        <div class="dropdown-menu" [class.show]="galleryDropdownOpen">
+          <a routerLink="/gallery" routerLinkActive="active">Kunstwerke</a>
+          <a routerLink="/gallery/photographer" routerLinkActive="active">Fotografie</a>
+        </div>
+      </div>
+      
       <a routerLink="/workshops" routerLinkActive="active" (click)="closeAllMenus()">Workshops</a>
       <a routerLink="/contact" routerLinkActive="active" (click)="closeAllMenus()">Kontakt</a>
       <a routerLink="/about" routerLinkActive="active" (click)="closeAllMenus()">Über mich</a>
 
       <!-- Dropdown for Philosophy -->
-      <div class="dropdown" [class.open]="philosophyDropdownOpen">
-        <span class="dropdown-toggle" (click)="toggleDropdown('philosophy')" tabindex="0" role="button" aria-haspopup="true" [attr.aria-expanded]="philosophyDropdownOpen">
-          Philosophie <span class="material-icons">{{ philosophyDropdownOpen ? 'expand_less' : 'expand_more' }}</span>
-        </span>
-        <div class="dropdown-menu" role="menu" aria-label="Philosophie Untermenü">
-          <a routerLink="/philosophie/farben" routerLinkActive="active" (click)="closeAllMenus()" role="menuitem">Farben</a>
-          <a routerLink="/philosophie/geschichten" routerLinkActive="active" (click)="closeAllMenus()" role="menuitem">Geschichten</a>
-          <a routerLink="/philosophie/resonance-farben" routerLinkActive="active" (click)="closeAllMenus()" role="menuitem">Resonance Colors</a>
+      <div class="dropdown">
+        <button class="dropdown-toggle" (click)="toggleDropdown('philosophy')" [attr.aria-expanded]="philosophyDropdownOpen">
+          Philosophie <span class="material-icons">arrow_drop_down</span>
+        </button>
+        <div class="dropdown-menu" [class.show]="philosophyDropdownOpen">
+          <a routerLink="/philosophie/farben" routerLinkActive="active">Farben</a>
+          <a routerLink="/philosophie/geschichten" routerLinkActive="active">Geschichten</a>
+          <a routerLink="/philosophie/resonance-farben" routerLinkActive="active">Resonance Colors</a>
         </div>
       </div>
 
       <!-- User Menu -->
       <div class="dropdown user-menu" [class.open]="userDropdownOpen">
-        <span class="dropdown-toggle" (click)="toggleDropdown('user')" tabindex="0" role="button" aria-haspopup="true" [attr.aria-expanded]="userDropdownOpen">
+        <button class="dropdown-toggle" (click)="toggleDropdown('user')" aria-haspopup="true" [attr.aria-expanded]="userDropdownOpen">
           <span class="material-icons user-icon">account_circle</span>
           <span class="material-icons">{{ userDropdownOpen ? 'expand_less' : 'expand_more' }}</span>
-        </span>
-        <div class="dropdown-menu" role="menu" aria-label="Benutzermenü">
+        </button>
+        <div class="dropdown-menu" [class.show]="userDropdownOpen" role="menu" aria-label="Benutzermenü">
           <a *ngIf="!isLoggedIn" routerLink="/login" routerLinkActive="active" (click)="closeAllMenus()" role="menuitem">Login</a>
           <a *ngIf="isLoggedIn && isAdmin" routerLink="/admin" role="menuitem" (click)="closeAllMenus()">Admin</a>
-          <a *ngIf="isLoggedIn" (click)="logout(); closeAllMenus()" role="menuitem">Logout</a>
+          <a *ngIf="isLoggedIn" routerLink="/profile" role="menuitem" (click)="closeAllMenus()">Profil</a>
+          <a *ngIf="isLoggedIn" href="javascript:void(0)" (click)="logout(); closeAllMenus()" role="menuitem">Logout</a>
         </div>
       </div>
     </nav>
@@ -53,36 +65,53 @@
       </button>
       <div class="mobile-nav-content">
         <a routerLink="/home" routerLinkActive="active" (click)="closeAllMenus()">Home</a>
-        <a routerLink="/gallery" routerLinkActive="active" (click)="closeAllMenus()">Galerie</a>
+        
+        <!-- Mobile Gallery Dropdown -->
+        <div class="dropdown">
+          <div class="dropdown-toggle" (click)="toggleSubmenu('gallery')">
+            Galerie
+            <span class="material-icons">{{ isSubmenuOpen('gallery') ? 'expand_less' : 'expand_more' }}</span>
+          </div>
+          <div class="submenu" [class.open]="isSubmenuOpen('gallery')">
+            <a routerLink="/gallery" routerLinkActive="active" (click)="closeAllMenus()">Kunstwerke</a>
+            <a routerLink="/gallery/photographer" routerLinkActive="active" (click)="closeAllMenus()">Fotografie</a>
+          </div>
+        </div>
+        
         <a routerLink="/workshops" routerLinkActive="active" (click)="closeAllMenus()">Workshops</a>
         <a routerLink="/contact" routerLinkActive="active" (click)="closeAllMenus()">Kontakt</a>
         <a routerLink="/about" routerLinkActive="active" (click)="closeAllMenus()">Über mich</a>
         
         <!-- Mobile Dropdown for Philosophy -->
-        <div class="dropdown" [class.open]="philosophyDropdownOpen">
-          <div class="dropdown-toggle" (click)="toggleDropdown('philosophy')" tabindex="0" role="button" aria-haspopup="true" [attr.aria-expanded]="philosophyDropdownOpen">
-            Philosophie <span class="material-icons">{{ philosophyDropdownOpen ? 'expand_less' : 'expand_more' }}</span>
+        <div class="dropdown">
+          <div class="dropdown-toggle" (click)="toggleSubmenu('philosophy')">
+            Philosophie
+            <span class="material-icons">{{ isSubmenuOpen('philosophy') ? 'expand_less' : 'expand_more' }}</span>
           </div>
-          <div class="dropdown-menu" role="menu" aria-label="Philosophie Untermenü">
-            <a routerLink="/philosophie/farben" routerLinkActive="active" (click)="closeAllMenus()" role="menuitem">Farben</a>
-            <a routerLink="/philosophie/geschichten" routerLinkActive="active" (click)="closeAllMenus()" role="menuitem">Geschichten</a>
-            <a routerLink="/philosophie/resonance-farben" routerLinkActive="active" (click)="closeAllMenus()" role="menuitem">Resonance Colors</a>
+          <div class="submenu" [class.open]="isSubmenuOpen('philosophy')">
+            <a routerLink="/philosophie/farben" routerLinkActive="active" (click)="closeAllMenus()">Farben</a>
+            <a routerLink="/philosophie/geschichten" routerLinkActive="active" (click)="closeAllMenus()">Geschichten</a>
+            <a routerLink="/philosophie/resonance-farben" routerLinkActive="active" (click)="closeAllMenus()">Resonance Colors</a>
           </div>
         </div>
         
         <!-- Mobile User Menu -->
-        <div class="dropdown" [class.open]="userDropdownOpen">
-          <div class="dropdown-toggle" (click)="toggleDropdown('user')" tabindex="0" role="button" aria-haspopup="true" [attr.aria-expanded]="userDropdownOpen">
-            <span *ngIf="isLoggedIn; else loggedOut">Mein Konto</span>
-            <ng-template #loggedOut>Login</ng-template>
-            <span class="material-icons">{{ userDropdownOpen ? 'expand_less' : 'expand_more' }}</span>
+        <ng-container *ngIf="isLoggedIn; else loginButton">
+          <div class="dropdown" [class.open]="isSubmenuOpen('user')">
+            <div class="dropdown-toggle" (click)="toggleSubmenu('user')">
+              Mein Konto
+              <span class="material-icons">{{ isSubmenuOpen('user') ? 'expand_less' : 'expand_more' }}</span>
+            </div>
+            <div class="submenu" [class.open]="isSubmenuOpen('user')">
+              <a *ngIf="isAdmin" routerLink="/admin" routerLinkActive="active" (click)="closeMobileMenu()">Admin</a>
+              <a routerLink="/profile" routerLinkActive="active" (click)="closeMobileMenu()">Profil</a>
+              <a href="javascript:void(0)" (click)="logout(); closeMobileMenu()">Logout</a>
+            </div>
           </div>
-          <div class="dropdown-menu" role="menu" aria-label="Benutzermenü">
-            <a *ngIf="!isLoggedIn" routerLink="/login" routerLinkActive="active" (click)="closeAllMenus()" role="menuitem">Login</a>
-            <a *ngIf="isLoggedIn && isAdmin" routerLink="/admin" role="menuitem" (click)="closeAllMenus()">Admin</a>
-            <a *ngIf="isLoggedIn" (click)="logout(); closeAllMenus()" role="menuitem">Logout</a>
-          </div>
-        </div>
+        </ng-container>
+        <ng-template #loginButton>
+          <a routerLink="/login" routerLinkActive="active" (click)="closeMobileMenu()">Login</a>
+        </ng-template>
       </div>
     </nav>
   </div>

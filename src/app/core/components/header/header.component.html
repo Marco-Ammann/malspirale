@@ -1,0 +1,62 @@
+<header [class.scrolled]="isScrolled">
+  <div class="container">
+    <nav class="navbar">
+      <div class="logo">
+        <a routerLink="/" aria-label="Malspirale Home">
+          <img src="assets/images/logo.png" alt="Malspirale Logo" />
+        </a>
+      </div>
+      
+      <button 
+        class="menu-toggle" 
+        [class.active]="isMenuOpen" 
+        (click)="toggleMenu()"
+        aria-label="Toggle Navigation Menu"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      
+      <div class="nav-links" [class.active]="isMenuOpen">
+        <div class="nav-item">
+          <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="handleMenuItemClick()">Home</a>
+        </div>
+        
+        <div class="nav-item dropdown">
+          <a (click)="toggleDropdown('workshops')" class="dropdown-toggle" [class.active]="activeDropdown === 'workshops'">
+            Workshops <span class="dropdown-icon">▾</span>
+          </a>
+          <div class="dropdown-menu" [class.active]="activeDropdown === 'workshops'">
+            <a routerLink="/workshops" routerLinkActive="active" (click)="handleMenuItemClick()">Alle Workshops</a>
+            <a routerLink="/workshops/kinder" routerLinkActive="active" (click)="handleMenuItemClick()">Für Kinder</a>
+            <a routerLink="/workshops/erwachsene" routerLinkActive="active" (click)="handleMenuItemClick()">Für Erwachsene</a>
+            <a routerLink="/workshops/gruppen" routerLinkActive="active" (click)="handleMenuItemClick()">Für Gruppen</a>
+          </div>
+        </div>
+        
+        <div class="nav-item dropdown">
+          <a (click)="toggleDropdown('gallery')" class="dropdown-toggle" [class.active]="activeDropdown === 'gallery'">
+            Galerie <span class="dropdown-icon">▾</span>
+          </a>
+          <div class="dropdown-menu" [class.active]="activeDropdown === 'gallery'">
+            <a routerLink="/galerie" routerLinkActive="active" (click)="handleMenuItemClick()">Malspirale</a>
+            <a routerLink="/fotografie" routerLinkActive="active" (click)="handleMenuItemClick()">Fotografie</a>
+          </div>
+        </div>
+        
+        <div class="nav-item">
+          <a routerLink="/ueber-mich" routerLinkActive="active" (click)="handleMenuItemClick()">Über Mich</a>
+        </div>
+        
+        <div class="nav-item">
+          <a routerLink="/blog" routerLinkActive="active" (click)="handleMenuItemClick()">Blog</a>
+        </div>
+        
+        <div class="nav-item">
+          <a routerLink="/kontakt" routerLinkActive="active" (click)="handleMenuItemClick()">Kontakt</a>
+        </div>
+      </div>
+    </nav>
+  </div>
+</header>

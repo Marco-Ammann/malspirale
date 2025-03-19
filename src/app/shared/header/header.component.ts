@@ -17,9 +17,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
   mobileMenuOpen = false;
   philosophyDropdownOpen = false;
   userDropdownOpen = false;
+  galleryDropdownOpen = false; // Add this property
   isLoggedIn = false;
   isAdmin = false;
   isScrolled = false;
+  openSubmenu: string | null = null;
   
   private unsubscribe$ = new Subject<void>();
   private previousScrollPosition = 0;
@@ -48,6 +50,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
       
     // Verhindere Scrollen, wenn Mobile-Menü geöffnet ist
     this.updateBodyScroll();
+    
+    // Check if we're on a gallery route and open dropdown if needed
+    const currentPath = window.location.pathname;
+    if (currentPath.includes('/gallery')) {
+      this.galleryDropdownOpen = true;
+    }
   }
   
   ngOnDestroy(): void {
@@ -61,8 +69,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   @HostListener('document:click', ['$event'])
   onClickOutside(event: Event): void {
-    // Schließt Dropdowns, wenn außerhalb geklickt wird
-    if (!(event.target as HTMLElement).closest('.dropdown, .menu-toggle')) {
+    // Don't close dropdowns when clicking inside them
+    const target = event.target as HTMLElement;
+    if (!target.closest('.dropdown') && !target.closest('.menu-toggle')) {
       this.closeDropdowns();
     }
   }
@@ -96,18 +105,53 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   toggleDropdown(menu: string): void {
-    if (menu === 'philosophy') {
-      this.philosophyDropdownOpen = !this.philosophyDropdownOpen;
-      this.userDropdownOpen = false;
-    } else if (menu === 'user') {
-      this.userDropdownOpen = !this.userDropdownOpen;
-      this.philosophyDropdownOpen = false;
+    // Close mobile menu if open
+    this.mobileMenuOpen = false;
+    
+    // Get the current state before we change it
+    const currentState = 
+      (menu === 'gallery' && this.galleryDropdownOpen) ||
+      (menu === 'philosophy' && this.philosophyDropdownOpen) ||
+      (menu === 'user' && this.userDropdownOpen);
+    
+    // Close other dropdowns first
+    this.galleryDropdownOpen = false;
+    this.philosophyDropdownOpen = false;
+    this.userDropdownOpen = false;
+    
+    // Toggle the requested dropdown (only open if it was closed)
+    if (menu === 'gallery' && !currentState) {
+      this.galleryDropdownOpen = true;
+    } else if (menu === 'philosophy' && !currentState) {
+      this.philosophyDropdownOpen = true;
+    } else if (menu === 'user' && !currentState) {
+      this.userDropdownOpen = true;
+    }
+    
+    // Update body scroll
+    this.updateBodyScroll();
+    
+    // Close mobile submenu if we're opening a desktop dropdown
+    if (window.innerWidth > 768) {
+      this.openSubmenu = null;
     }
   }
 
+  toggleSubmenu(menu: string): void {
+    if (this.openSubmenu === menu) {
+      this.openSubmenu = null;
+    } else {
+      this.openSubmenu = menu;
+    }
+  }
+
+  isSubmenuOpen(menu: string): boolean {
+    return this.openSubmenu === menu;
+  }
+
   closeAllMenus(): void {
-    this.mobileMenuOpen = false;
     this.closeDropdowns();
+    this.mobileMenuOpen = false;
     this.updateBodyScroll();
   }
   
@@ -125,6 +169,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   private closeDropdowns(): void {
+    this.galleryDropdownOpen = false;
     this.philosophyDropdownOpen = false;
     this.userDropdownOpen = false;
   }

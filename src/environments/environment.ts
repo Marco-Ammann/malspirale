@@ -1,6 +1,7 @@
 export const environment = {
     production: false,
-    apiUrl: 'https://malspirale.ch', // Lokale Entwicklungs-API
+    // For local development - should point to where PHP files are hosted during development
+    apiUrl: '', 
     firebaseConfig: {
       apiKey: "AIzaSyBFr48lghf1NfhDO0Og2QoDZyaPlrka6vc",
       authDomain: "malspirale-244e6.firebaseapp.com",

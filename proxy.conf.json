@@ -1,0 +1,11 @@
+{
+  "/sendMail.php": {
+    "target": "http://localhost/malspirale-api",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/sendMail.php": "/sendMail.php"
+    }
+  }
+}
