@@ -1,0 +1,30 @@
+<div class="masonry-wrapper">
+  <!-- Loading state -->
+  <div *ngIf="loading" class="skeleton-grid" [style.gap]="gap">
+    <div class="skeleton-item" *ngFor="let i of placeholderArray">
+      <div class="skeleton-image"></div>
+    </div>
+  </div>
+
+  <!-- Masonry grid with items -->
+  <div *ngIf="!loading && items.length > 0" class="masonry-grid" [style.column-count]="columns" [style.gap]="gap">
+    <div *ngFor="let item of items; let i = index; trackBy: trackByFn"
+         class="masonry-item"
+         (click)="onItemClick(item, i)">
+      <div class="image-container">
+        <img [src]="item.src"
+             [alt]="item.alt || 'Gallery image'"
+             (load)="onImageLoad(item)"
+             [class.loaded]="item.loaded">
+        <div class="overlay" *ngIf="item.title">
+          <div class="text">{{ item.title }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty state -->
+  <div *ngIf="!loading && items.length === 0" class="empty-grid">
+    <p>{{ emptyMessage }}</p>
+  </div>
+</div>

@@ -1,15 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { getFirestore, collection, getDocs } from 'firebase/firestore';
+import { getFirestore, collection, getDocs, query, where } from 'firebase/firestore';
 import { firebaseApp } from '../../../firebase-config';
 import { LightboxComponent, LightboxImage } from '../../shared/lightbox/lightbox.component';
+import { MasonryGridComponent, MasonryItem } from '../../shared/masonry-grid/masonry-grid.component';
 
 interface Artwork {
   id: string;
   src: string;
   alt: string;
   title: string;
+  displayOrder?: number;
+  createdAt?: Date;
+  timestamp?: number;
+  isPublic?: boolean;
 }
 
 @Component({
@@ -17,7 +22,7 @@ interface Artwork {
   templateUrl: './gallery.component.html',
   styleUrls: ['./gallery.component.scss'],
   standalone: true,
-  imports: [CommonModule, LightboxComponent, RouterLink],
+  imports: [CommonModule, LightboxComponent, RouterLink, MasonryGridComponent],
 })
 export class GalleryComponent implements OnInit {
   artworks: Artwork[] = [];
@@ -26,7 +31,7 @@ export class GalleryComponent implements OnInit {
   errorMessage: string = '';
   artworks_default: Artwork[] = [];
   subArtworks_default: Artwork[] = [];
-  
+
   // Lightbox-Eigenschaften
   showLightbox: boolean = false;
   lightboxImages: LightboxImage[] = [];
@@ -60,21 +65,38 @@ export class GalleryComponent implements OnInit {
   }
 
   async loadArtworks(): Promise<void> {
+    this.loading = true;
+
     try {
-      const artworksCollection = collection(this.db, 'gallery');
-      const snapshot = await getDocs(artworksCollection);
+      const artworksRef = collection(this.db, 'gallery');
+      // Create a query that only gets public artworks
+      const publicArtworksQuery = query(artworksRef, where("isPublic", "==", true));
+
+      const snapshot = await getDocs(publicArtworksQuery);
 
       if (!snapshot.empty) {
-        this.artworks = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        })) as Artwork[];
+        this.artworks = snapshot.docs.map(doc => {
+          const data = doc.data() as Record<string, any>;
+          return {
+            id: doc.id,
+            ...data,
+            // Use proper indexing for data that comes from an index signature
+            createdAt: data['createdAt'] ? new Date(data['createdAt'].seconds * 1000) : new Date()
+          } as Artwork;
+        });
       } else {
-        console.warn('⚠️ Keine Bilder in Firestore.');
+        console.warn('⚠️ Keine Hauptgalerie-Bilder in Firestore.');
         this.artworks = this.artworks_default;
       }
+
+      // Sort by displayOrder
+      this.artworks.sort((a, b) => {
+        const orderA = a.displayOrder !== undefined ? a.displayOrder : Number.MAX_SAFE_INTEGER;
+        const orderB = b.displayOrder !== undefined ? b.displayOrder : Number.MAX_SAFE_INTEGER;
+        return orderA - orderB;
+      });
     } catch (error) {
-      console.error('❌ Fehler beim Laden der Galerie:', error);
+      console.error('❌ Fehler beim Laden der Hauptgalerie:', error);
       this.artworks = this.artworks_default;
     } finally {
       this.loading = false;
@@ -110,11 +132,11 @@ export class GalleryComponent implements OnInit {
       target.scrollIntoView({ behavior: 'smooth' });
     }
   }
-  
+
   // Lightbox-Methoden
   openLightbox(gallery: 'main' | 'sub', index: number): void {
     const source = gallery === 'main' ? this.artworks : this.subArtworks;
-    
+
     // Konvertiere Artworks in Lightbox-Format
     this.lightboxImages = source.map(artwork => ({
       src: artwork.src,
@@ -122,11 +144,11 @@ export class GalleryComponent implements OnInit {
       title: artwork.title,
       caption: artwork.alt // Wir verwenden alt als Bildunterschrift
     }));
-    
+
     this.currentLightboxIndex = index;
     this.showLightbox = true;
   }
-  
+
   closeLightbox(): void {
     this.showLightbox = false;
   }

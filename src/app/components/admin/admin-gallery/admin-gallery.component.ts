@@ -17,6 +17,11 @@ interface Artwork {
   loaded?: boolean;
   width?: number;
   height?: number;
+  isPublic: boolean;  // Whether to show on public gallery
+  isFeatured: boolean; // Whether to feature on homepage
+  displayOrder: number; // For controlling the display order
+  timestamp: number;   // Change to non-optional for sorting by date
+  description?: string; // Add for search filtering
 }
 
 interface FileWithPreview {
@@ -117,7 +122,7 @@ export class AdminGalleryComponent implements OnInit {
         loaded: false
       })) as Artwork[];
       
-      this.filterImages();
+      this.applyFilters();
     } catch (error) {
       console.error('Fehler beim Laden der Galerie:', error);
       this.artworks = [];
@@ -137,16 +142,54 @@ export class AdminGalleryComponent implements OnInit {
   }
   
   filterImages(): void {
-    if (!this.searchTerm.trim()) {
-      this.filteredArtworks = [...this.artworks];
-      return;
+    this.applyFilters();
+  }
+  
+  applyFilters(): void {
+    let filtered = [...this.artworks];
+    
+    // Apply search term
+    if (this.searchTerm) {
+      const term = this.searchTerm.toLowerCase();
+      filtered = filtered.filter(art => 
+        art.title.toLowerCase().includes(term) || 
+        (art.alt && art.alt.toLowerCase().includes(term)) ||
+        (art.description && art.description.toLowerCase().includes(term))
+      );
     }
     
-    const search = this.searchTerm.toLowerCase();
-    this.filteredArtworks = this.artworks.filter(artwork => 
-      artwork.title.toLowerCase().includes(search) || 
-      artwork.alt.toLowerCase().includes(search)
-    );
+    // Apply display filter
+    switch (this.displayFilter) {
+      case 'public':
+        filtered = filtered.filter(art => art.isPublic);
+        break;
+      case 'featured':
+        filtered = filtered.filter(art => art.isFeatured);
+        break;
+      case 'hidden':
+        filtered = filtered.filter(art => !art.isPublic);
+        break;
+    }
+    
+    // Apply sort order
+    filtered.sort((a, b) => {
+      switch (this.sortOrder) {
+        case 'displayOrder':
+          const orderA = a.displayOrder !== undefined ? a.displayOrder : Number.MAX_SAFE_INTEGER;
+          const orderB = b.displayOrder !== undefined ? b.displayOrder : Number.MAX_SAFE_INTEGER;
+          return orderA - orderB;
+        case 'dateDesc':
+          return (b.timestamp || 0) - (a.timestamp || 0);
+        case 'dateAsc':
+          return (a.timestamp || 0) - (b.timestamp || 0);
+        case 'title':
+          return a.title.localeCompare(b.title);
+        default:
+          return 0;
+      }
+    });
+    
+    this.filteredArtworks = filtered;
   }
   
   onImageLoad(artwork: Artwork): void {
@@ -297,7 +340,10 @@ export class AdminGalleryComponent implements OnInit {
           src: imageUrl,
           timestamp: timestamp,
           width: img.width,
-          height: img.height
+          height: img.height,
+          isPublic: true,  // Default to public
+          isFeatured: false, // Default to not featured
+          displayOrder: 0 // Default order
         };
         
         // Füge Fotografen hinzu, falls relevant
@@ -330,6 +376,7 @@ export class AdminGalleryComponent implements OnInit {
   }
   
   async saveEditedArtwork(): Promise<void> {
+    // Keep only one version of this method and remove the duplicate at the end of the file
     if (!this.editingArtwork || !this.editingArtwork.id) return;
     
     try {
@@ -353,7 +400,7 @@ export class AdminGalleryComponent implements OnInit {
         this.artworks[index] = { ...this.editingArtwork };
       }
       
-      this.filterImages();
+      this.applyFilters();
       
     } catch (error) {
       console.error('Fehler beim Speichern:', error);
@@ -393,11 +440,70 @@ export class AdminGalleryComponent implements OnInit {
       
       // Aktualisiere lokale Arrays
       this.artworks = this.artworks.filter(a => a.id !== artwork.id);
-      this.filterImages();
+      this.applyFilters();
       
     } catch (error) {
       console.error('Fehler beim Löschen:', error);
       alert('Fehler beim Löschen. Bitte versuche es erneut.');
     }
+  }
+  
+  // New properties for sorting and filtering
+  sortOrder = 'displayOrder';
+  displayFilter = 'all';
+  
+  togglePublicStatus(artwork: Artwork): void {
+    const updatedValue = !artwork.isPublic;
+    artwork.isPublic = updatedValue;
+    this.updateArtworkProperty(artwork.id!, 'isPublic', updatedValue);
+  }
+  
+  toggleFeaturedStatus(artwork: Artwork): void {
+    const updatedValue = !artwork.isFeatured;
+    artwork.isFeatured = updatedValue;
+    this.updateArtworkProperty(artwork.id!, 'isFeatured', updatedValue);
+  }
+  
+  decreaseOrder(artwork: Artwork): void {
+    if (artwork.displayOrder === undefined) {
+      artwork.displayOrder = 0;
+    }
+    if (artwork.displayOrder > 0) {
+      artwork.displayOrder--;
+      this.updateArtworkProperty(artwork.id!, 'displayOrder', artwork.displayOrder);
+    }
+  }
+  
+  increaseOrder(artwork: Artwork): void {
+    if (artwork.displayOrder === undefined) {
+      artwork.displayOrder = 0;
+    }
+    artwork.displayOrder++;
+    this.updateArtworkProperty(artwork.id!, 'displayOrder', artwork.displayOrder);
+  }
+  
+  updateArtworkProperty(artworkId: string, propertyName: string, value: any): void {
+    // Determine the collection path based on the artwork's type
+    let collectionPath = 'gallery';
+    
+    // Find the artwork to get its type
+    const artwork = this.artworks.find(a => a.id === artworkId);
+    
+    if (artwork) {
+      if (artwork.type === 'subgallery') {
+        collectionPath = 'subGallery';
+      } else if (artwork.type === 'photographer') {
+        collectionPath = 'photographerGallery';
+      }
+    }
+    
+    const artworkRef = doc(this.db, collectionPath, artworkId);
+    updateDoc(artworkRef, {
+      [propertyName]: value
+    }).then(() => {
+      console.log(`Updated ${propertyName} for artwork ${artworkId} in ${collectionPath}`);
+    }).catch(error => {
+      console.error(`Error updating ${propertyName}:`, error);
+    });
   }
 }

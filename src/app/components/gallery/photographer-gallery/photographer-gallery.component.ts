@@ -26,11 +26,11 @@ export class PhotographerGalleryComponent implements OnInit {
   loading: boolean = true;
   errorMessage: string = '';
   photographer: string = 'Shiva Ludi';
-  
+
   // Display settings
   activeCategory: string = 'all';
   categories = ['all', 'natur', 'portraits', 'reisen', 'kunst'];
-  
+
   // Lightbox properties
   showLightbox: boolean = false;
   lightboxImages: LightboxImage[] = [];
@@ -40,7 +40,7 @@ export class PhotographerGalleryComponent implements OnInit {
   private defaultArtworks: PhotographerArtwork[] = [
     {
       id: '1',
-      src: 'assets/images/Shiva/picture1.jpg',
+      src: 'assets/images/Shiva/picture1.webp',
       alt: 'Berglandschaft mit See fotografiert von Shiva Ludi',
       title: 'Bergsee im Morgenlicht',
       photographer: 'Shiva Ludi',
@@ -48,7 +48,7 @@ export class PhotographerGalleryComponent implements OnInit {
     },
     {
       id: '2',
-      src: 'assets/images/Shiva/picture2.jpg',
+      src: 'assets/images/Shiva/picture2.webp',
       alt: 'Portraitfotografie im natürlichen Licht von Shiva Ludi',
       title: 'Portraitstudie in Naturtönen',
       photographer: 'Shiva Ludi',
@@ -56,7 +56,7 @@ export class PhotographerGalleryComponent implements OnInit {
     },
     {
       id: '3',
-      src: 'assets/images/Shiva/picture3.jpg',
+      src: 'assets/images/Shiva/picture3.webp',
       alt: 'Urbane Architektur bei Dämmerlicht von Shiva Ludi',
       title: 'Stadt im Zwielicht',
       photographer: 'Shiva Ludi',
@@ -64,7 +64,7 @@ export class PhotographerGalleryComponent implements OnInit {
     },
     {
       id: '4',
-      src: 'assets/images/Shiva/picture4.jpg',
+      src: 'assets/images/Shiva/picture4.webp',
       alt: 'Detailaufnahme von Naturformen von Shiva Ludi',
       title: 'Naturdetail',
       photographer: 'Shiva Ludi',
@@ -72,7 +72,7 @@ export class PhotographerGalleryComponent implements OnInit {
     },
     {
       id: '5',
-      src: 'assets/images/Shiva/picture5.jpg',
+      src: 'assets/images/Shiva/picture5.webp',
       alt: 'Portrait einer Person im natürlichen Umfeld von Shiva Ludi',
       title: 'Person im Dialog mit der Natur',
       photographer: 'Shiva Ludi',
@@ -80,7 +80,7 @@ export class PhotographerGalleryComponent implements OnInit {
     },
     {
       id: '6',
-      src: 'assets/images/Shiva/picture6.jpg',
+      src: 'assets/images/Shiva/picture6.webp',
       alt: 'Kunstvolle Dokumentation einer Skulptur von Shiva Ludi',
       title: 'Skulptur im Licht',
       photographer: 'Shiva Ludi',
@@ -88,7 +88,7 @@ export class PhotographerGalleryComponent implements OnInit {
     },
     {
       id: '7',
-      src: 'assets/images/Shiva/picture7.jpg',
+      src: 'assets/images/Shiva/picture7.webp',
       alt: 'Bergpanorama bei Sonnenuntergang von Shiva Ludi',
       title: 'Alpenpanorama in Gold',
       photographer: 'Shiva Ludi',
@@ -96,7 +96,7 @@ export class PhotographerGalleryComponent implements OnInit {
     },
     {
       id: '8',
-      src: 'assets/images/Shiva/picture8.jpg',
+      src: 'assets/images/Shiva/picture8.webp',
       alt: 'Kunstinstallation mit natürlichen Materialien von Shiva Ludi',
       title: 'Natur als Kunst',
       photographer: 'Shiva Ludi',
@@ -104,7 +104,7 @@ export class PhotographerGalleryComponent implements OnInit {
     },
     {
       id: '9',
-      src: 'assets/images/Shiva/picture9.jpg',
+      src: 'assets/images/Shiva/picture9.webp',
       alt: 'Reisefotografie aus einer fernen Stadt von Shiva Ludi',
       title: 'Fremde Welten',
       photographer: 'Shiva Ludi',
@@ -112,7 +112,7 @@ export class PhotographerGalleryComponent implements OnInit {
     },
     {
       id: '10',
-      src: 'assets/images/Shiva/picture10.jpg',
+      src: 'assets/images/Shiva/picture10.webp',
       alt: 'Kunstwerk in Makroperspektive von Shiva Ludi',
       title: 'Kunst im Detail',
       photographer: 'Shiva Ludi',
@@ -120,7 +120,7 @@ export class PhotographerGalleryComponent implements OnInit {
     },
     {
       id: '11',
-      src: 'assets/images/Shiva/picture11.jpg',
+      src: 'assets/images/Shiva/picture11.webp',
       alt: 'Portraitaufnahme in Schwarz-Weiß von Shiva Ludi',
       title: 'Charakterporträt',
       photographer: 'Shiva Ludi',
@@ -128,7 +128,7 @@ export class PhotographerGalleryComponent implements OnInit {
     },
     {
       id: '12',
-      src: 'assets/images/Shiva/picture12.jpg',
+      src: 'assets/images/Shiva/picture12.webp',
       alt: 'Landschaftsaufnahme mit besonderem Lichteinfall von Shiva Ludi',
       title: 'Landschaft im Lichtspiel',
       photographer: 'Shiva Ludi',
@@ -137,7 +137,7 @@ export class PhotographerGalleryComponent implements OnInit {
     // Additional images
     {
       id: '13',
-      src: 'assets/images/Shiva/picture13.jpg',
+      src: 'assets/images/Shiva/picture13.webp',
       alt: 'Detailaufnahme einer Kunstinstallation von Shiva Ludi',
       title: 'Strukturen und Formen',
       photographer: 'Shiva Ludi',
@@ -145,7 +145,7 @@ export class PhotographerGalleryComponent implements OnInit {
     },
     {
       id: '14',
-      src: 'assets/images/Shiva/picture14.jpg',
+      src: 'assets/images/Shiva/picture14.webp',
       alt: 'Reisefotografie aus einem Bergdorf von Shiva Ludi',
       title: 'Leben in den Bergen',
       photographer: 'Shiva Ludi',
@@ -153,7 +153,7 @@ export class PhotographerGalleryComponent implements OnInit {
     },
     {
       id: '15',
-      src: 'assets/images/Shiva/picture15.jpg',
+      src: 'assets/images/Shiva/picture15.webp',
       alt: 'Nahaufnahme einer Blüte von Shiva Ludi',
       title: 'Blütentraum',
       photographer: 'Shiva Ludi',
@@ -161,7 +161,7 @@ export class PhotographerGalleryComponent implements OnInit {
     },
     {
       id: '16',
-      src: 'assets/images/Shiva/picture16.jpg',
+      src: 'assets/images/Shiva/picture16.webp',
       alt: 'Emotionales Portrait eines Menschen von Shiva Ludi',
       title: 'Emotionen',
       photographer: 'Shiva Ludi',
@@ -169,7 +169,7 @@ export class PhotographerGalleryComponent implements OnInit {
     },
     {
       id: '17',
-      src: 'assets/images/Shiva/picture17.jpg',
+      src: 'assets/images/Shiva/picture17.webp',
       alt: 'Kunstwerk in ungewöhnlicher Perspektive von Shiva Ludi',
       title: 'Kunst aus neuem Blickwinkel',
       photographer: 'Shiva Ludi',
@@ -177,7 +177,7 @@ export class PhotographerGalleryComponent implements OnInit {
     },
     {
       id: '18',
-      src: 'assets/images/Shiva/picture18.jpg',
+      src: 'assets/images/Shiva/picture18.webp',
       alt: 'Reisefotografie von einer Küstenlandschaft von Shiva Ludi',
       title: 'Küstenträume',
       photographer: 'Shiva Ludi',
@@ -185,7 +185,7 @@ export class PhotographerGalleryComponent implements OnInit {
     },
     {
       id: '19',
-      src: 'assets/images/Shiva/picture19.jpg',
+      src: 'assets/images/Shiva/picture19.webp',
       alt: 'Naturdetail im Makrobereich von Shiva Ludi',
       title: 'Kleine Welten',
       photographer: 'Shiva Ludi',
@@ -193,7 +193,7 @@ export class PhotographerGalleryComponent implements OnInit {
     },
     {
       id: '20',
-      src: 'assets/images/Shiva/picture20.jpg',
+      src: 'assets/images/Shiva/picture20.webp',
       alt: 'Portrait eines älteren Menschen von Shiva Ludi',
       title: 'Lebenslinien',
       photographer: 'Shiva Ludi',
@@ -201,7 +201,7 @@ export class PhotographerGalleryComponent implements OnInit {
     },
     {
       id: '21',
-      src: 'assets/images/Shiva/picture21.jpg',
+      src: 'assets/images/Shiva/picture21.webp',
       alt: 'Abstrakte Kunstfotografie von Shiva Ludi',
       title: 'Abstraktion des Alltags',
       photographer: 'Shiva Ludi',
@@ -209,7 +209,7 @@ export class PhotographerGalleryComponent implements OnInit {
     },
     {
       id: '22',
-      src: 'assets/images/Shiva/picture22.jpg',
+      src: 'assets/images/Shiva/picture22.webp',
       alt: 'Reiseimpression aus einem fernen Land von Shiva Ludi',
       title: 'Reisemomente',
       photographer: 'Shiva Ludi',
@@ -217,7 +217,7 @@ export class PhotographerGalleryComponent implements OnInit {
     },
     {
       id: '23',
-      src: 'assets/images/Shiva/picture23.jpg',
+      src: 'assets/images/Shiva/picture23.webp',
       alt: 'Landschaftsfotografie bei besonderen Wetterbedingungen von Shiva Ludi',
       title: 'Natur im Wandel',
       photographer: 'Shiva Ludi',
@@ -225,7 +225,7 @@ export class PhotographerGalleryComponent implements OnInit {
     },
     {
       id: '24',
-      src: 'assets/images/Shiva/picture24.jpg',
+      src: 'assets/images/Shiva/picture24.webp',
       alt: 'Dokumentation einer Kunstinstallation von Isabel Kunz von Shiva Ludi',
       title: 'Isabels Kunst im Fokus',
       photographer: 'Shiva Ludi',
@@ -280,7 +280,7 @@ export class PhotographerGalleryComponent implements OnInit {
   setCategory(category: string): void {
     this.activeCategory = category;
   }
-  
+
   // Lightbox methods
   openLightbox(index: number): void {
     // Convert artworks to lightbox format using filtered artworks
@@ -290,11 +290,11 @@ export class PhotographerGalleryComponent implements OnInit {
       title: artwork.title,
       caption: artwork.alt
     }));
-    
+
     this.currentLightboxIndex = index;
     this.showLightbox = true;
   }
-  
+
   closeLightbox(): void {
     this.showLightbox = false;
   }

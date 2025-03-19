@@ -14,38 +14,21 @@
   </header>
 
   <section class="main-gallery">
-    <div *ngIf="loading" class="loading">
-      <div class="skeleton-grid">
-        <div class="skeleton-item" *ngFor="let i of [1,2,3,4,5,6]">
-          <div class="skeleton-image"></div>
-        </div>
-      </div>
-    </div>
-    
-    <div *ngIf="errorMessage" class="error-message">
-      <p>{{ errorMessage }}</p>
-    </div>
-    
-    <div class="gallery-grid" *ngIf="!loading && artworks.length > 0">
-      <div *ngFor="let artwork of artworks; let i = index" class="artwork" (click)="openLightbox('main', i)">
-        <div class="image-container">
-          <img [src]="artwork.src" [alt]="artwork.alt" />
-          <div class="overlay">
-            <div class="text">{{ artwork.title }}</div>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <div *ngIf="!loading && artworks.length === 0" class="no-artworks">
-      <p>Zurzeit sind keine Kunstwerke verfügbar.</p>
-    </div>
+    <app-masonry-grid
+      [items]="artworks"
+      [columns]="3"
+      [loading]="loading"
+      [emptyMessage]="'Zurzeit sind keine Kunstwerke verfügbar.'"
+      (itemClick)="openLightbox('main', $event.index)">
+    </app-masonry-grid>
   </section>
 
   <!-- Photographer Spotlight Section -->
   <section id="photographer-spotlight" class="photographer-spotlight">
     <div class="spotlight-container">
       <div class="spotlight-icon">
+        <!-- Add the animated dotted circle -->
+        <div class="dotted-circle"></div>
         <div class="camera-icon">
           <span class="material-icons">camera</span>
         </div>
@@ -59,11 +42,11 @@
         <h4>Shiva Ludi - Mein Sohn, der Fotograf</h4>
         <div class="spotlight-bio">
           <p>Bei der Präsentation meiner Kunst unterstützt mich mein Sohn Shiva. Geboren 1992, lebt er in der Nähe von Bern und hat sich nach seiner Ausbildung zum orthopädischen Schuhmacher beruflich neu orientiert – er arbeitet heute freiberuflich als Künstler und Kreativschaffender im Bereich Fotografie. Durch zahlreiche Weiterbildungen und intensives Selbststudium hat er sein Fachwissen stetig erweitert.</p>
-          
+
           <p>Besonders am Herzen liegt es ihm, mit seinen Bildern die Menschen zu berühren. Er möchte die Welt so zeigen, wie er sie sieht – in ihrer natürlichen Schönheit und Authentizität. Sein Ziel ist es, Emotionen einzufangen und echte Momente festzuhalten.</p>
-          
+
           <p>Seine Arbeiten wurden bereits in verschiedenen Zeitungen veröffentlicht, unter anderem bei Globetrotter. Neben der Fotografie ist das Reisen eine seiner größten Leidenschaften, die er mit seiner Partnerin teilt. Gemeinsam erkunden sie die Welt und lassen sich von ihren Geschichten inspirieren.</p>
-          
+
           <div class="photographer-actions">
             <a href="mailto:ludi_11@icloud.com" class="nav-link">
               <span class="material-icons">email</span>
@@ -84,23 +67,25 @@
     <p>
       Hier zeige ich zusätzliche Werke, die meinen kreativen Weg dokumentieren.
     </p>
-    <div class="masonry-grid">
-      <div *ngFor="let subArtwork of subArtworks; let i = index" class="masonry-item" (click)="openLightbox('sub', i)">
-        <img [src]="subArtwork.src" [alt]="subArtwork.alt" />
-      </div>
-    </div>
-    
-    <!-- Statt Footer nur Quellenangabe -->
+
+    <app-masonry-grid
+      [items]="subArtworks"
+      [columns]="3"
+      [loading]="loading"
+      (itemClick)="openLightbox('sub', $event.index)">
+    </app-masonry-grid>
+
+    <!-- Quellenangabe -->
     <p class="photo-credits-footer">
       Fotografie: Shiva Ludi
     </p>
   </section>
-  
+
   <!-- Lightbox -->
-  <app-lightbox 
-    *ngIf="showLightbox" 
-    [images]="lightboxImages" 
-    [currentIndex]="currentLightboxIndex" 
+  <app-lightbox
+    *ngIf="showLightbox"
+    [images]="lightboxImages"
+    [currentIndex]="currentLightboxIndex"
     (close)="closeLightbox()">
   </app-lightbox>
 </div>
