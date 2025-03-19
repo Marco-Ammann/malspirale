@@ -29,8 +29,8 @@
 
       <!-- Bild -->
       <img
-        [src]="images[currentIndex]?.src"
-        [alt]="images[currentIndex]?.alt || 'Bild'"
+        [src]="images[currentIndex].src"
+        [alt]="images[currentIndex].alt || 'Bild'"
         (load)="onImageLoad()"
         class="lightbox-image"
         [class.loading]="loading"
@@ -57,10 +57,10 @@
         *ngIf="images[currentIndex]?.caption || images[currentIndex]?.title"
       >
         <h3 *ngIf="images[currentIndex]?.title">
-          {{ images[currentIndex]?.title }}
+          {{ images[currentIndex].title }}
         </h3>
         <p *ngIf="images[currentIndex]?.caption">
-          {{ images[currentIndex]?.caption }}
+          {{ images[currentIndex].caption }}
         </p>
       </div>
     </div>

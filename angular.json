@@ -29,8 +29,7 @@
               { "glob": "sitemap.xml", "input": "src", "output": "/" },
               { "glob": "robots.txt", "input": "src", "output": "/" },
               { "glob": ".htaccess", "input": "src", "output": "/" },
-              { "glob": "**/*.php", "input": "src/server", "output": "/" },
-              { "glob": "sendMail.php", "input": "src/server", "output": "/" },
+              { "glob": "**/*.php", "input": "src/server", "output": "/server" },
               { "glob": "manifest.webmanifest", "input": "src", "output": "/" }
             ],
             "styles": [
@@ -91,31 +90,13 @@
             "tsConfig": "tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
             "assets": [
-              {
-                "glob": "**/*",
-                "input": "src/assets",
-                "output": "assets"
-              },
-              {
-                "glob": "robots.txt",
-                "input": "./",
-                "output": "./"
-              },
-              {
-                "glob": "sitemap.xml",
-                "input": "./",
-                "output": "./"
-              },
-              {
-                "glob": ".htaccess",
-                "input": "./",
-                "output": "./"
-              },
-              {
-                "glob": "manifest.webmanifest",
-                "input": "src",
-                "output": "/"
-              }
+              { "glob": "**/*", "input": "src/assets", "output": "assets" },
+              { "glob": "favicon.ico", "input": "src", "output": "/" },
+              { "glob": "sitemap.xml", "input": "src", "output": "/" },
+              { "glob": "robots.txt", "input": "src", "output": "/" },
+              { "glob": ".htaccess", "input": "src", "output": "/" },
+              { "glob": "**/*.php", "input": "src/server", "output": "/server" },
+              { "glob": "manifest.webmanifest", "input": "src", "output": "/" }
             ],
             "styles": [
               "node_modules/quill/dist/quill.snow.css",

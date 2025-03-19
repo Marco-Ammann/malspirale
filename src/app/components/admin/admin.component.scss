@@ -15,7 +15,7 @@
   background: linear-gradient(
     135deg,
     vars.$accent-color-dark,
-    darken(vars.$accent-color-dark, 10%)
+    color.adjust(vars.$accent-color-dark, $lightness: -10%)
   );
   color: white;
   display: flex;
@@ -510,4 +510,12 @@
       }
     }
   }
+}
+
+.admin-container {
+  background: linear-gradient(
+    135deg,
+    vars.$accent-color-dark,
+    color.adjust(vars.$accent-color-dark, $lightness: -10%)
+  );
 }

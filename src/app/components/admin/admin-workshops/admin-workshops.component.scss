@@ -167,7 +167,11 @@
 
         &.status-active {
           background-color: #d4edda;
-          color: darken(vars.$success-color, 10%);
+          color: color.adjust(vars.$success-color, $lightness: -10%);
+        }
+
+        &.active {
+          color: color.adjust(vars.$success-color, $lightness: -10%);
         }
 
         &.status-draft {
@@ -253,7 +257,7 @@
           .status-badge {
             &.status-published {
               background-color: rgba(vars.$success-color, 0.15);
-              color: darken(vars.$success-color, 10%);
+              color: color.adjust(vars.$success-color, $lightness: -10%);
             }
 
             &.status-draft {
@@ -404,6 +408,12 @@
       top: 0;
       left: 0;
       transition: transform 0.3s ease;
+    }
+  }
+
+  .status-label {
+    &.active {
+      color: color.adjust(vars.$success-color, $lightness: -10%);
     }
   }
 

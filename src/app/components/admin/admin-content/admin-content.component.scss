@@ -503,12 +503,12 @@
     
     &.success {
       background-color: #d4edda;
-      color: darken(vars.$success-color, 10%);
+      color: color.adjust(vars.$success-color, $lightness: -10%);
     }
     
     &.error {
       background-color: #f8d7da;
-      color: darken(vars.$danger-color, 10%);
+      color: color.adjust(vars.$danger-color, $lightness: -10%);
     }
   }
 }

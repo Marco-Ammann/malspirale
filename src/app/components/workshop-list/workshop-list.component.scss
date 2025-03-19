@@ -18,9 +18,9 @@
     max-width: 350px;
     padding: vars.$padding-small;
     font-size: vars.$font-size-base;
-    border: 1px solid transparentize(vars.$text-color, 0.7);
+    border: 1px solid color.adjust(vars.$text-color, $alpha: -0.7);
     border-radius: vars.$border-radius;
-    background: transparentize(vars.$background-color, 0.9);
+    background: color.adjust(vars.$background-color, $alpha: -0.9);
   }
 }
 

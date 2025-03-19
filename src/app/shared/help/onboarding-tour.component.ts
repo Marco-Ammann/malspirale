@@ -173,7 +173,7 @@ interface TourStep {
             
             &.btn-success {
               background-color: vars.$success-color;
-              border: 1px solid darken(vars.$success-color, 10%);
+              border: 1px solid color.adjust(vars.$success-color, $lightness: -10%);
               color: white;
             }
           }

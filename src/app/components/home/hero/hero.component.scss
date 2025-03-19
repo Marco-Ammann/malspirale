@@ -28,7 +28,7 @@
     left: 0;
     width: 100%;
     height: 100vh;
-    background: transparentize(vars.$background-whiter, 0.65);
+    background: color.adjust(vars.$background-whiter, $alpha: -0.65);
     backdrop-filter: blur(6px);
     clip-path: polygon(0 0, 65% 0, 35% 100%, 0 100%);
     z-index: 2;
@@ -41,6 +41,7 @@
     max-width: clamp(300px, 50vw, 600px);
     margin-left: vars.$padding-large;
     color: vars.$text-color;
+    background: color.adjust(vars.$background-whiter, $alpha: -0.65);
   
     .hero-title {
       font-family: vars.$font-family-heading;
@@ -103,6 +104,12 @@
   }
 }
 
+.cta-container {
+  .cta {
+    background: color.adjust(vars.$background-whiter, $alpha: -0.55);
+  }
+}
+
 @keyframes gradientFlow {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
@@ -139,7 +146,7 @@
     .hero-glass {
       width: 100%;
       clip-path: polygon(0 0, 100% 0, 60% 100%, 0 100%);
-      background: transparentize(vars.$background-whiter, 0.55);
+      background: color.adjust(vars.$background-whiter, $alpha: -0.55);
     }
 
     .hero-content {
