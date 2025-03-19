@@ -3,13 +3,11 @@ import {
   provideZoneChangeDetection,
   isDevMode,
 } from '@angular/core';
-import { 
-  PreloadAllModules, 
-  provideRouter, 
+import {
+  PreloadAllModules,
+  provideRouter,
   withPreloading,
-  withHashLocation, // Remove this if you're using PathLocationStrategy
   RouterStateSnapshot,
-  withDebugTracing // Only for debugging
 } from '@angular/router';
 import { routes } from './app.routes';
 import { provideServiceWorker } from '@angular/service-worker';
@@ -22,9 +20,6 @@ export const appConfig: ApplicationConfig = {
     provideRouter(
       routes,
       withPreloading(PreloadAllModules),
-      // Enable this for easier debugging if needed
-      // withDebugTracing(),
-      // Remove withDisabledInitialNavigation() as it may cause issues with routing
     ),
     provideServiceWorker('ngsw-worker.js', {
       enabled: !isDevMode(),

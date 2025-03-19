@@ -1,4 +1,19 @@
 <div class="masonry-wrapper">
+  <!-- Categories filter -->
+  <div *ngIf="showCategories && categories.length > 0" class="categories-filter" @fadeIn>
+    <button class="category-btn"
+            [class.active]="activeCategory === 'all'"
+            (click)="filterByCategory('all')">
+      Alle
+    </button>
+    <button *ngFor="let category of categories"
+            class="category-btn"
+            [class.active]="activeCategory === category"
+            (click)="filterByCategory(category)">
+      {{ category }}
+    </button>
+  </div>
+
   <!-- Loading state -->
   <div *ngIf="loading" class="skeleton-grid" [style.gap]="gap">
     <div class="skeleton-item" *ngFor="let i of placeholderArray">
@@ -7,24 +22,39 @@
   </div>
 
   <!-- Masonry grid with items -->
-  <div *ngIf="!loading && items.length > 0" class="masonry-grid" [style.column-count]="columns" [style.gap]="gap">
-    <div *ngFor="let item of items; let i = index; trackBy: trackByFn"
+  <div *ngIf="!loading && visibleItems.length > 0"
+       class="masonry-grid"
+       [style.column-count]="columns"
+       [style.gap]="gap">
+    <div *ngFor="let item of visibleItems; let i = index; trackBy: trackByFn"
          class="masonry-item"
-         (click)="onItemClick(item, i)">
+         (click)="onItemClick(item, i)"
+         @fadeIn>
       <div class="image-container">
         <img [src]="item.src"
              [alt]="item.alt || 'Gallery image'"
              (load)="onImageLoad(item)"
              [class.loaded]="item.loaded">
-        <div class="overlay" *ngIf="item.title">
-          <div class="text">{{ item.title }}</div>
+
+        <div class="overlay">
+          <div class="text" *ngIf="item.title">{{ item.title }}</div>
+          <span class="category-tag" *ngIf="item.category">{{ item.category }}</span>
         </div>
+
+        <div class="hover-effect"></div>
       </div>
     </div>
   </div>
 
+  <!-- Load more button (alternative to infinite scroll) -->
+  <div *ngIf="enableLazyLoading && !loading && visibleItems.length < items.length" class="load-more-container">
+    <button class="load-more-btn" (click)="loadMoreItems()">
+      Mehr anzeigen
+    </button>
+  </div>
+
   <!-- Empty state -->
-  <div *ngIf="!loading && items.length === 0" class="empty-grid">
+  <div *ngIf="!loading && visibleItems.length === 0" class="empty-grid">
     <p>{{ emptyMessage }}</p>
   </div>
 </div>

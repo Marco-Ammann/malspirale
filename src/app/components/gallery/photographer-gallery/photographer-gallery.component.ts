@@ -4,6 +4,7 @@ import { getFirestore, collection, getDocs, query, where } from 'firebase/firest
 import { firebaseApp } from '../../../../firebase-config';
 import { LightboxComponent, LightboxImage } from '../../../shared/lightbox/lightbox.component';
 import { Router, RouterLink } from '@angular/router';
+import { MasonryGridComponent, MasonryItem } from '../../../shared/masonry-grid/masonry-grid.component';
 
 interface PhotographerArtwork {
   id: string;
@@ -19,7 +20,7 @@ interface PhotographerArtwork {
   templateUrl: './photographer-gallery.component.html',
   styleUrls: ['./photographer-gallery.component.scss'],
   standalone: true,
-  imports: [CommonModule, LightboxComponent, RouterLink],
+  imports: [CommonModule, LightboxComponent, RouterLink, MasonryGridComponent],
 })
 export class PhotographerGalleryComponent implements OnInit {
   photographerArtworks: PhotographerArtwork[] = [];
@@ -282,16 +283,16 @@ export class PhotographerGalleryComponent implements OnInit {
   }
 
   // Lightbox methods
-  openLightbox(index: number): void {
-    // Convert artworks to lightbox format using filtered artworks
-    this.lightboxImages = this.filteredArtworks.map(artwork => ({
+  openLightbox(event: {item: MasonryItem, index: number}): void {
+    // Convert artworks to lightbox format
+    this.lightboxImages = this.photographerArtworks.map(artwork => ({
       src: artwork.src,
       alt: artwork.alt,
       title: artwork.title,
       caption: artwork.alt
     }));
 
-    this.currentLightboxIndex = index;
+    this.currentLightboxIndex = event.index;
     this.showLightbox = true;
   }
 

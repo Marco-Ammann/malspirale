@@ -5,6 +5,8 @@ import { AuthService } from '../../core/services/auth.service';
 import { StateService } from '../../core/services/state.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { Router, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-header',
@@ -17,25 +19,35 @@ export class HeaderComponent implements OnInit, OnDestroy {
   mobileMenuOpen = false;
   philosophyDropdownOpen = false;
   userDropdownOpen = false;
-  galleryDropdownOpen = false; // Add this property
+  galleryDropdownOpen = false;
   isLoggedIn = false;
   isAdmin = false;
   isScrolled = false;
   openSubmenu: string | null = null;
-  
+
   private unsubscribe$ = new Subject<void>();
   private previousScrollPosition = 0;
   private scrollDelta = 5;
   private scrollThreshold = 50;
-  
+
   constructor(
-    private authService: AuthService, 
+    private authService: AuthService,
     private stateService: StateService,
-    private renderer: Renderer2
-  ) {}
-  
+    private renderer: Renderer2,
+    private router: Router
+  ) {
+    // Close menu and dropdowns when route changes
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      this.closeDropdowns();
+      this.mobileMenuOpen = false;
+      this.updateBodyScroll();
+    });
+  }
+
   ngOnInit(): void {
-    // Überwache Auth-Status
+    // Auth status monitoring
     this.authService.user$
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(user => {
@@ -47,23 +59,23 @@ export class HeaderComponent implements OnInit, OnDestroy {
       .subscribe(role => {
         this.isAdmin = role === 'admin';
       });
-      
-    // Verhindere Scrollen, wenn Mobile-Menü geöffnet ist
+
+    // Prevent scrolling when mobile menu is open
     this.updateBodyScroll();
-    
+
     // Check if we're on a gallery route and open dropdown if needed
     const currentPath = window.location.pathname;
     if (currentPath.includes('/gallery')) {
       this.galleryDropdownOpen = true;
     }
   }
-  
+
   ngOnDestroy(): void {
-    // Räume Subscriptions auf
+    // Clean up subscriptions
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
-    
-    // Stelle sicher, dass Scrollen wieder möglich ist
+
+    // Ensure scrolling is re-enabled
     this.renderer.removeClass(document.body, 'no-scroll');
   }
 
@@ -75,10 +87,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.closeDropdowns();
     }
   }
-  
+
   @HostListener('window:keydown', ['$event'])
   onKeyDown(event: KeyboardEvent): void {
-    // Tastatursteuerung
+    // Keyboard control
     if (event.key === 'Escape') {
       this.closeAllMenus();
     }
@@ -87,14 +99,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
   @HostListener('window:scroll', [])
   onWindowScroll() {
     const currentScroll = window.scrollY;
-    
-    // Header-Styling bei Scrollen anpassen
+
+    // Adjust header styling on scroll
     if (currentScroll > this.scrollThreshold) {
       this.isScrolled = true;
     } else {
       this.isScrolled = false;
     }
-    
+
     this.previousScrollPosition = currentScroll;
   }
 
@@ -104,21 +116,25 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.updateBodyScroll();
   }
 
-  toggleDropdown(menu: string): void {
+  toggleDropdown(menu: string, event?: Event): void {
+    if (event) {
+      event.preventDefault();
+    }
+
     // Close mobile menu if open
     this.mobileMenuOpen = false;
-    
+
     // Get the current state before we change it
-    const currentState = 
+    const currentState =
       (menu === 'gallery' && this.galleryDropdownOpen) ||
       (menu === 'philosophy' && this.philosophyDropdownOpen) ||
       (menu === 'user' && this.userDropdownOpen);
-    
+
     // Close other dropdowns first
     this.galleryDropdownOpen = false;
     this.philosophyDropdownOpen = false;
     this.userDropdownOpen = false;
-    
+
     // Toggle the requested dropdown (only open if it was closed)
     if (menu === 'gallery' && !currentState) {
       this.galleryDropdownOpen = true;
@@ -127,10 +143,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
     } else if (menu === 'user' && !currentState) {
       this.userDropdownOpen = true;
     }
-    
+
     // Update body scroll
     this.updateBodyScroll();
-    
+
     // Close mobile submenu if we're opening a desktop dropdown
     if (window.innerWidth > 768) {
       this.openSubmenu = null;
@@ -154,7 +170,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.mobileMenuOpen = false;
     this.updateBodyScroll();
   }
-  
+
   closeMobileMenu(): void {
     this.mobileMenuOpen = false;
     this.closeDropdowns();
@@ -168,18 +184,24 @@ export class HeaderComponent implements OnInit, OnDestroy {
     });
   }
 
-  private closeDropdowns(): void {
+  // Changed from private to public to allow access from template
+  public closeDropdowns(): void {
     this.galleryDropdownOpen = false;
     this.philosophyDropdownOpen = false;
     this.userDropdownOpen = false;
   }
-  
+
   private updateBodyScroll(): void {
-    // Verhindere Scrollen des Hintergrunds, wenn Mobile-Menü offen ist
+    // Prevent background scrolling when mobile menu is open
     if (this.mobileMenuOpen) {
       this.renderer.addClass(document.body, 'no-scroll');
     } else {
       this.renderer.removeClass(document.body, 'no-scroll');
     }
+  }
+
+  // Helper method to check if current route contains a specific path
+  isRouteActive(path: string): boolean {
+    return this.router.url.includes(path);
   }
 }

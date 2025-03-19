@@ -41,8 +41,7 @@
     max-width: clamp(300px, 50vw, 600px);
     margin-left: vars.$padding-large;
     color: vars.$text-color;
-    background: color.adjust(vars.$background-whiter, $alpha: -0.65);
-  
+
     .hero-title {
       font-family: vars.$font-family-heading;
       font-size: clamp(3rem, 7vw, 5.5rem);
@@ -61,7 +60,7 @@
       color: transparent;
       animation: gradientFlow 8s ease-in-out infinite alternate;
     }
-  
+
     .hero-subtitle {
       font-size: clamp(1.25rem, 3vw, 2rem);
       line-height: 1.4;
@@ -69,7 +68,7 @@
       text-shadow: 0 1px 8px rgba(0, 0, 0, 0.2);
       font-weight: 500;
     }
-  
+
     .btn-cta {
       padding: vars.$padding-medium vars.$padding-large;
       font-size: clamp(1.1rem, 2.5vw, 1.5rem);
@@ -89,13 +88,13 @@
       animation: gradientShift 8s ease-in-out infinite;
       box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
-  
+
       &:hover,
       &:focus {
         transform: translateY(-5px);
         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
       }
-      
+
       &:active {
         transform: translateY(-2px);
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
@@ -166,7 +165,7 @@
     .hero-glass {
       clip-path: polygon(0 0, 100% 0, 100% 35%, 0 90%);
     }
-    
+
     .hero-content {
       top: 20%;
     }

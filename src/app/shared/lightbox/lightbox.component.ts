@@ -1,18 +1,13 @@
-import {
-  Component,
-  Input,
-  Output,
-  EventEmitter,
-  HostListener,
-} from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { trigger, style, animate, transition } from '@angular/animations';
+import { animate, style, transition, trigger } from '@angular/animations';
 
 export interface LightboxImage {
   src: string;
   alt?: string;
   title?: string;
   caption?: string;
+  category?: string;
 }
 
 @Component({
@@ -25,67 +20,79 @@ export interface LightboxImage {
     trigger('fadeIn', [
       transition(':enter', [
         style({ opacity: 0 }),
-        animate('300ms', style({ opacity: 1 })),
-      ]),
-      transition(':leave', [animate('300ms', style({ opacity: 0 }))]),
+        animate('300ms ease-out', style({ opacity: 1 }))
+      ])
     ]),
-    trigger('slideIn', [
-      transition(':enter', [
-        style({ transform: 'scale(0.9)', opacity: 0 }),
-        animate('300ms ease-out', style({ transform: 'scale(1)', opacity: 1 })),
-      ]),
+    trigger('fadeOut', [
       transition(':leave', [
-        animate(
-          '300ms ease-in',
-          style({ transform: 'scale(0.9)', opacity: 0 })
-        ),
-      ]),
-    ]),
-  ],
+        style({ opacity: 1 }),
+        animate('200ms ease-in', style({ opacity: 0 }))
+      ])
+    ])
+  ]
 })
-export class LightboxComponent {
+export class LightboxComponent implements OnInit {
   @Input() images: LightboxImage[] = [];
   @Input() currentIndex: number = 0;
   @Output() close = new EventEmitter<void>();
-  private touchStartX = 0;
-  private touchEndX = 0;
-  private swipeThreshold = 50;
-  loading: boolean = false;
 
-  @HostListener('document:keydown', ['$event'])
-  handleKeyboardEvent(event: KeyboardEvent) {
-    switch (event.key) {
-      case 'Escape':
-        this.closeLightbox();
-        break;
-      case 'ArrowLeft':
-        this.prevImage();
-        break;
-      case 'ArrowRight':
-        this.nextImage();
-        break;
+  loading: boolean = true;
+
+  ngOnInit(): void {
+    // Prevent body scrolling when lightbox is open
+    document.body.style.overflow = 'hidden';
+
+    // Preload the current image to start
+    this.preloadImage(this.currentIndex);
+
+    // Then preload neighbors
+    if (this.currentIndex > 0) {
+      this.preloadImage(this.currentIndex - 1);
+    }
+    if (this.currentIndex < this.images.length - 1) {
+      this.preloadImage(this.currentIndex + 1);
     }
   }
 
-  closeLightbox(): void {
+  navigate(direction: number): void {
+    this.loading = true;
+    const newIndex = this.currentIndex + direction;
+
+    if (newIndex >= 0 && newIndex < this.images.length) {
+      this.currentIndex = newIndex;
+
+      // Preload the next image in the sequence
+      if (direction > 0 && this.currentIndex < this.images.length - 1) {
+        this.preloadImage(this.currentIndex + 1);
+      } else if (direction < 0 && this.currentIndex > 0) {
+        this.preloadImage(this.currentIndex - 1);
+      }
+    }
+  }
+
+  onClose(): void {
+    document.body.style.overflow = '';
     this.close.emit();
   }
 
-  nextImage(): void {
-    this.loading = true;
-    if (this.currentIndex < this.images.length - 1) {
-      this.currentIndex++;
-    } else {
-      this.currentIndex = 0; // Loop back to the first image
+  closeOnBackdrop(event: MouseEvent): void {
+    if ((event.target as HTMLElement).classList.contains('lightbox-overlay')) {
+      this.onClose();
     }
   }
 
-  prevImage(): void {
-    this.loading = true;
-    if (this.currentIndex > 0) {
-      this.currentIndex--;
-    } else {
-      this.currentIndex = this.images.length - 1; // Loop to the last image
+  @HostListener('document:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent): void {
+    switch (event.key) {
+      case 'ArrowLeft':
+        this.navigate(-1);
+        break;
+      case 'ArrowRight':
+        this.navigate(1);
+        break;
+      case 'Escape':
+        this.onClose();
+        break;
     }
   }
 
@@ -93,32 +100,10 @@ export class LightboxComponent {
     this.loading = false;
   }
 
-  stopPropagation(event: MouseEvent): void {
-    event.stopPropagation();
-  }
-
-  onTouchStart(event: TouchEvent): void {
-    this.touchStartX = event.touches[0].clientX;
-  }
-
-  onTouchEnd(event: TouchEvent): void {
-    this.touchEndX = event.changedTouches[0].clientX;
-    this.handleSwipe();
-  }
-
-  private handleSwipe(): void {
-    const swipeDistance = this.touchEndX - this.touchStartX;
-
-    if (Math.abs(swipeDistance) < this.swipeThreshold) {
-      return; // Ignoriere kleine Bewegungen
-    }
-
-    if (swipeDistance > 0) {
-      // Swipe nach rechts - vorheriges Bild
-      this.prevImage();
-    } else {
-      // Swipe nach links - nächstes Bild
-      this.nextImage();
+  private preloadImage(index: number): void {
+    if (index >= 0 && index < this.images.length) {
+      const img = new Image();
+      img.src = this.images[index].src;
     }
   }
 }

@@ -19,17 +19,19 @@
       [columns]="3"
       [loading]="loading"
       [emptyMessage]="'Zurzeit sind keine Kunstwerke verfügbar.'"
-      (itemClick)="openLightbox('main', $event.index)">
+      [showCategories]="true"
+      [categories]="categories"
+      [enableLazyLoading]="true"
+      (itemClick)="openLightbox('main', $event)">
     </app-masonry-grid>
   </section>
 
-  <!-- Photographer Spotlight Section -->
   <section id="photographer-spotlight" class="photographer-spotlight">
     <div class="spotlight-container">
       <div class="spotlight-icon">
-        <!-- Add the animated dotted circle -->
-        <div class="dotted-circle"></div>
         <div class="camera-icon">
+          <div class="dotted-circle"></div>
+          <div class="flash-effect"></div>
           <span class="material-icons">camera</span>
         </div>
         <a href="https://www.instagram.com/ludiphotography11/" target="_blank" class="instagram-link">
@@ -39,13 +41,11 @@
       </div>
       <div class="spotlight-content">
         <h3>Die Kunst hinter der Kamera</h3>
-        <h4>Shiva Ludi - Mein Sohn, der Fotograf</h4>
+        <h4>Shiva Ludi - Der Fotograf</h4>
         <div class="spotlight-bio">
           <p>Bei der Präsentation meiner Kunst unterstützt mich mein Sohn Shiva. Geboren 1992, lebt er in der Nähe von Bern und hat sich nach seiner Ausbildung zum orthopädischen Schuhmacher beruflich neu orientiert – er arbeitet heute freiberuflich als Künstler und Kreativschaffender im Bereich Fotografie. Durch zahlreiche Weiterbildungen und intensives Selbststudium hat er sein Fachwissen stetig erweitert.</p>
 
           <p>Besonders am Herzen liegt es ihm, mit seinen Bildern die Menschen zu berühren. Er möchte die Welt so zeigen, wie er sie sieht – in ihrer natürlichen Schönheit und Authentizität. Sein Ziel ist es, Emotionen einzufangen und echte Momente festzuhalten.</p>
-
-          <p>Seine Arbeiten wurden bereits in verschiedenen Zeitungen veröffentlicht, unter anderem bei Globetrotter. Neben der Fotografie ist das Reisen eine seiner größten Leidenschaften, die er mit seiner Partnerin teilt. Gemeinsam erkunden sie die Welt und lassen sich von ihren Geschichten inspirieren.</p>
 
           <div class="photographer-actions">
             <a href="mailto:ludi_11@icloud.com" class="nav-link">
@@ -72,10 +72,10 @@
       [items]="subArtworks"
       [columns]="3"
       [loading]="loading"
-      (itemClick)="openLightbox('sub', $event.index)">
+      [enableLazyLoading]="true"
+      (itemClick)="openLightbox('sub', $event)">
     </app-masonry-grid>
 
-    <!-- Quellenangabe -->
     <p class="photo-credits-footer">
       Fotografie: Shiva Ludi
     </p>

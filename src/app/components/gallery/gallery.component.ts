@@ -15,6 +15,7 @@ interface Artwork {
   createdAt?: Date;
   timestamp?: number;
   isPublic?: boolean;
+  category?: string;
 }
 
 @Component({
@@ -31,6 +32,7 @@ export class GalleryComponent implements OnInit {
   errorMessage: string = '';
   artworks_default: Artwork[] = [];
   subArtworks_default: Artwork[] = [];
+  categories: string[] = [];
 
   // Lightbox-Eigenschaften
   showLightbox: boolean = false;
@@ -81,9 +83,17 @@ export class GalleryComponent implements OnInit {
             id: doc.id,
             ...data,
             // Use proper indexing for data that comes from an index signature
-            createdAt: data['createdAt'] ? new Date(data['createdAt'].seconds * 1000) : new Date()
+            createdAt: data['createdAt'] ? new Date(data['createdAt'].seconds * 1000) : new Date(),
+            category: data['category'] || 'Allgemein'
           } as Artwork;
         });
+
+        // Extract unique categories
+        const uniqueCategories = new Set<string>();
+        this.artworks.forEach(art => {
+          if (art.category) uniqueCategories.add(art.category);
+        });
+        this.categories = Array.from(uniqueCategories);
       } else {
         console.warn('⚠️ Keine Hauptgalerie-Bilder in Firestore.');
         this.artworks = this.artworks_default;
@@ -134,7 +144,7 @@ export class GalleryComponent implements OnInit {
   }
 
   // Lightbox-Methoden
-  openLightbox(gallery: 'main' | 'sub', index: number): void {
+  openLightbox(gallery: 'main' | 'sub', event: {item: MasonryItem, index: number}): void {
     const source = gallery === 'main' ? this.artworks : this.subArtworks;
 
     // Konvertiere Artworks in Lightbox-Format
@@ -142,10 +152,11 @@ export class GalleryComponent implements OnInit {
       src: artwork.src,
       alt: artwork.alt,
       title: artwork.title,
-      caption: artwork.alt // Wir verwenden alt als Bildunterschrift
+      caption: artwork.alt, // Wir verwenden alt als Bildunterschrift
+      category: artwork.category
     }));
 
-    this.currentLightboxIndex = index;
+    this.currentLightboxIndex = event.index;
     this.showLightbox = true;
   }
 
