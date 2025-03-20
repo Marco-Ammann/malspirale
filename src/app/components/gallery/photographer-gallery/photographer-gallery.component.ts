@@ -42,96 +42,96 @@ export class PhotographerGalleryComponent implements OnInit {
     {
       id: '1',
       src: 'assets/images/Shiva/picture1.webp',
-      alt: 'Berglandschaft mit See fotografiert von Shiva Ludi',
-      title: 'Bergsee im Morgenlicht',
-      photographer: 'Shiva Ludi',
-      category: 'natur'
-    },
-    {
-      id: '2',
-      src: 'assets/images/Shiva/picture2.webp',
-      alt: 'Portraitfotografie im natürlichen Licht von Shiva Ludi',
-      title: 'Portraitstudie in Naturtönen',
-      photographer: 'Shiva Ludi',
-      category: 'portraits'
-    },
-    {
-      id: '3',
-      src: 'assets/images/Shiva/picture3.webp',
-      alt: 'Urbane Architektur bei Dämmerlicht von Shiva Ludi',
-      title: 'Stadt im Zwielicht',
+      alt: 'Stadt in Röte fotografiert von Shiva Ludi',
+      title: 'Stadtstrasse im Morgenlicht',
       photographer: 'Shiva Ludi',
       category: 'reisen'
     },
     {
-      id: '4',
-      src: 'assets/images/Shiva/picture4.webp',
-      alt: 'Detailaufnahme von Naturformen von Shiva Ludi',
-      title: 'Naturdetail',
+      id: '2',
+      src: 'assets/images/Shiva/picture2.webp',
+      alt: 'Schneelandschaft im Nordlicht Licht von Shiva Ludi',
+      title: 'Schneelandschaft mit Polarlichter',
       photographer: 'Shiva Ludi',
       category: 'natur'
     },
     {
+      id: '3',
+      src: 'assets/images/Shiva/picture3.webp',
+      alt: 'Polarlichter über dem Himmel von Shiva Ludi',
+      title: 'Polarlichter',
+      photographer: 'Shiva Ludi',
+      category: 'natur'
+    },
+    {
+      id: '4',
+      src: 'assets/images/Shiva/picture4.webp',
+      alt: 'Haus beleuchtet am Abend von Shiva Ludi',
+      title: 'Haus im Schnee',
+      photographer: 'Shiva Ludi',
+      category: 'reisen'
+    },
+    {
       id: '5',
       src: 'assets/images/Shiva/picture5.webp',
-      alt: 'Portrait einer Person im natürlichen Umfeld von Shiva Ludi',
-      title: 'Person im Dialog mit der Natur',
+      alt: 'Waldlandschaft mit Polarlichter von Shiva Ludi',
+      title: 'Schritt durch den Wald',
       photographer: 'Shiva Ludi',
-      category: 'portraits'
+      category: 'natur'
     },
     {
       id: '6',
       src: 'assets/images/Shiva/picture6.webp',
-      alt: 'Kunstvolle Dokumentation einer Skulptur von Shiva Ludi',
-      title: 'Skulptur im Licht',
+      alt: 'Schnee und Tannen von Shiva Ludi',
+      title: 'Tannen bedeckt mit Schnee',
       photographer: 'Shiva Ludi',
-      category: 'kunst'
+      category: 'natur'
     },
     {
       id: '7',
       src: 'assets/images/Shiva/picture7.webp',
-      alt: 'Bergpanorama bei Sonnenuntergang von Shiva Ludi',
-      title: 'Alpenpanorama in Gold',
+      alt: 'Polarlichter zirkelnd von Shiva Ludi',
+      title: 'Zirkelndes Polarlicht',
       photographer: 'Shiva Ludi',
       category: 'natur'
     },
     {
       id: '8',
       src: 'assets/images/Shiva/picture8.webp',
-      alt: 'Kunstinstallation mit natürlichen Materialien von Shiva Ludi',
+      alt: 'Wasserfälle an ruhigem Waldsee von Shiva Ludi',
       title: 'Natur als Kunst',
       photographer: 'Shiva Ludi',
-      category: 'kunst'
+      category: 'natur'
     },
     {
       id: '9',
       src: 'assets/images/Shiva/picture9.webp',
-      alt: 'Reisefotografie aus einer fernen Stadt von Shiva Ludi',
-      title: 'Fremde Welten',
+      alt: 'Kolibri an Blüte von Shiva Ludi',
+      title: 'Kolibri im Flug',
       photographer: 'Shiva Ludi',
-      category: 'reisen'
+      category: 'natur'
     },
     {
       id: '10',
       src: 'assets/images/Shiva/picture10.webp',
-      alt: 'Kunstwerk in Makroperspektive von Shiva Ludi',
-      title: 'Kunst im Detail',
+      alt: 'Strasse mit Bewölktem Himmel von Shiva Ludi',
+      title: 'Strasse und Himmel',
       photographer: 'Shiva Ludi',
-      category: 'kunst'
+      category: 'reisen'
     },
     {
       id: '11',
       src: 'assets/images/Shiva/picture11.webp',
-      alt: 'Portraitaufnahme in Schwarz-Weiß von Shiva Ludi',
-      title: 'Charakterporträt',
+      alt: 'Makroaufnahe von Pflanze von Shiva Ludi',
+      title: 'Pflanzenwelt',
       photographer: 'Shiva Ludi',
-      category: 'portraits'
+      category: 'natur'
     },
     {
       id: '12',
       src: 'assets/images/Shiva/picture12.webp',
-      alt: 'Landschaftsaufnahme mit besonderem Lichteinfall von Shiva Ludi',
-      title: 'Landschaft im Lichtspiel',
+      alt: 'Meeresschildkröte von Shiva Ludi',
+      title: 'Meeresschildkröte',
       photographer: 'Shiva Ludi',
       category: 'natur'
     },
@@ -139,98 +139,98 @@ export class PhotographerGalleryComponent implements OnInit {
     {
       id: '13',
       src: 'assets/images/Shiva/picture13.webp',
-      alt: 'Detailaufnahme einer Kunstinstallation von Shiva Ludi',
-      title: 'Strukturen und Formen',
+      alt: 'Milchsstrasse in der Nacht von Shiva Ludi',
+      title: 'Milchstrasse',
       photographer: 'Shiva Ludi',
-      category: 'kunst'
+      category: 'natur'
     },
     {
       id: '14',
       src: 'assets/images/Shiva/picture14.webp',
-      alt: 'Reisefotografie aus einem Bergdorf von Shiva Ludi',
-      title: 'Leben in den Bergen',
+      alt: 'Einzelner Baum Ragt aus dem See von Shiva Ludi',
+      title: 'Baum im See',
       photographer: 'Shiva Ludi',
-      category: 'reisen'
+      category: 'natur'
     },
     {
       id: '15',
       src: 'assets/images/Shiva/picture15.webp',
-      alt: 'Nahaufnahme einer Blüte von Shiva Ludi',
-      title: 'Blütentraum',
+      alt: 'Regenbogen über Bauernhaus von Shiva Ludi',
+      title: 'Regenbogen',
       photographer: 'Shiva Ludi',
       category: 'natur'
     },
     {
       id: '16',
       src: 'assets/images/Shiva/picture16.webp',
-      alt: 'Emotionales Portrait eines Menschen von Shiva Ludi',
-      title: 'Emotionen',
-      photographer: 'Shiva Ludi',
-      category: 'portraits'
-    },
-    {
-      id: '17',
-      src: 'assets/images/Shiva/picture17.webp',
-      alt: 'Kunstwerk in ungewöhnlicher Perspektive von Shiva Ludi',
-      title: 'Kunst aus neuem Blickwinkel',
-      photographer: 'Shiva Ludi',
-      category: 'kunst'
-    },
-    {
-      id: '18',
-      src: 'assets/images/Shiva/picture18.webp',
-      alt: 'Reisefotografie von einer Küstenlandschaft von Shiva Ludi',
-      title: 'Küstenträume',
+      alt: 'Strasse entlang der Küste von Shiva Ludi',
+      title: 'Küstenstrasse',
       photographer: 'Shiva Ludi',
       category: 'reisen'
     },
     {
+      id: '17',
+      src: 'assets/images/Shiva/picture17.webp',
+      alt: 'Eisvogel auf Ästen von Shiva Ludi',
+      title: 'Eisvogel',
+      photographer: 'Shiva Ludi',
+      category: 'natur'
+    },
+    {
+      id: '18',
+      src: 'assets/images/Shiva/picture18.webp',
+      alt: 'Eisvogel auf Ast von Shiva Ludi',
+      title: 'Eisvogel auf Ast',
+      photographer: 'Shiva Ludi',
+      category: 'natur'
+    },
+    {
       id: '19',
       src: 'assets/images/Shiva/picture19.webp',
-      alt: 'Naturdetail im Makrobereich von Shiva Ludi',
-      title: 'Kleine Welten',
+      alt: 'Eisvogel auf Ast in der Nacht von Shiva Ludi',
+      title: 'Eisvogel in der Nacht',
       photographer: 'Shiva Ludi',
       category: 'natur'
     },
     {
       id: '20',
       src: 'assets/images/Shiva/picture20.webp',
-      alt: 'Portrait eines älteren Menschen von Shiva Ludi',
-      title: 'Lebenslinien',
-      photographer: 'Shiva Ludi',
-      category: 'portraits'
-    },
-    {
-      id: '21',
-      src: 'assets/images/Shiva/picture21.webp',
-      alt: 'Abstrakte Kunstfotografie von Shiva Ludi',
-      title: 'Abstraktion des Alltags',
-      photographer: 'Shiva Ludi',
-      category: 'kunst'
-    },
-    {
-      id: '22',
-      src: 'assets/images/Shiva/picture22.webp',
-      alt: 'Reiseimpression aus einem fernen Land von Shiva Ludi',
-      title: 'Reisemomente',
+      alt: 'Am Strand unterm Baum mit Meeresblick von Shiva Ludi',
+      title: 'Strandblick',
       photographer: 'Shiva Ludi',
       category: 'reisen'
     },
     {
+      id: '21',
+      src: 'assets/images/Shiva/picture21.webp',
+      alt: 'Grosser Vogel auf Rasen von Shiva Ludi',
+      title: 'Vogel im Garten',
+      photographer: 'Shiva Ludi',
+      category: 'natur'
+    },
+    {
+      id: '22',
+      src: 'assets/images/Shiva/picture22.webp',
+      alt: 'Wasserfall in Bucht über Höhle von Shiva Ludi',
+      title: 'Wasserfall in Bucht',
+      photographer: 'Shiva Ludi',
+      category: 'natur'
+    },
+    {
       id: '23',
       src: 'assets/images/Shiva/picture23.webp',
-      alt: 'Landschaftsfotografie bei besonderen Wetterbedingungen von Shiva Ludi',
-      title: 'Natur im Wandel',
+      alt: 'Wasserfall im Wald von Shiva Ludi',
+      title: 'Wasserfall im Wald',
       photographer: 'Shiva Ludi',
       category: 'natur'
     },
     {
       id: '24',
       src: 'assets/images/Shiva/picture24.webp',
-      alt: 'Dokumentation einer Kunstinstallation von Isabel Kunz von Shiva Ludi',
-      title: 'Isabels Kunst im Fokus',
+      alt: 'Küstenkette hinaus ins Meer zu einem Haus von Shiva Ludi',
+      title: 'Küstenkette',
       photographer: 'Shiva Ludi',
-      category: 'kunst'
+      category: 'reisen'
     }
   ];
 
